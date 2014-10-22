@@ -1,0 +1,30 @@
+buildscript {
+    repositories {
+        maven { url "http://repo.spring.io/libs-release" }
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.8.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "http://repo.spring.io/libs-release" }
+}
+
+dependencies {
+    compile("org.springframework:spring-context:4.1.1.RELEASE")
+    compile("org.springframework:spring-webmvc:4.1.1.RELEASE")
+    compile("org.springframework:spring-web:4.1.1.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("javax.ws.rs:javax.ws.rs-api:2.0-m01")
+    
+}
