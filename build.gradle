@@ -1,18 +1,22 @@
-buildscript {
-    repositories {
-        maven { url "http://repo.spring.io/libs-release" }
-        mavenLocal()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.8.RELEASE")
-    }
-}
+/////////////
+// Plugins //
+/////////////
 
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
+
+//////////////
+// Settings //
+//////////////
+
+sourceCompatibility = '1.7'
+version = '0.0.1.a'
+
+/////////////////////////////////
+// Repositories & Dependencies //
+/////////////////////////////////
 
 repositories {
     mavenCentral()
@@ -27,4 +31,20 @@ dependencies {
     compile 'com.sun.jersey:jersey-server:1.18'
     compile 'com.sun.jersey:jersey-core:1.18'
     compile 'com.sun.jersey:jersey-servlet:1.18'
+}
+
+//////////////////////
+// Custom Functions //
+//////////////////////
+
+/** Necessary for the spring-boot plugin. */
+buildscript {
+    repositories {
+        maven { url "http://repo.spring.io/libs-release" }
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.1.8.RELEASE'
+    }
 }

@@ -1,6 +1,8 @@
 /bin/
 /build/
-/.gradle/
-/.settings/
 /.classpath
+/.gradle/
 /.project
+/.settings/
+/*.sublime-project
+/*.sublime-workspace

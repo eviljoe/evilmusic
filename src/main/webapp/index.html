@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html ng-app="EvilMusicApp">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Insert title here</title>
@@ -8,28 +8,23 @@
 		var peakingNode;
 		var player;
 		var eqNodes;
-		
-		function testREST() {
-			alert()
-		}
-		
-		
+
 		function playMusic() {
 			player = AV.Player.fromURL('music');
 			player.play();
 		}
-		
+
 		function insertBeforeDest(context, firstNode) {
-			peakingNode = context.createBiquadFilter();
+			/*peakingNode = context.createBiquadFilter();
 			peakingNode.connect(context.destination);
 			peakingNode.type = peakingNode.PEAKING;
 			peakingNode.frequency.value = 55;
 			peakingNode.Q.value = 2.5;
-			
+
 			firstNode.connect(peakingNode);
-			
-			return peakingNode;
-			
+
+			return peakingNode;*/
+
 			//  1: 55    : 2.5
 			//  2: 77    : 2.3
 			//  3: 110   : 2.4
@@ -44,52 +39,52 @@
 			// 12: 5000  :
 			// 13: 7000  :
 			// 14: 10000 :
-			// 15: 14000 : 
+			// 15: 14000 :
 			// 16: 20000 :
-			
+
 			/*var prevNode = null;
 			var freqs = [55, 77, 110, 156, 311, 440, 622, 880, 1200, 1800, 3500, 5000, 7000, 10000, 14000, 20000];
-			
+
 			eqNodes = [];
-			
+
 			for(var x = 0; x < EQ_COUNT; x++) {
 				var eqNode = createEQNode(context, freqs[x], 2.5);
-				
+
 				if(prevNode != null) {
-					prevNode.connect(eqNode);	
+					prevNode.connect(eqNode);
 				}
-				
+
 				eqNodes.push(eqNode);
 				prevNode = eqNode;
 			}
-			
+
 			firstNode.connect(eqNodes[0]);
-			return eqNodes[EQ_COUNT - 1];*/			
+			return eqNodes[EQ_COUNT - 1];*/
 		}
-		
+
 		function createEQNode(context, freq, q) {
 			var node = context.createBiquadFilter();
-			
+
 			node.type = node.PEAKING;
 			node.frequency.value = freq;
 			node.Q.value = q;
-			
+
 			return node;
 		}
-		
-		
+
+
 		function volumeUp() {
 			// TODO use player to increase volume
 		}
-		
+
 		function volumeDown() {
 			// TODO use player to decrease volume
 		}
-		
+
 		function setPeaking(val) {
 			peakingNode.gain.value = val;
 		}
-		
+
 		function setEQ(eqID) {
 			eqNodes[eqID].gain.value = document.getElementById('eq' + eqID).value;
 			updateEQLabels();
@@ -101,15 +96,17 @@
 			}
 		}
 	</script>
-	<script type="text/javascript" src="aurora.js"></script>
-	<script type="text/javascript" src="flac.js"></script>
+	<script type="text/javascript" src="js/angular.js"></script>
+	<script type="text/javascript" src="js/emcontroller.js"></script>
+	<script type="text/javascript" src="js/aurora.js"></script>
+	<script type="text/javascript" src="js/flac.js"></script>
 </head>
-<body>
+<body ng-controller="EvilMusicController">
 	<h1>Welcome to my JSP</h1>
 	<form action="MyServlet">
 		<div>
-			<input type="button" value="Test REST" onclick="testREST();"/>
 			<a href="music">test download file</a>
+			<p>{{angularTestText}}</p>
 		</div>
 		<div>
 			<input type="button" value="play" onclick="playMusic();"/>
