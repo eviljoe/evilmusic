@@ -1,8 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-</head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Insert title here</title>
+	<script type="text/javascript">
+		var EQ_COUNT = 16;
+		var peakingNode;
+		var player;
+		var eqNodes;
+		
+		function testREST() {
+			alert()
+		}
+		
+		
+		function playMusic() {
+			player = AV.Player.fromURL('music');
+			player.play();
+		}
+		
+		function insertBeforeDest(context, firstNode) {
+			peakingNode = context.createBiquadFilter();
+			peakingNode.connect(context.destination);
+			peakingNode.type = peakingNode.PEAKING;
+			peakingNode.frequency.value = 55;
+			peakingNode.Q.value = 2.5;
+			
+			firstNode.connect(peakingNode);
+			
+			return peakingNode;
+			
+			//  1: 55    : 2.5
+			//  2: 77    : 2.3
+			//  3: 110   : 2.4
+			//  4: 156   : 2.4
+			//  5: 311   : 2.4
+			//  6: 440   : 2.4
+			//  7: 622   :
+			//  8: 880   :
+			//  9: 1200  :
+			// 10: 1800  :
+			// 11: 3500  :
+			// 12: 5000  :
+			// 13: 7000  :
+			// 14: 10000 :
+			// 15: 14000 : 
+			// 16: 20000 :
+			
+			/*var prevNode = null;
+			var freqs = [55, 77, 110, 156, 311, 440, 622, 880, 1200, 1800, 3500, 5000, 7000, 10000, 14000, 20000];
+			
+			eqNodes = [];
+			
+			for(var x = 0; x < EQ_COUNT; x++) {
+				var eqNode = createEQNode(context, freqs[x], 2.5);
+				
+				if(prevNode != null) {
+					prevNode.connect(eqNode);	
+				}
+				
+				eqNodes.push(eqNode);
+				prevNode = eqNode;
+			}
+			
+			firstNode.connect(eqNodes[0]);
+			return eqNodes[EQ_COUNT - 1];*/			
+		}
+		
+		function createEQNode(context, freq, q) {
+			var node = context.createBiquadFilter();
+			
+			node.type = node.PEAKING;
+			node.frequency.value = freq;
+			node.Q.value = q;
+			
+			return node;
+		}
+		
+		
+		function volumeUp() {
+			// TODO use player to increase volume
+		}
+		
+		function volumeDown() {
+			// TODO use player to decrease volume
+		}
+		
+		function setPeaking(val) {
+			peakingNode.gain.value = val;
+		}
+		
+		function setEQ(eqID) {
+			eqNodes[eqID].gain.value = document.getElementById('eq' + eqID).value;
+			updateEQLabels();
+		}
 
+		function updateEQLabels() {
+			for(var x = 0; x < EQ_COUNT; x++) {
+				document.getElementById('eqCurrent' + x).innerHTML = "Current: " + eqNodes[x].gain.value;
+			}
+		}
+	</script>
+	<script type="text/javascript" src="aurora.js"></script>
+	<script type="text/javascript" src="flac.js"></script>
+</head>
 <body>
-	<p>(HTML) Hello, world!</p>
+	<h1>Welcome to my JSP</h1>
+	<form action="MyServlet">
+		<div>
+			<input type="button" value="Test REST" onclick="testREST();"/>
+			<a href="music">test download file</a>
+		</div>
+		<div>
+			<input type="button" value="play" onclick="playMusic();"/>
+			<input type="button" value="volume up" onclick="volumeDown();"/>
+			<input type="button" value="volume down" onclick="volumeDown();"/>
+		</div>
+		<span id="volumelevel">default volume</span>
+		<div>
+			<input type="button" value="peaking: -40" onclick="setPeaking(-40);"/>
+			<input type="button" value="peaking: -30" onclick="setPeaking(-30);"/>
+			<input type="button" value="peaking: -20" onclick="setPeaking(-20);"/>
+			<input type="button" value="peaking: -10" onclick="setPeaking(-10);"/>
+			<input type="button" value="peaking: 0" onclick="setPeaking(0);"/>
+			<input type="button" value="peaking: 10" onclick="setPeaking(10);"/>
+			<input type="button" value="peaking: 20" onclick="setPeaking(20);"/>
+			<input type="button" value="peaking: 30" onclick="setPeaking(30);"/>
+			<input type="button" value="peaking: 40" onclick="setPeaking(40);"/>
+		</div>
+		<table>
+			<tr><td>55 Hz</td>  <td>-10 dB<input  id="eq0"  onchange="setEQ(0);"  type="range"  min="-10" max="10" value="0"/>10 dB</td><td><span id="eqCurrent0" >Current: 0</span></td></tr>
+			<tr><td>77 Hz</td>  <td>-10 dB<input  id="eq1"  onchange="setEQ(1);"  type="range"  min="-10" max="10" value="0"/>10 dB</td><td><span id="eqCurrent1" >Current: 0</span></td></tr>
+			<tr><td>110 Hz</td> <td>-10 dB<input  id="eq2"  onchange="setEQ(2);"  type="range"  min="-10" max="10" value="0"/>10 dB</td><td><span id="eqCurrent2" >Current: 0</span></td></tr>
+			<tr><td>156 Hz</td> <td>-10 dB<input  id="eq3"  onchange="setEQ(3);"  type="range"  min="-10" max="10" value="0"/>10 dB</td><td><span id="eqCurrent3" >Current: 0</span></td></tr>
+			<tr><td>311 Hz</td> <td>-10 dB<input  id="eq4"  onchange="setEQ(4);"  type="range"  min="-10" max="10" value="0"/>10 dB</td><td><span id="eqCurrent4" >Current: 0</span></td></tr>
+			<tr><td>440 Hz</td> <td>-10 dB<input  id="eq5"  onchange="setEQ(5);"  type="range"  min="-10" max="10" value="0"/>10 dB</td><td><span id="eqCurrent5" >Current: 0</span></td></tr>
+			<tr><td>622 Hz</td> <td>-10 dB<input  id="eq6"  onchange="setEQ(6);"  type="range"  min="-10" max="10" value="0"/>10 dB</td><td><span id="eqCurrent6" >Current: 0</span></td></tr>
+			<tr><td>880 Hz</td> <td>-10 dB<input  id="eq7"  onchange="setEQ(7);"  type="range"  min="-10" max="10" value="0"/>10 dB</td><td><span id="eqCurrent7" >Current: 0</span></td></tr>
+			<tr><td>1.2k Hz</td> <td>-10 dB<input id="eq8"  onchange="setEQ(8);"  type="range"  min="-10" max="10" value="0"/>10 dB</td><td><span id="eqCurrent8" >Current: 0</span></td></tr>
+			<tr><td>1.8k Hz</td> <td>-10 dB<input id="eq9"  onchange="setEQ(9);"  type="range"  min="-10" max="10" value="0"/>10 dB</td><td><span id="eqCurrent9" >Current: 0</span></td></tr>
+			<tr><td>3.5k Hz</td> <td>-10 dB<input id="eq10" onchange="setEQ(10);" type="range" min="-10" max="10" value="0" />10 dB</td><td><span id="eqCurrent10">Current: 0</span></td></tr>
+			<tr><td>5k Hz</td>   <td>-10 dB<input id="eq11" onchange="setEQ(11);" type="range" min="-10" max="10" value="0" />10 dB</td><td><span id="eqCurrent11">Current: 0</span></td></tr>
+			<tr><td>7k Hz</td>   <td>-10 dB<input id="eq12" onchange="setEQ(12);" type="range" min="-10" max="10" value="0" />10 dB</td><td><span id="eqCurrent12">Current: 0</span></td></tr>
+			<tr><td>10k Hz</td>  <td>-10 dB<input id="eq13" onchange="setEQ(13);" type="range" min="-10" max="10" value="0" />10 dB</td><td><span id="eqCurrent13">Current: 0</span></td></tr>
+			<tr><td>14k Hz</td>  <td>-10 dB<input id="eq14" onchange="setEQ(14);" type="range" min="-10" max="10" value="0" />10 dB</td><td><span id="eqCurrent14">Current: 0</span></td></tr>
+			<tr><td>20k Hz</td>  <td>-10 dB<input id="eq15" onchange="setEQ(15);" type="range" min="-10" max="10" value="0" />10 dB</td><td><span id="eqCurrent15">Current: 0</span></td></tr>
+		</table>
+	</form>
 </body>
 </html>
