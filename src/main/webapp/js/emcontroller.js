@@ -1,13 +1,23 @@
 var emApp = angular.module('EvilMusicApp', []);
 
 emApp.controller('EvilMusicController', function($scope, $http) {
-    $scope.angularTestText = 'Hello, World (from angular)!';
+    $scope.addSongAndList = function() {
+        $http.get('addsongandlist')
+            .success(function (data, status, headers, config) {
+                alert(JSON.stringify(data));
+            })
+            .error(function (data, status, headers, config) {
+                alert("Spring JPA test failed.\n\n" + JSON.stringify(data));
+            });
+    }
 
-    $http.get('songinfo')
-        .success(function (data, status, headers, config) {
-            $scope.angularTestText = JSON.stringify(data);
-        })
-        .error(function (data, status, headers, config) {
-            $scope.angularTestText = 'AngularJS error: ' + JSON.stringify(data);
-        });
+    $scope.removeAllSongs = function() {
+        $http.delete('songs')
+            .success(function (data, status, headers, config) {
+                alert('Songs removed!');
+            })
+            .error(function (data, status, headers, config) {
+                alert('Remove all songs failed.\n\n' + JSON.stringify(data));
+            });
+    }
 });

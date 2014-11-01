@@ -105,8 +105,11 @@
 	<h1>Welcome to my JSP</h1>
 	<form action="MyServlet">
 		<div>
+			<input type="button" value="Add Song And List" ng-click="addSongAndList()"/>
+			<input type="button" value="Remove All Songs" ng-click="removeAllSongs()"/>
+		</div>
+		<div>
 			<a href="music">test download file</a>
-			<p>{{angularTestText}}</p>
 		</div>
 		<div>
 			<input type="button" value="play" onclick="playMusic();"/>

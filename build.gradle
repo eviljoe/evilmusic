@@ -13,6 +13,7 @@ apply plugin: 'spring-boot'
 
 sourceCompatibility = '1.7'
 version = '0.0.1.a'
+applicationDefaultJvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"]
 
 /////////////////////////////////
 // Repositories & Dependencies //
@@ -28,9 +29,13 @@ dependencies {
     compile 'org.springframework:spring-webmvc:4.1.1.RELEASE'
     compile 'org.springframework:spring-web:4.1.1.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-web:1.1.8.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa:1.1.8.RELEASE'
+    compile 'org.springframework.boot:spring-boot-autoconfigure:1.1.8.RELEASE'
     compile 'com.sun.jersey:jersey-server:1.18'
     compile 'com.sun.jersey:jersey-core:1.18'
     compile 'com.sun.jersey:jersey-servlet:1.18'
+    compile 'org.apache.derby:derby:10.11.1.1'
+    compile 'org.hibernate:hibernate-entitymanager:4.3.6.Final'
 }
 
 //////////////////////

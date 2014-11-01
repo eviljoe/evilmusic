@@ -4,66 +4,80 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import em.dao.SongInfoDAO;
 import em.model.SongInfo;
 
 @RestController
 public class MusicController {
-	
-	@GET
-	@RequestMapping("/music")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getSong(@Context HttpServletResponse response) {
-		try {
-			final File file = new File("/home/joe/Desktop/song.flac");
-			byte[] buf = new byte[1024];
-	        int length = 0;
-	        ServletOutputStream outStream;
-	        BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-	        
-	        response.setContentLength((int) file.length());
-	        response.setHeader("Content-Disposition", "attachment; filename="
-	                + file.getName());
-	        outStream = response.getOutputStream();
-	        
-	        while (((length = in.read(buf)) != -1)) {
-	            outStream.write(buf, 0, length);
-	        }
-	        
-	        in.close();
-	        outStream.flush();
-	    } catch (IOException e) {
-	    	e.printStackTrace();
-	    }
-		
-	    return Response.ok().build();
-		
-	}
-	
-	@GET
-	@RequestMapping("/songinfo")
-	@Produces(MediaType.APPLICATION_JSON)
-	public SongInfo getSongInfo() {
-		final SongInfo info = new SongInfo();
-		
-		info.setArtist("test artist");
-		info.setAlbum("test album");
-		info.setYear(Calendar.getInstance().get(Calendar.YEAR));
-		info.setSeconds(210);
-		
-		return info;		
-	}
-	
+    
+    @Autowired
+    private SongInfoDAO songInfoDAO;
+    
+    @GET
+    @RequestMapping("/music")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getSong(@Context HttpServletResponse response) {
+        try {
+            final File file = new File("/home/joe/Desktop/song.flac");
+            byte[] buf = new byte[1024];
+            int length = 0;
+            ServletOutputStream outStream;
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+            
+            response.setContentLength((int)file.length());
+            response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+            outStream = response.getOutputStream();
+            
+            while(((length = in.read(buf)) != -1)) {
+                outStream.write(buf, 0, length);
+            }
+            
+            in.close();
+            outStream.flush();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        
+        return Response.ok().build();
+    }
+    
+    @GET
+    @RequestMapping("/addsongandlist")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<SongInfo> addSongAndList() {
+        final SongInfo song = new SongInfo();
+        final Date now = new Date();
+        
+        song.setArtist("test artist, " + now);
+        song.setAlbum("test album, " + now);
+        song.setYear((int)(now.getTime() % 2014L));
+        song.setSeconds((int)(now.getTime() % 360L));
+        
+        return songInfoDAO.addAndList(song);
+    }
+    
+    @DELETE
+    @RequestMapping("/songs")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void removeAllSongs() {
+        songInfoDAO.removeAllSongs();
+    }
 }
