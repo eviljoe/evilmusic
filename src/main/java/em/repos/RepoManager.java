@@ -1,10 +1,15 @@
 package em.repos;
 
+/**
+ * @since v0.1
+ * @author eviljoe
+ */
 public class RepoManager {
     
     private static RepoManager instance;
     
     private volatile SongInfoRepository songInfo;
+    private volatile MusicDirectoryRepository musicDirectory;
     
     /* ************ */
     /* Constructors */
@@ -35,5 +40,13 @@ public class RepoManager {
     
     public void setSongInfo(SongInfoRepository songInfo) {
         this.songInfo = songInfo;
+    }
+    
+    public MusicDirectoryRepository getMusicDirectory() {
+        return musicDirectory;
+    }
+    
+    public void setMusicDirectory(MusicDirectoryRepository musicDirectory) {
+        this.musicDirectory = musicDirectory;
     }
 }

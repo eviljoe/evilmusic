@@ -2,6 +2,10 @@ package em.dao.repo;
 
 import em.repos.RepoManager;
 
+/**
+ * @since v0.1
+ * @author eviljoe
+ */
 public class AbstractRepositoryDAO {
     
     private RepoManager rmgr;

@@ -9,8 +9,6 @@ import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -19,20 +17,24 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import em.dao.SongInfoDAO;
 import em.model.SongInfo;
 
+/**
+ * @since v0.1
+ * @author eviljoe
+ */
 @RestController
 public class MusicController {
     
     @Autowired
     private SongInfoDAO songInfoDAO;
     
-    @GET
-    @RequestMapping("/music")
+    @RequestMapping(value = "/music", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getSong(@Context HttpServletResponse response) {
         try {
@@ -59,8 +61,7 @@ public class MusicController {
         return Response.ok().build();
     }
     
-    @GET
-    @RequestMapping("/addsongandlist")
+    @RequestMapping(value = "/addsongandlist", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public List<SongInfo> addSongAndList() {
         final SongInfo song = new SongInfo();
@@ -74,8 +75,7 @@ public class MusicController {
         return songInfoDAO.addAndList(song);
     }
     
-    @DELETE
-    @RequestMapping("/songs")
+    @RequestMapping(value = "/songs", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     public void removeAllSongs() {
         songInfoDAO.removeAllSongs();

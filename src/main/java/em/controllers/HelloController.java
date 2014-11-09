@@ -1,16 +1,15 @@
 package em.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import javax.ws.rs.GET;
 
 import em.model.Greeting;
 
 @RestController
-public class HelloController {
+public class HelloController { // JOE rt
 
-	@GET
-	@RequestMapping("/greeting")
+    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
     public Greeting greeting() {
         return new Greeting(100, "work");
     }

@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html ng-app="EvilMusicApp">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Evil Music - Library</title>
+    <script type="text/javascript" src="js/angular.js"></script>
+    <script type="text/javascript" src="js/emcontroller.js"></script>
+    <script type="text/javascript" src="js/aurora.js"></script>
+    <script type="text/javascript" src="js/flac.js"></script>
+</head>
+<body ng-controller="EMLibraryController">
+    <h1>Evil Music - Library</h1>
+    <div>
+        <input type="button" value="remove all" ng-click="removeAllSongs()"/>
+        <input type="button" value="rebuild" ng-click="rebuildLibrary()"/>
+    </div>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+        <tr ng-repeat="info in songInfos">
+            <td>{{info.id}}</td>
+            <td>{{info.name}}</td>
+        </tr>
+    </table>
+</body>

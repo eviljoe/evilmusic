@@ -4,5 +4,9 @@ import org.springframework.data.repository.CrudRepository;
 
 import em.model.SongInfo;
 
-public interface SongInfoRepository extends CrudRepository<SongInfo, Long> {
+/**
+ * @since v0.1
+ * @author eviljoe
+ */
+public interface SongInfoRepository extends CrudRepository<SongInfo, Integer> {
 }

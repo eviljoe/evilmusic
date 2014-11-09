@@ -22,16 +22,19 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import em.model.SongInfo;
+import em.repos.MusicDirectoryRepository;
 import em.repos.RepoManager;
 import em.repos.SongInfoRepository;
 
+/**
+ * @since v0.1
+ * @author eviljoe
+ */
 @ComponentScan
 @Configuration
 @EnableJpaRepositories
 @EnableAutoConfiguration
 public class EvilMusicApp {
-    
-    private static volatile ConfigurableApplicationContext context;
     
     /* *********** */
     /* Main Method */
@@ -43,20 +46,7 @@ public class EvilMusicApp {
         configureDerby();
         
         context = SpringApplication.run(EvilMusicApp.class, args);
-        setContext(context);
         configureRepoManager(context);
-    }
-    
-    /* ***************** */
-    /* Getters / Setters */
-    /* ***************** */
-    
-    public static ConfigurableApplicationContext getContext() {
-        return context;
-    }
-    
-    private static void setContext(ConfigurableApplicationContext context) {
-        EvilMusicApp.context = context;
     }
     
     /* *********************** */
@@ -70,6 +60,7 @@ public class EvilMusicApp {
     private static void configureRepoManager(ConfigurableApplicationContext context) {
         final RepoManager rmgr = RepoManager.getInstance();
         
+        rmgr.setMusicDirectory(context.getBean(MusicDirectoryRepository.class));
         rmgr.setSongInfo(context.getBean(SongInfoRepository.class));
     }
     
