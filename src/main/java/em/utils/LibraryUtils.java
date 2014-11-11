@@ -1,11 +1,16 @@
 package em.utils;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import em.model.SongInfo;
 
@@ -107,5 +112,48 @@ public class LibraryUtils {
         }
         
         return f;
+    }
+    
+    public static SongInfo sanitizeForClient(SongInfo info) {
+        if(info != null) {
+            info.setFile(null);
+        }
+        
+        return info;
+    }
+    
+    public static <S extends SongInfo, C extends Collection<S>> C sanitizeForClient(C infos) {
+        if(infos != null) {
+            for(SongInfo info : infos) {
+                sanitizeForClient(info);
+            }
+        }
+        
+        return infos;
+    }
+    
+    public static void streamSongToResponse(HttpServletResponse response, SongInfo info) throws IOException {
+        if(response != null && info != null) {
+            final File file = info.getFile();
+            
+            if(file != null) {
+                final ServletOutputStream outStream = response.getOutputStream();
+                final BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+                final byte[] buf = new byte[1024];
+                int length = 0;
+                
+                try {
+                    response.setContentLength((int)file.length());
+                    response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+                    
+                    while(((length = in.read(buf)) != -1)) {
+                        outStream.write(buf, 0, length);
+                    }
+                } finally {
+                    in.close();
+                    outStream.flush();
+                }
+            }
+        }
     }
 }

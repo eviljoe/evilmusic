@@ -76,7 +76,7 @@ public class MusicController {
     }
     
     @RequestMapping(value = "/songs", method = RequestMethod.DELETE)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
     public void removeAllSongs() {
         songInfoDAO.removeAllSongs();
     }

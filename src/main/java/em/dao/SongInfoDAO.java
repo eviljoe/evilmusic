@@ -2,6 +2,7 @@ package em.dao;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import em.model.SongInfo;
 
@@ -17,5 +18,9 @@ public interface SongInfoDAO {
     
     public void replaceAllSongs(Collection<SongInfo> infos);
     
-    public List<SongInfo> getAll();
+    public List<SongInfo> findAll();
+    
+    public SongInfo findByID(Integer id);
+    
+    public Set<SongInfo> findByID(Collection<Integer> ids);
 }

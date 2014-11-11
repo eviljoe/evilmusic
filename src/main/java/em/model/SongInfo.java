@@ -35,7 +35,12 @@ public class SongInfo implements Identifiable {
     /* ************ */
     
     public SongInfo() {
+        this(null);
+    }
+    
+    public SongInfo(Integer id) {
         super();
+        setID(id);
     }
     
     /* ***************** */
@@ -98,5 +103,19 @@ public class SongInfo implements Identifiable {
     
     public void setFile(File file) {
         this.file = file;
+    }
+    
+    /* ***************** */
+    /* Utility Functions */
+    /* ***************** */
+    
+    public void update(SongInfo other) {
+        other.setID(getID());
+        other.setArtist(getArtist());
+        other.setAlbum(getAlbum());
+        other.setYear(getYear());
+        other.setName(getName());
+        other.setSeconds(getSeconds());
+        other.setFile(getFile());
     }
 }
