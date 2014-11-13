@@ -7,18 +7,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import em.model.SongInfo;
+import em.utils.metadatareaders.MetaDataReadException;
+import em.utils.metadatareaders.MetaDataReader;
 
+/**
+ * @since v0.1
+ * @author eviljoe
+ */
 public class LibraryUtils {
     
     private static final String HOME_DIR_KEYWORD = "$home";
     private static final String HOME_DIR_PROP_NAME = "user.home";
-    private static final String FLAC_EXTENSION = "flac";
     
     private static final Logger LOG = Logger.getLogger(LibraryUtils.class.getName());
     
@@ -79,25 +85,13 @@ public class LibraryUtils {
     private static SongInfo getSongInfoForFile(File f) {
         SongInfo info = null;
         
-        if(isMusicFile(f)) {
-            info = new SongInfo();
-            info.setName(f.getName());
-            info.setFile(f);
+        try {
+            info = MetaDataReader.getMetaDataFor(f);
+        } catch(MetaDataReadException e) {
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         }
         
         return info;
-    }
-    
-    public static boolean isMusicFile(File f) {
-        boolean musicFile = false;
-        
-        if(f != null && !f.isDirectory()) {
-            final String ext = EMUtils.getExtension(f);
-            
-            musicFile = ext == null ? false : FLAC_EXTENSION.equals(ext);
-        }
-        
-        return musicFile;
     }
     
     public static File convertToFile(String dir) {

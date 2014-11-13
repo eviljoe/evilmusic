@@ -3,6 +3,7 @@ package em.utils;
 import java.io.File;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A class containing useful utility functions.
@@ -66,6 +67,55 @@ public class EMUtils {
      */
     public static boolean hasValues(Map<?, ?> m) {
         return m != null && m.size() > 0;
+    }
+    
+    /* ******************** */
+    /* Comparison Functions */
+    /* ******************** */
+    
+    /**
+     * Determines if the two given strings are equal (ignoring case). The following table describes how equality is
+     * determined:
+     * <p>
+     * <table border="1">
+     * <tr>
+     * <th>{@code a = null}</th>
+     * <th>{@code b = null}</th>
+     * <th>Equal</th>
+     * </tr>
+     * <tr>
+     * <td>{@code true}</td>
+     * <td>{@code true}</td>
+     * <td>{@code true}</td>
+     * </tr>
+     * <tr>
+     * <td>{@code true}</td>
+     * <td>{@code false}</td>
+     * <td>{@code false}</td>
+     * </tr>
+     * <tr>
+     * <td>{@code false}</td>
+     * <td>{@code true}</td>
+     * <td>{@code false}</td>
+     * </tr>
+     * <tr>
+     * <td>{@code false}</td>
+     * <td>{@code false}</td>
+     * <td>{@code a.}{@link String#equalsIgnoreCase(String) equalsIgnoreCase}{@code (b)}</td>
+     * </tr>
+     * </table>
+     * <p>
+     * 
+     * @param a The first string
+     * @param b The second string
+     * 
+     * @return Returns {@code true} if the strings are equal (ignoring case). Returns {@code false} otherwise.
+     * 
+     * @see String#equalsIgnoreCase(String)
+     * @see Objects#equals(Object, Object)
+     */
+    public static boolean equalsIgnoreCase(String a, String b) {
+        return (a == b) || (a != null && a.equalsIgnoreCase(b));
     }
     
     /* ********************** */

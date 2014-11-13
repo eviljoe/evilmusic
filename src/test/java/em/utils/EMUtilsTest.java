@@ -99,4 +99,26 @@ public class EMUtilsTest {
         assertEquals("", EMUtils.getExtension("C:hello"));
         assertEquals("world", EMUtils.getExtension("C:hello.world"));
     }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#equalsIgnoreCase(String, String)} function correctly determines when two
+     * strings are equal (ignoring case).
+     */
+    @Test
+    public void testEqualsIgnoreCase() {
+        assertTrue(EMUtils.equalsIgnoreCase(null, null));
+        assertTrue(EMUtils.equalsIgnoreCase("", ""));
+        assertTrue(EMUtils.equalsIgnoreCase("abc", "abc"));
+        assertTrue(EMUtils.equalsIgnoreCase("abc", "ABC"));
+        assertTrue(EMUtils.equalsIgnoreCase("ABC", "abc"));
+        assertTrue(EMUtils.equalsIgnoreCase("ABC", "ABC"));
+        assertTrue(EMUtils.equalsIgnoreCase("AbC", "aBc"));
+        
+        assertFalse(EMUtils.equalsIgnoreCase("", null));
+        assertFalse(EMUtils.equalsIgnoreCase(null, ""));
+        assertFalse(EMUtils.equalsIgnoreCase("", "abc"));
+        assertFalse(EMUtils.equalsIgnoreCase("abc", ""));
+        assertFalse(EMUtils.equalsIgnoreCase("abc", "xyz"));
+        assertFalse(EMUtils.equalsIgnoreCase("xyz", "abc"));
+    }
 }

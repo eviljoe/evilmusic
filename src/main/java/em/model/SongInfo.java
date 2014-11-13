@@ -21,12 +21,16 @@ public class SongInfo implements Identifiable {
     
     private String artist;
     private String album;
-    private String name;
+    private String title;
+    private String genre;
     
     /** "year" is a keyword in Derby, so specify a different column name. */
     @Column(name = "albumYear")
     private int year;
     private int seconds;
+    private int trackNumber;
+    private int sampleRate;
+    private int sampleCount;
     
     private File file;
     
@@ -81,12 +85,20 @@ public class SongInfo implements Identifiable {
         this.year = year;
     }
     
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
     
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
+    public String getGenre() {
+        return genre;
+    }
+    
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
     
     public int getSeconds() {
@@ -95,6 +107,30 @@ public class SongInfo implements Identifiable {
     
     public void setSeconds(int seconds) {
         this.seconds = seconds;
+    }
+    
+    public int getSampleRate() {
+        return sampleRate;
+    }
+    
+    public void setSampleRate(int sampleRate) {
+        this.sampleRate = sampleRate;
+    }
+    
+    public int getSampleCount() {
+        return sampleCount;
+    }
+    
+    public void setSampleCount(int sampleCount) {
+        this.sampleCount = sampleCount;
+    }
+    
+    public int getTrackNumber() {
+        return trackNumber;
+    }
+    
+    public void setTrackNumber(int track) {
+        this.trackNumber = track;
     }
     
     public File getFile() {
@@ -114,7 +150,7 @@ public class SongInfo implements Identifiable {
         other.setArtist(getArtist());
         other.setAlbum(getAlbum());
         other.setYear(getYear());
-        other.setName(getName());
+        other.setTitle(getTitle());
         other.setSeconds(getSeconds());
         other.setFile(getFile());
     }

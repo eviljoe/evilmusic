@@ -1,5 +1,9 @@
 package em.model;
 
+/**
+ * @since v0.1
+ * @author eviljoe
+ */
 public class QueuedSongInfo extends SongInfo {
     
     private int queueIndex;

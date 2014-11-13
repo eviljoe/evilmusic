@@ -20,13 +20,23 @@
         <table>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Queue</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th>Title</th>
+                <th>Length</th>
+                <th>Sample Rate</th>
+                <th>Sample Count</th>
+                <th>Controls</th>
             </tr>
             <tr ng-repeat="info in library">
                 <td>{{info.id}}</td>
-                <td>{{info.name}}</td>
-                <td><input type="button" value="enqueue last" ng-click="enqueueLast(info.id)"/></td>
+                <td>{{info.artist}}</td>
+                <td>{{info.album}}</td>
+                <td>{{info.title}}</td>
+                <td>{{info.seconds}} s</td>
+                <td>{{info.sampleRate}} Hz</td>
+                <td>{{info.sampleCount}}</td>
+                <td><input type="button" value="qL" ng-click="enqueueLast(info.id)"/></td>
             </tr>
         </table>
     </div>
@@ -37,14 +47,14 @@
                 <th>pI</th>
                 <th>qI</th>
                 <th>ID</th>
-                <th>Name</th>
+                <th>Title</th>
                 <th>Controls</th>
             </tr>
             <tr ng-repeat="info in queue">
                 <td>{{info.playIndex}}</td>
                 <td>{{info.queueIndex}}</td>
                 <td>{{info.id}}</td>
-                <td>{{info.name}}</td>
+                <td>{{info.title}}</td>
                 <td>
                     <input type="button" value="play" ng-click="play(info.queueIndex)"/>
                     <input type="button" value="remove" ng-click="removeFromQueue(info.queueIndex)"/>

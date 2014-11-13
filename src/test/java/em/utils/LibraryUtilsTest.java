@@ -1,10 +1,8 @@
 package em.utils;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,22 +18,6 @@ import em.model.SongInfo;
  * @author eviljoe
  */
 public class LibraryUtilsTest {
-    
-    /* ************** */
-    /* Test Functions */
-    /* ************** */
-    
-    /**
-     * Tests to ensure that the {@link LibraryUtils#isMusicFile(File)} will correctly determine if a file is a music
-     * file.
-     */
-    @Test
-    public void testIsMusicFile() {
-        assertFalse(LibraryUtils.isMusicFile(null));
-        assertFalse(LibraryUtils.isMusicFile(new File("")));
-        assertFalse(LibraryUtils.isMusicFile(new File("foo.")));
-        assertTrue(LibraryUtils.isMusicFile(new File("foo.flac")));
-    }
     
     /**
      * Tests to ensure that the {@link LibraryUtils#convertToFile(String)} will correctly convert a music directory

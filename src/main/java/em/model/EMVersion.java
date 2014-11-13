@@ -1,5 +1,9 @@
 package em.model;
 
+/**
+ * @since v0.1
+ * @author eviljoe
+ */
 public enum EMVersion {
     
     /** v0.1 */

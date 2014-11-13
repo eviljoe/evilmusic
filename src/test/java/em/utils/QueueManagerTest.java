@@ -16,6 +16,10 @@ import org.junit.Test;
 
 import em.model.SongInfo;
 
+/**
+ * @since v0.1
+ * @author eviljoe
+ */
 public class QueueManagerTest {
     
     /* *************************** */
