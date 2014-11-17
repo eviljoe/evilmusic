@@ -35,6 +35,7 @@ emApp.controller('EvilMusicController', function($scope, $http) {
 emApp.controller('EMLibraryController', function($scope, $http) {
     $scope.library = null;
     $scope.queue = null;
+    $scope.player = null;
 
     $scope.loadLibrary = function() {
         $scope.library = null;
@@ -111,15 +112,50 @@ emApp.controller('EMLibraryController', function($scope, $http) {
     }
 
     $scope.play = function(queueIndex) {
-        $http.put('/rest/queue/playing/queueindex/' + queueIndex)
-            .success(function (data, status, headers, config) {
-                $scope.loadQueue();
-            })
-            .error(function (data, status, headers, config) {
-                alert('Failed to remove from queue (' + queueIndex + ')\n\n' + JSON.stringify(data));
+        if($scope.player) {
+            $scope.togglePlayback();
+        } else {
+            $scope.player = AV.Player.fromURL('/rest/queue/stream/queueindex/' + queueIndex + '?updatePlayIndex=true');
+
+            $scope.player.on('end', function() {
+                $scope.player = null;
             });
+
+            $scope.player.play();
+            $scope.loadQueue();
+        }
+    }
+
+    $scope.seek = function(millis) {
+        var newMillis = null;
+
+        if($scope.player) {
+            newMillis = $scope.player.seek(millis);
+        }
+
+        return newMillis;
+    }
+
+    $scope.togglePlayback = function() {
+        var toggled = false;
+
+        if($scope.player) {
+            $scope.player.togglePlayback();
+            toggled = true;
+        }
+
+        return toggled;
     }
 
     $scope.loadLibrary();
     $scope.loadQueue();
 });
+
+function insertBeforeDest(context, firstNode) {
+    var eq = new EM.EQ();
+
+    eq.create(context);
+    eq.connectAfter(firstNode);
+
+    return eq.getLastNode();
+}

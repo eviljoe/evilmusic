@@ -1,19 +1,14 @@
 package em.prefs;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
-import em.dao.MusicDirectoryDAO;
 import em.model.EMPreferences;
+import em.utils.LibraryUtils;
 
 /**
  * @since v0.1
@@ -21,12 +16,14 @@ import em.model.EMPreferences;
  */
 public class EMPreferencesManager {
     
-    private static final String DEFAULT_PREFS_FILE_NAME = "em-properties.json";
+    private static final Logger LOG = Logger.getLogger(LibraryUtils.class.getName());
     
-    private static EMPreferencesManager instance;
+    private static final String DEFAULT_PREFS_FILE_NAME = "em.properties";
+    static final String DELIMITER = ";";
     
-    @Autowired
-    private MusicDirectoryDAO musicDirDAO;
+    static EMPreferencesManager instance;
+    
+    private volatile EMPreferences preferences;
     
     /* ************ */
     /* Constructors */
@@ -52,46 +49,83 @@ public class EMPreferencesManager {
     /* Preferences Functions */
     /* ********************* */
     
-    public synchronized EMPreferences loadPreferences() {
-        final ObjectMapper mapper = new ObjectMapper();
-        EMPreferences prefs = null;
+    public synchronized EMPreferences loadPreferences() throws IOException {
+        final Properties props = new Properties();
+        final InputStream in = EMPreferencesManager.class.getClassLoader().getResourceAsStream(DEFAULT_PREFS_FILE_NAME);
         
-        try {
-            prefs =
-                    mapper.readValue(EMPreferencesManager.class.getClassLoader().getResource(DEFAULT_PREFS_FILE_NAME),
-                            EMPreferences.class);
-        } catch(JsonParseException e) {
-            e.printStackTrace();
-        } catch(JsonMappingException e) {
-            e.printStackTrace();
-        } catch(IOException e) {
-            e.printStackTrace();
+        if(in != null) {
+            props.load(in);
         }
         
-        return prefs;
+        return createPreferences(props);
     }
     
-    public synchronized void savePreferences(EMPreferences prefs) {
-        final ObjectMapper mapper = new ObjectMapper();
+    EMPreferences createPreferences(Properties props) {
+        final EMPreferences emPrefs = new EMPreferences();
         
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        
-        if(prefs == null) {
-            prefs = new EMPreferences();
+        if(props != null) {
+            final String[] musicDirs = getStringArray(props, EMPreferencesKey.MUSIC_DIRECTORIES);
+            final String metaflac = props.getProperty(EMPreferencesKey.METAFLAC.toString());
+            
+            emPrefs.setMusicDirectories(musicDirs);
+            emPrefs.setMetaFLACCommand(metaflac);
+            
+            LOG.info("=== Loaded Preferences ===");
+            LOG.info("Music Directories: " + Arrays.toString(musicDirs));
+            LOG.info("MetaFLAC Command: " + metaflac);
+            LOG.info("===== End Preferences ====");
         }
         
-        try {
-            mapper.writeValue(
-                    new FileOutputStream(new File(EMPreferencesManager.class.getClassLoader()
-                            .getResource(DEFAULT_PREFS_FILE_NAME).toURI())), prefs);
-        } catch(JsonParseException e) {
-            e.printStackTrace();
-        } catch(JsonMappingException e) {
-            e.printStackTrace();
-        } catch(IOException e) {
-            e.printStackTrace();
-        } catch(URISyntaxException e) {
-            e.printStackTrace();
+        return emPrefs;
+    }
+    
+    /* ***************** */
+    /* Getters / Setters */
+    /* ***************** */
+    
+    String[] getStringArray(Properties props, EMPreferencesKey key) {
+        String[] array = null;
+        
+        if(props != null && key != null) {
+            final String fullValue = props.getProperty(key.toString());
+            
+            if(fullValue == null || fullValue.length() == 0) {
+                array = null;
+            } else {
+                array = fullValue.split(";");
+            }
+        }
+        
+        return array;
+    }
+    
+    public EMPreferences getPreferences() {
+        if(preferences == null) {
+            try {
+                preferences = loadPreferences();
+            } catch(IOException e) {
+                LOG.log(Level.SEVERE, "Could not load preferences", e);
+                preferences = null;
+            }
+        }
+        return preferences;
+    }
+    
+    /* *********************** */
+    /* EM Preferences Key Enum */
+    /* *********************** */
+    
+    public static enum EMPreferencesKey {
+        MUSIC_DIRECTORIES("em.music_directories"), METAFLAC("em.metaflac");
+        
+        private final String key;
+        
+        private EMPreferencesKey(String key) {
+            this.key = key;
+        }
+        
+        public String toString() {
+            return key;
         }
     }
 }

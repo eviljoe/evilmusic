@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -17,12 +18,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import em.dao.SongInfoDAO;
 import em.model.QueuedSongInfo;
 import em.model.SongInfo;
+import em.utils.EMUtils;
 import em.utils.LibraryUtils;
 import em.utils.LogUtils;
 import em.utils.QueueManager;
@@ -60,7 +63,7 @@ public class QueueController {
     
     @RequestMapping(value = "/rest/queue", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void clear() {
+    public void clearQueue() {
         LogUtils.createRESTCallEntry(LOG, "/rest/queue", RequestMethod.DELETE, "Clearing queue");
         QueueManager.getInstance().clear();
     }
@@ -87,16 +90,19 @@ public class QueueController {
         return LibraryUtils.sanitizeForClient(qmgr.getContents());
     }
     
-    @RequestMapping(value = "/rest/queue/playing/queueindex/{queueIndex}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/rest/queue/stream/queueindex/{queueIndex}", method = {RequestMethod.GET,
+            RequestMethod.HEAD})
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response play(@PathVariable("queueIndex") int queueIndex, @Context HttpServletResponse response)
-            throws IOException {
+    public Response getSongStream(@Context HttpServletRequest request, @Context HttpServletResponse response,
+            @PathVariable("queueIndex") int queueIndex,
+            @RequestParam(value = "updatePlayIndex", required = true) boolean updatePlayIndex) throws IOException {
         
         final QueueManager qmgr;
         final QueuedSongInfo queuedInfo;
+        final String reqMethod = request.getMethod();
         
-        LogUtils.createRESTCallEntry(LOG, "/rest/queue/playing/queueindex/{queueIndex}", RequestMethod.PUT,
-                "Setting currently playing song: " + queueIndex);
+        LogUtils.createRESTCallEntry(LOG, "/rest/queue/stream/queueindex/{queueIndex}", reqMethod,
+                "Streaming song to client: " + queueIndex);
         
         qmgr = QueueManager.getInstance();
         queuedInfo = qmgr.getByQueueIndex(queueIndex);
@@ -106,9 +112,8 @@ public class QueueController {
             
             if(fullInfo != null) {
                 qmgr.setPlayIndex(queueIndex);
+                LibraryUtils.streamSongToResponse(response, fullInfo, EMUtils.equalsIgnoreCase("head", reqMethod));
             }
-            
-            LibraryUtils.streamSongToResponse(response, fullInfo);
         }
         
         return Response.ok().build();

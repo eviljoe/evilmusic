@@ -1,5 +1,6 @@
 package em;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
@@ -22,6 +23,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import em.model.SongInfo;
+import em.prefs.EMPreferencesManager;
 import em.repos.MusicDirectoryRepository;
 import em.repos.RepoManager;
 import em.repos.SongInfoRepository;
@@ -40,9 +42,10 @@ public class EvilMusicApp {
     /* Main Method */
     /* *********** */
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         final ConfigurableApplicationContext context;
         
+        loadEMPreferences();
         configureDerby();
         
         context = SpringApplication.run(EvilMusicApp.class, args);
@@ -85,7 +88,7 @@ public class EvilMusicApp {
         em.setPackagesToScan(new String[] {SongInfo.class.getPackage().getName()});
         
         em.setJpaVendorAdapter(vendorAdapter);
-        em.setJpaProperties(additionalProperties());
+        em.setJpaProperties(additionalJPAProperties());
         
         return em;
     }
@@ -102,7 +105,7 @@ public class EvilMusicApp {
         return new PersistenceExceptionTranslationPostProcessor();
     }
     
-    public Properties additionalProperties() {
+    public Properties additionalJPAProperties() {
         final Properties properties = new Properties();
         
         // Setting this to "create-drop" configure hibernate to drop all created tables when the JVM dies.
@@ -110,5 +113,9 @@ public class EvilMusicApp {
         properties.setProperty("hibernate.dialect", DerbyTenSevenDialect.class.getName());
         
         return properties;
+    }
+    
+    private static void loadEMPreferences() throws IOException {
+        EMPreferencesManager.getInstance().loadPreferences();
     }
 }

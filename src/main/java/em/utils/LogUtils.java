@@ -26,6 +26,10 @@ public class LogUtils {
     /* ***************** */
     
     public static void createRESTCallEntry(Logger log, String url, RequestMethod method, String msg) {
-        log.info(String.format("REST <%s:%s> %s", method.name(), url, msg));
+        log.info(String.format("REST <%s:%s> %s", method == null ? "null" : method.name(), url, msg));
+    }
+    
+    public static void createRESTCallEntry(Logger log, String url, String method, String msg) {
+        log.info(String.format("REST <%s:%s> %s", method, url, msg));
     }
 }

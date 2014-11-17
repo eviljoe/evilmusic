@@ -10,6 +10,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import em.model.SongInfo;
@@ -19,6 +23,30 @@ import em.model.SongInfo;
  * @author eviljoe
  */
 public class FLACMetaDataReaderTest {
+    
+    /* **************************** */
+    /* Set Up / Tear Down Functions */
+    /* **************************** */
+    
+    @BeforeClass
+    public static void setUpClass() {
+        
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+        
+    }
+    
+    @Before
+    public void setUp() {
+        
+    }
+    
+    @After
+    public void tearDown() {
+        
+    }
     
     /* ************** */
     /* Test Functions */
@@ -40,7 +68,6 @@ public class FLACMetaDataReaderTest {
         assertTrue(reader.canReadMetaData(new File("foo.fLAc")));
     }
     
-    // JOE tb
     /**
      * Tests to ensure that the {@link FLACMetaDataReader#parseField(String, String)} function can parse comment lines
      * correctly.
@@ -84,8 +111,6 @@ public class FLACMetaDataReaderTest {
     public void testParseField_null() {
         assertNull(FLACMetaDataReader.parseField(null, "sample_rate"));
     }
-    
-    // JOE eb
     
     /**
      * Tests to ensure that the {@link FLACMetaDataReader#parseComment(String, String)} function can parse comment lines
@@ -131,6 +156,10 @@ public class FLACMetaDataReaderTest {
         assertNull(FLACMetaDataReader.parseComment(null, "artist"));
     }
     
+    /**
+     * Tests to ensure that the {@link FLACMetaDataReader#parseMetaData(InputStream)} function correctly parses metadata
+     * output.
+     */
     @Test
     public void testParseMetaData() throws IOException {
         final int trackNum = 1;
@@ -155,6 +184,43 @@ public class FLACMetaDataReaderTest {
         assertEquals(sampleRate, info.getSampleRate());
         assertEquals(sampleCount, info.getSampleCount());
         assertEquals((int)Math.ceil((double)sampleCount / (double)sampleRate), info.getSeconds());
+    }
+    
+    /**
+     * Tests to ensure the {@link FLACMetaDataReader#getMetaFLACCommand()} will return the default metaflac command when
+     * the global metaflac command preference is {@code null}.
+     */
+    @Test
+    public void testGetMetaFLACCommand_NullPref() {
+        assertEquals(FLACMetaDataReader.DEFAULT_METAFLAC_COMMAND, new FLACMetaDataReader().getMetaFLACCommand(null));
+    }
+    
+    /**
+     * Tests to ensure the {@link FLACMetaDataReader#getMetaFLACCommand()} will return the default metaflac command when
+     * the global metaflac command preference is empty.
+     */
+    @Test
+    public void testGetMetaFLACCommand_EmptyPref() {
+        assertEquals(FLACMetaDataReader.DEFAULT_METAFLAC_COMMAND, new FLACMetaDataReader().getMetaFLACCommand(""));
+    }
+    
+    /**
+     * Tests to ensure the {@link FLACMetaDataReader#getMetaFLACCommand()} will return the default metaflac command when
+     * the global metaflac command preference contains only whitespace.
+     */
+    @Test
+    public void testGetMetaFLACCommand_WhiteSpaceOnlyPref() {
+        assertEquals(FLACMetaDataReader.DEFAULT_METAFLAC_COMMAND, new FLACMetaDataReader().getMetaFLACCommand("  \t "));
+    }
+    
+    /**
+     * Tests to ensure the {@link FLACMetaDataReader#getMetaFLACCommand()} will return the global metaflac command
+     * preference when it is set.
+     */
+    @Test
+    public void testGetMetaFLACCommand_ValidPref() {
+        final String cmd = "/foo/bar ";
+        assertEquals(cmd, new FLACMetaDataReader().getMetaFLACCommand(cmd));
     }
     
     /* ***************** */

@@ -69,7 +69,7 @@ public class LibraryController {
         
         LogUtils.createRESTCallEntry(LOG, "/rest/queue", RequestMethod.POST, "Rebuilding library");
         
-        prefs = EMPreferencesManager.getInstance().loadPreferences();
+        prefs = EMPreferencesManager.getInstance().getPreferences();
         infos = LibraryUtils.scanDirectories(prefs == null ? null : prefs.getMusicDirectories());
         
         songInfoDAO.replaceAllSongs(infos);

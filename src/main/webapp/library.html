@@ -5,6 +5,7 @@
     <title>Evil Music - Library</title>
     <script type="text/javascript" src="js/angular.js"></script>
     <script type="text/javascript" src="js/emcontroller.js"></script>
+    <script type="text/javascript" src="js/emeq.js"></script>
     <script type="text/javascript" src="js/aurora.js"></script>
     <script type="text/javascript" src="js/flac.js"></script>
 </head>
@@ -14,6 +15,8 @@
         <input type="button" value="clear library" ng-click="clearLibrary()"/>
         <input type="button" value="rebuild library" ng-click="rebuildLibrary()"/>
         <input type="button" value="clear queue" ng-click="clearQueue()"/>
+        <input type="button" value="play/pause" ng-click="togglePlayback()"/>
+        <input type="button" value="move 10s" ng-click="moveToTime(10000)"/>
     </div>
     <div style="float:left">
         <div><h2>Library</h2></div>

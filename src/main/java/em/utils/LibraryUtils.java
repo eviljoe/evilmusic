@@ -41,7 +41,7 @@ public class LibraryUtils {
     /* Utility Functions */
     /* ***************** */
     
-    public static List<SongInfo> scanDirectories(Collection<String> dirNames) throws IOException {
+    public static List<SongInfo> scanDirectories(String[] dirNames) throws IOException {
         final ArrayList<SongInfo> musicFiles = new ArrayList<SongInfo>();
         
         if(dirNames != null) {
@@ -126,26 +126,30 @@ public class LibraryUtils {
         return infos;
     }
     
-    public static void streamSongToResponse(HttpServletResponse response, SongInfo info) throws IOException {
+    public static void streamSongToResponse(HttpServletResponse response, SongInfo info, boolean updateHeadersOnly)
+            throws IOException {
+        
         if(response != null && info != null) {
             final File file = info.getFile();
             
             if(file != null) {
-                final ServletOutputStream outStream = response.getOutputStream();
-                final BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-                final byte[] buf = new byte[1024];
-                int length = 0;
+                response.setContentLength((int)file.length());
+                response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
                 
-                try {
-                    response.setContentLength((int)file.length());
-                    response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+                if(!updateHeadersOnly) {
+                    final ServletOutputStream outStream = response.getOutputStream();
+                    final BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+                    final byte[] buf = new byte[1024];
+                    int length = 0;
                     
-                    while(((length = in.read(buf)) != -1)) {
-                        outStream.write(buf, 0, length);
+                    try {
+                        while(((length = in.read(buf)) != -1)) {
+                            outStream.write(buf, 0, length);
+                        }
+                    } finally {
+                        in.close();
+                        outStream.flush();
                     }
-                } finally {
-                    in.close();
-                    outStream.flush();
                 }
             }
         }

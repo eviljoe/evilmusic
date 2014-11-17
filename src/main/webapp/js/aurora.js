@@ -3494,18 +3494,18 @@ WebAudioDevice = (function(_super) {
     }
     this.node = this.context[createProcessor](4096, this.channels, this.channels);
     this.node.onaudioprocess = this.refill;
-    
+
     // JOE tb
     var lastNode = insertBeforeDest(this.context, this.node);
-    
+
     if(lastNode == null) {
-    	this.node.connect(this.context.destination);
+      this.node.connect(this.context.destination);
     } else {
-    	lastNode.connect(this.context.destination);
+      lastNode.connect(this.context.destination);
     }
     // JOE eb
-    
-//    this.node.connect(this.context.destination); // JOE ol
+
+   // this.node.connect(this.context.destination); // JOE ol
   }
 
   WebAudioDevice.prototype.refill = function(event) {

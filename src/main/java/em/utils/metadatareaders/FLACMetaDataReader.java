@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import em.model.SongInfo;
+import em.prefs.EMPreferencesManager;
 import em.utils.EMUtils;
 
 /**
@@ -17,6 +18,7 @@ import em.utils.EMUtils;
 public class FLACMetaDataReader extends MetaDataReader {
     
     private static final String FLAC_FILE_EXT = "flac";
+    static final String DEFAULT_METAFLAC_COMMAND = "metaflac";
     
     /* ************ */
     /* Constructors */
@@ -43,6 +45,10 @@ public class FLACMetaDataReader extends MetaDataReader {
         
         try {
             info = executeMetaDataCommand(f);
+            
+            if(info != null) {
+                info.setFile(f);
+            }
         } catch(IOException | InterruptedException e) {
             throw new MetaDataReadException(e);
         }
@@ -51,7 +57,8 @@ public class FLACMetaDataReader extends MetaDataReader {
     }
     
     private SongInfo executeMetaDataCommand(File f) throws IOException, InterruptedException {
-        final ProcessBuilder pb = new ProcessBuilder(new String[] {"metaflac", "--list", f.getAbsolutePath()});
+        final ProcessBuilder pb =
+                new ProcessBuilder(new String[] {getMetaFLACCommand(), "--list", f.getAbsolutePath()});
         final Process p = pb.start();
         final InputStream stdOut = p.getInputStream();
         final InputStream stdErr = p.getErrorStream();
@@ -157,9 +164,25 @@ public class FLACMetaDataReader extends MetaDataReader {
         return value;
     }
     
-    /* ************** */
-    /* Stream Gobbler */
-    /* ************** */
+    String getMetaFLACCommand() {
+        return getMetaFLACCommand(EMPreferencesManager.getInstance().getPreferences().getMetaFLACCommand());
+    }
+    
+    String getMetaFLACCommand(String overrideCmd) {
+        final String cmd;
+        
+        if(overrideCmd == null || overrideCmd.trim().length() == 0) {
+            cmd = DEFAULT_METAFLAC_COMMAND;
+        } else {
+            cmd = overrideCmd;
+        }
+        
+        return cmd;
+    }
+    
+    /* *************** */
+    /* Stream Gobblers */
+    /* *************** */
     
     private static class SongInfoStreamGobbler extends Thread {
         

@@ -1,14 +1,13 @@
 package em.model;
 
-import java.util.List;
-
 /**
  * @since v0.1
  * @author eviljoe
  */
 public class EMPreferences {
     
-    private List<String> musicDirectories;
+    private String[] musicDirectories;
+    private String metaFLACCommand;
     
     /* ************ */
     /* Constructors */
@@ -22,11 +21,19 @@ public class EMPreferences {
     /* Getters / Setters */
     /* ***************** */
     
-    public List<String> getMusicDirectories() {
+    public String[] getMusicDirectories() {
         return musicDirectories;
     }
     
-    public void setMusicDirectories(List<String> musicDirectories) {
+    public void setMusicDirectories(String[] musicDirectories) {
         this.musicDirectories = musicDirectories;
+    }
+    
+    public String getMetaFLACCommand() {
+        return metaFLACCommand;
+    }
+    
+    public void setMetaFLACCommand(String metaflacCommand) {
+        this.metaFLACCommand = metaflacCommand;
     }
 }
