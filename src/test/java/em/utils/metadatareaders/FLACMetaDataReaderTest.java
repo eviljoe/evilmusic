@@ -10,10 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import em.model.SongInfo;
@@ -23,30 +19,6 @@ import em.model.SongInfo;
  * @author eviljoe
  */
 public class FLACMetaDataReaderTest {
-    
-    /* **************************** */
-    /* Set Up / Tear Down Functions */
-    /* **************************** */
-    
-    @BeforeClass
-    public static void setUpClass() {
-        
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-        
-    }
-    
-    @Before
-    public void setUp() {
-        
-    }
-    
-    @After
-    public void tearDown() {
-        
-    }
     
     /* ************** */
     /* Test Functions */

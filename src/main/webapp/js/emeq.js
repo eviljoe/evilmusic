@@ -1,54 +1,55 @@
 var EM = {};
 
-EM.EQ = (function() {
-    var nodes;
+EM.EQ = function() {
+    this.nodes = [];
+};
 
-    function EQ() {
-        nodes = [];
-    }
+EM.EQ.prototype.create = function(context) {
+    var prevNode = null;
+    var freqs = [55, 77, 110, 156, 311, 440, 622, 880, 1200, 1800, 3500, 5000, 7000, 10000, 14000, 20000];
 
-    EQ.prototype.create = function(context) {
-        var prevNode = firstNode;
-        var eqNodeCount = 0;
+    for(var x = 0; x < freqs.length; x++) {
+        var eqNode = this.createEQNode(context, freqs[x], 2.5);
 
-        for(var x = 0; x < eqNodeCount; x++) {
-            var eqNode = createEQNode(context, freqs[x], 2.5);
-
-            if(prevNode) {
-                prevNode.connect(eqNode);
-            }
-
-            nodes.push(eqNode);
-            prevNode = eqNode;
+        if(prevNode) {
+            prevNode.connect(eqNode);
         }
 
-        return prevNode;
+        this.nodes.push(eqNode);
+        prevNode = eqNode;
     }
 
-    EQ.prototype.connectAfter = function(lastNode) {
-        var connected = false;
+    return prevNode;
+};
 
-        if(nodes.length > 0) {
-            lastNode.connect(nodes[0]);
-            connected = true;
-        }
+EM.EQ.prototype.connectAfter = function(lastNode) {
+    var connected = false;
 
-        return connected;
+    if(this.nodes.length > 0) {
+        lastNode.connect(this.nodes[0]);
+        connected = true;
     }
 
-    EQ.prototype.getLastNode = function() {
-        return nodes.length > 0 ? nodes[nodes.length - 1] : null;
-    }
+    return connected;
+};
 
-    EQ.prototype.createEQNode = function(context, freq, q) {
-        var node = context.createBiquadFilter();
+EM.EQ.prototype.getLastNode = function() {
+    return this.nodes && this.nodes.length > 0 ? this.nodes[this.nodes.length - 1] : null;
+};
 
-        node.type = node.PEAKING;
-        node.frequency.value = freq;
-        node.Q.value = q;
+EM.EQ.prototype.createEQNode = function(context, freq, q) {
+    var node = context.createBiquadFilter();
 
-        return node;
-    }
+    node.type = 'peaking';
+    node.frequency.value = freq;
+    node.Q.value = q;
 
-    return EQ();
-});
+    return node;
+};
+
+EM.EQNode = function() {
+    this.frequency = null;
+    this.q = null;
+    this.gain = 0;
+    this.nodes = [];
+};

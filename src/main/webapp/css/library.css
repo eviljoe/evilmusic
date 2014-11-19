@@ -1,0 +1,30 @@
+/* ************ */
+/* Basic Styles */
+/* ************ */
+
+.centered { text-align: center; }
+
+.float-left { float: left; }
+.float-right { float: right; }
+.clear-both { clear: both; }
+
+.width-45 { width: 45px; }
+
+/* *************** */
+/* Specific Styles */
+/* *************** */
+
+.eq-node-slider-div {
+    float: left;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+}
+
+.eq-node-slider {
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 8px;
+    height: 200px;
+    text-align: center;
+}

@@ -33,9 +33,11 @@ emApp.controller('EvilMusicController', function($scope, $http) {
 });
 
 emApp.controller('EMLibraryController', function($scope, $http) {
-    $scope.library = null;
-    $scope.queue = null;
+    $scope.library = [];
+    $scope.queue = [];
     $scope.player = null;
+    $scope.testOutput = null;
+    $scope.nodes = [];
 
     $scope.loadLibrary = function() {
         $scope.library = null;
@@ -116,6 +118,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
             $scope.togglePlayback();
         } else {
             $scope.player = AV.Player.fromURL('/rest/queue/stream/queueindex/' + queueIndex + '?updatePlayIndex=true');
+            $scope.player.nodeCreationCallback = $scope.createEQNodes;
 
             $scope.player.on('end', function() {
                 $scope.player = null;
@@ -124,6 +127,8 @@ emApp.controller('EMLibraryController', function($scope, $http) {
             $scope.player.play();
             $scope.loadQueue();
         }
+
+        $scope.testOutput = JSON.stringify($scope.player.Player, undefined, 2);
     }
 
     $scope.seek = function(millis) {
@@ -147,15 +152,80 @@ emApp.controller('EMLibraryController', function($scope, $http) {
         return toggled;
     }
 
+    $scope.createEMEQNodes = function() {
+        var prevNode = null;
+        var freqs = [55, 77, 110, 156, 311, 440, 622, 880, 1200, 1800, 3500, 5000, 7000, 10000, 14000, 20000];
+
+        for(var x = 0; x < freqs.length; x++) {
+            var eqNode = this.createEMEQNode(freqs[x], 2.5);
+            $scope.nodes.push(eqNode);
+        }
+
+        return $scope.nodes;
+    };
+
+    $scope.createEMEQNode = function(freq, q) {
+        var node = new EM.EQNode();
+
+        node.frequency = freq;
+        node.q = q;
+
+        return node;
+    };
+
+    $scope.createEQNodes = function(context) {
+        var prevEQNode = null;
+        var eqNodes = [];
+
+        for(var x = 0; x < $scope.nodes.length; x++) {
+            var emNode = $scope.nodes[x];
+            var eqNode = $scope.createEQNode(context, emNode);
+
+            emNode.nodes.push(eqNode);
+            eqNodes.push(eqNode);
+            prevNode = eqNode;
+        }
+
+        return eqNodes;
+    };
+
+    $scope.createEQNode = function(context, emNode) {
+        var node = context.createBiquadFilter();
+
+        node.type = 'peaking';
+        node.frequency.value = emNode.frequency;
+        node.Q.value = emNode.q;
+        node.gain.value = emNode.gain;
+
+        return node;
+    };
+
+    $scope.hertzToString = function(hertz) {
+        var str = null;
+
+        if(hertz) {
+            if(hertz < 1000) {
+                str = hertz + " Hz";
+            } else if(hertz < 100000) {
+                str = hertz / 1000 + " kHz"
+            } else {
+                str = hertz + " Hz";
+            }
+        }
+
+        return str;
+    };
+
+    $scope.updateNodeGain = function(emNode) {
+        emNode.gain = parseInt(emNode.gain);
+
+        for(var x = 0; x < emNode.nodes.length; x++) {
+            var eqNode = emNode.nodes[x];
+            eqNode.gain.value = emNode.gain;
+        }
+    };
+
     $scope.loadLibrary();
     $scope.loadQueue();
+    $scope.createEMEQNodes();
 });
-
-function insertBeforeDest(context, firstNode) {
-    var eq = new EM.EQ();
-
-    eq.create(context);
-    eq.connectAfter(firstNode);
-
-    return eq.getLastNode();
-}

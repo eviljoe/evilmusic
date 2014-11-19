@@ -1651,6 +1651,8 @@ AV.Player = (function(_super) {
     this.pan = 0;
     this.metadata = {};
     this.filters = [new AV.VolumeFilter(this, 'volume'), new AV.BalanceFilter(this, 'pan')];
+    this.nodes = [];
+    this.nodeCreationCallback;
     this.asset.on('buffer', (function(_this) {
       return function(buffered) {
         _this.buffered = buffered;
@@ -1819,6 +1821,11 @@ AV.Player = (function(_super) {
     this.device.on('refill', this.refill);
     if (this.playing) {
       this.device.start();
+
+      if(this.nodeCreationCallback && this.device.device.connectBeforeDestination) {
+        this.nodes = this.nodeCreationCallback(this.device.device.context);
+        this.device.device.connectBeforeDestination(this.nodes);
+      }
     }
     return this.emit('ready');
   };
@@ -3496,16 +3503,36 @@ WebAudioDevice = (function(_super) {
     this.node.onaudioprocess = this.refill;
 
     // JOE tb
-    var lastNode = insertBeforeDest(this.context, this.node);
+    // var lastNode = insertBeforeDest(this.context, this.node);
 
-    if(lastNode == null) {
-      this.node.connect(this.context.destination);
-    } else {
-      lastNode.connect(this.context.destination);
-    }
+    // if(lastNode) {
+    //   lastNode.connect(this.context.destination);
+    // } else {
+    //   this.node.connect(this.context.destination);
+    // }
     // JOE eb
 
-   // this.node.connect(this.context.destination); // JOE ol
+    // this.node.connect(this.context.destination); // JOE ol
+  }
+
+  WebAudioDevice.prototype.connectBeforeDestination = function(nodes) {
+    this.node.disconnect();
+
+    if(nodes && nodes.length > 0) {
+      var prevNode = this.node;
+
+      for(var x = 0; x < nodes.length; x++) {
+        var n = nodes[x];
+
+        prevNode.connect(n);
+        prevNode = n;
+      }
+
+      prevNode.connect(this.context.destination);
+
+    } else {
+      this.node.connect(this.context.destination);
+    }
   }
 
   WebAudioDevice.prototype.refill = function(event) {
