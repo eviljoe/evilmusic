@@ -3,6 +3,7 @@ package em.utils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import em.model.QueueElement;
 import em.model.SongInfo;
 import em.utils.metadatareaders.MetaDataReadException;
 import em.utils.metadatareaders.MetaDataReader;
@@ -116,7 +118,15 @@ public class LibraryUtils {
         return info;
     }
     
-    public static <S extends SongInfo, C extends Collection<S>> C sanitizeForClient(C infos) {
+    public static QueueElement sanitizeForClient(QueueElement element) {
+        if(element != null) {
+            sanitizeForClient(element.getSong());
+        }
+        
+        return element;
+    }
+    
+    public static <S extends SongInfo, C extends Collection<S>> C sanitizeSongsForClient(C infos) {
         if(infos != null) {
             for(SongInfo info : infos) {
                 sanitizeForClient(info);
@@ -126,30 +136,46 @@ public class LibraryUtils {
         return infos;
     }
     
+    public static <S extends QueueElement, C extends Collection<S>> C sanitizeElementsForClient(C elements) {
+        if(elements != null) {
+            for(QueueElement element : elements) {
+                sanitizeForClient(element);
+            }
+        }
+        
+        return elements;
+    }
+    
     public static void streamSongToResponse(HttpServletResponse response, SongInfo info, boolean updateHeadersOnly)
-            throws IOException {
+            throws IOException, NullPointerException, FileNotFoundException, SecurityException {
         
         if(response != null && info != null) {
             final File file = info.getFile();
             
-            if(file != null) {
-                response.setContentLength((int)file.length());
-                response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+            if(file == null) {
+                throw new NullPointerException("Cannot stream from a null file");
+            } else if(!file.exists()) {
+                throw new FileNotFoundException("File does not exist: " + file);
+            } else if(!file.canRead()) {
+                throw new SecurityException("Cannot read file: " + file);
+            }
+            
+            response.setContentLength((int)file.length());
+            response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+            
+            if(!updateHeadersOnly) {
+                final ServletOutputStream outStream = response.getOutputStream();
+                final BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+                final byte[] buf = new byte[1024];
+                int length = 0;
                 
-                if(!updateHeadersOnly) {
-                    final ServletOutputStream outStream = response.getOutputStream();
-                    final BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-                    final byte[] buf = new byte[1024];
-                    int length = 0;
-                    
-                    try {
-                        while(((length = in.read(buf)) != -1)) {
-                            outStream.write(buf, 0, length);
-                        }
-                    } finally {
-                        in.close();
-                        outStream.flush();
+                try {
+                    while(((length = in.read(buf)) != -1)) {
+                        outStream.write(buf, 0, length);
                     }
+                } finally {
+                    in.close();
+                    outStream.flush();
                 }
             }
         }

@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -36,6 +37,7 @@ public class MusicController {
     
     @RequestMapping(value = "/music", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Transactional
     public Response getSong(@Context HttpServletResponse response) {
         try {
             final File file = new File("/home/joe/Desktop/song.flac");
@@ -63,6 +65,7 @@ public class MusicController {
     
     @RequestMapping(value = "/addsongandlist", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public List<SongInfo> addSongAndList() {
         final SongInfo song = new SongInfo();
         final Date now = new Date();
@@ -77,6 +80,7 @@ public class MusicController {
     
     @RequestMapping(value = "/songs", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     public void removeAllSongs() {
         songInfoDAO.removeAllSongs();
     }

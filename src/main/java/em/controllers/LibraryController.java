@@ -1,9 +1,11 @@
 package em.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.transaction.Transactional;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -14,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import em.dao.QueueDAO;
 import em.dao.SongInfoDAO;
 import em.model.EMPreferences;
 import em.model.SongInfo;
 import em.prefs.EMPreferencesManager;
 import em.utils.LibraryUtils;
 import em.utils.LogUtils;
-import em.utils.QueueManager;
 
 /**
  * @since v0.1
@@ -34,6 +36,9 @@ public class LibraryController {
     @Autowired
     private SongInfoDAO songInfoDAO;
     
+    @Autowired
+    private QueueDAO queueDAO;
+    
     /* ************ */
     /* Constructors */
     /* ************ */
@@ -46,21 +51,34 @@ public class LibraryController {
     /* REST Functions */
     /* ************** */
     
+    @Transactional
     @RequestMapping(value = "/rest/library", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public List<SongInfo> getLibrary() {
+        final List<SongInfo> songs;
+        final List<SongInfo> clones = new ArrayList<>();
+        
         LogUtils.createRESTCallEntry(LOG, "/rest/library", RequestMethod.GET, "Requesting library");
-        return LibraryUtils.sanitizeForClient(songInfoDAO.findAll());
+        songs = songInfoDAO.findAll();
+        
+        for(SongInfo song : songs) {
+            clones.add(song.clone());
+        }
+        
+        return LibraryUtils.sanitizeSongsForClient(clones);
     }
     
+    @Transactional
     @RequestMapping(value = "/rest/library", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void clear() {
         LogUtils.createRESTCallEntry(LOG, "/rest/library", RequestMethod.DELETE, "Clearing library");
+        
         songInfoDAO.removeAllSongs();
-        QueueManager.getInstance().clear();
+        queueDAO.removeAll();
     }
     
+    @Transactional
     @RequestMapping(value = "/rest/library", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void rebuildLibrary() throws IOException {
@@ -73,6 +91,6 @@ public class LibraryController {
         infos = LibraryUtils.scanDirectories(prefs == null ? null : prefs.getMusicDirectories());
         
         songInfoDAO.replaceAllSongs(infos);
-        QueueManager.getInstance().clear();
+        queueDAO.removeAll();
     }
 }

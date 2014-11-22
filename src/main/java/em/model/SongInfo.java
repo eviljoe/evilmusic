@@ -13,7 +13,7 @@ import javax.persistence.Id;
  * @author eviljoe
  */
 @Entity
-public class SongInfo implements Identifiable {
+public class SongInfo implements Identifiable, Cloneable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -141,17 +141,30 @@ public class SongInfo implements Identifiable {
         this.file = file;
     }
     
-    /* ***************** */
-    /* Utility Functions */
-    /* ***************** */
+    @Override
+    public SongInfo clone() {
+        SongInfo clone;
+        
+        try {
+            clone = (SongInfo)super.clone();
+        } catch(CloneNotSupportedException e) {
+            clone = null;
+        }
+        
+        if(clone != null) {
+            update(clone);
+        }
+        
+        return clone;
+    }
     
     public void update(SongInfo other) {
-        other.setID(getID());
-        other.setArtist(getArtist());
-        other.setAlbum(getAlbum());
-        other.setYear(getYear());
-        other.setTitle(getTitle());
-        other.setSeconds(getSeconds());
-        other.setFile(getFile());
+        other.id = id;
+        other.artist = artist;
+        other.album = album;
+        other.year = year;
+        other.title = title;
+        other.seconds = seconds;
+        other.file = file;
     }
 }

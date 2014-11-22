@@ -2,6 +2,7 @@ package em.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -120,5 +123,42 @@ public class EMUtilsTest {
         assertFalse(EMUtils.equalsIgnoreCase("abc", ""));
         assertFalse(EMUtils.equalsIgnoreCase("abc", "xyz"));
         assertFalse(EMUtils.equalsIgnoreCase("xyz", "abc"));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toList(Collection)} will return a list containing a given collection's
+     * elements.
+     */
+    @Test
+    public void testToList() {
+        final HashSet<Integer> set = new HashSet<Integer>();
+        final List<Integer> list;
+        
+        set.add(2);
+        set.add(1);
+        set.add(null);
+        
+        list = EMUtils.toList(set);
+        assertEquals(null, list.get(0));
+        assertEquals(new Integer(1), list.get(1));
+        assertEquals(new Integer(2), list.get(2));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toList(Collection)} will return an empty list when given an empty
+     * collection.
+     */
+    @Test
+    public void testToList_Empty() {
+        assertEquals(0, EMUtils.toList(new HashSet<Integer>()).size());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toList(Collection)} will return {@code null} when given a {@code null}
+     * collection.
+     */
+    @Test
+    public void testToList_Null() {
+        assertNull(EMUtils.toList(null));
     }
 }

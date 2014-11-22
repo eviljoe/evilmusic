@@ -3,9 +3,6 @@ package em.dao.repo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-
-import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -13,7 +10,6 @@ import em.dao.SongInfoDAO;
 import em.model.SongInfo;
 import em.repos.SongInfoRepository;
 import em.utils.EMUtils;
-import em.utils.IDSet;
 
 /**
  * @since v0.1
@@ -37,7 +33,6 @@ public class RepositorySongInfoDAO extends AbstractRepositoryDAO implements Song
     /* ************* */
     
     @Override
-    @Transactional
     public List<SongInfo> addAndList(SongInfo newSong) {
         final SongInfoRepository repo = getSongInfoRepo();
         final ArrayList<SongInfo> songs = new ArrayList<SongInfo>();
@@ -52,13 +47,11 @@ public class RepositorySongInfoDAO extends AbstractRepositoryDAO implements Song
     }
     
     @Override
-    @Transactional
     public void removeAllSongs() {
         getSongInfoRepo().deleteAll();
     }
     
     @Override
-    @Transactional
     public void replaceAllSongs(Collection<SongInfo> infos) {
         final SongInfoRepository repo = getSongInfoRepo();
         
@@ -70,7 +63,6 @@ public class RepositorySongInfoDAO extends AbstractRepositoryDAO implements Song
     }
     
     @Override
-    @Transactional
     public List<SongInfo> findAll() {
         final SongInfoRepository repo = getSongInfoRepo();
         final ArrayList<SongInfo> infos = new ArrayList<SongInfo>();
@@ -83,17 +75,15 @@ public class RepositorySongInfoDAO extends AbstractRepositoryDAO implements Song
     }
     
     @Override
-    @Transactional
     public SongInfo findByID(Integer id) {
         final SongInfoRepository repo = getSongInfoRepo();
         return repo.findOne(id);
     }
     
     @Override
-    @Transactional
-    public Set<SongInfo> findByID(Collection<Integer> ids) {
+    public List<SongInfo> findByID(Collection<Integer> ids) {
         final SongInfoRepository repo = getSongInfoRepo();
-        final IDSet<SongInfo> infos = new IDSet<>();
+        final List<SongInfo> infos = new ArrayList<>();
         
         for(SongInfo info : repo.findAll(ids)) {
             infos.add(info);

@@ -84,7 +84,7 @@ public class IDSet<I extends Identifiable> extends AbstractSet<I> {
      * 
      * @see #add(Identifiable)
      */
-    public boolean addAll(Iterator<I> it) { // JOE ju
+    public boolean addAll(Iterator<I> it) {
         boolean changed = false;
         
         if(it != null) {

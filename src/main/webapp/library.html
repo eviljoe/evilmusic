@@ -54,16 +54,16 @@
                 <th>Sample Count</th>
                 <th>Controls</th>
             </tr>
-            <tr ng-repeat="info in library | orderBy : ['artist','trackNumber']">
-                <td>{{info.id}}</td>
-                <td>{{info.artist}}</td>
-                <td>{{info.album}}</td>
-                <td align="right">{{info.trackNumber}}</td>
-                <td>{{info.title}}</td>
-                <td>{{info.seconds}} s</td>
-                <td>{{info.sampleRate}} Hz</td>
-                <td>{{info.sampleCount}}</td>
-                <td><input type="button" value="qL" ng-click="enqueueLast(info.id)"/></td>
+            <tr ng-repeat="song in library | orderBy : ['artist','trackNumber']">
+                <td>{{song.id}}</td>
+                <td>{{song.artist}}</td>
+                <td>{{song.album}}</td>
+                <td align="right">{{song.trackNumber}}</td>
+                <td>{{song.title}}</td>
+                <td>{{song.seconds}} s</td>
+                <td>{{song.sampleRate}} Hz</td>
+                <td>{{song.sampleCount}}</td>
+                <td><input type="button" value="qL" ng-click="enqueueLast(song.id)"/></td>
             </tr>
         </table>
     </div>
@@ -77,14 +77,14 @@
                 <th>Title</th>
                 <th>Controls</th>
             </tr>
-            <tr ng-repeat="info in queue">
-                <td>{{info.playIndex}}</td>
-                <td>{{info.queueIndex}}</td>
-                <td>{{info.id}}</td>
-                <td>{{info.title}}</td>
+            <tr ng-repeat="elem in queue.elements">
+                <td>{{elem.playIndex}}</td>
+                <td>{{elem.queueIndex}}</td>
+                <td>{{elem.song.id}}</td>
+                <td>{{elem.song.title}}</td>
                 <td>
-                    <input type="button" value="play" ng-click="play(info.queueIndex)"/>
-                    <input type="button" value="remove" ng-click="removeFromQueue(info.queueIndex)"/>
+                    <input type="button" value="play" ng-click="play(elem.queueIndex)"/>
+                    <input type="button" value="remove" ng-click="removeFromQueue(elem.queueIndex)"/>
                 </td>
             </tr>
         </table>

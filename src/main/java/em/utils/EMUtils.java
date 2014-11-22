@@ -1,7 +1,9 @@
 package em.utils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -67,6 +69,28 @@ public class EMUtils {
      */
     public static boolean hasValues(Map<?, ?> m) {
         return m != null && m.size() > 0;
+    }
+    
+    /**
+     * Converts the given collection to a list. The elements in the returned list will be ordered according to the order
+     * of elements returned by the given collection's iterator.
+     * 
+     * @param c The collection to be converted to a list. If {@code null}, {@code null} will be returned.
+     * 
+     * @return Returns a list containing the given collection's elements. If the given collection is {@code null},
+     *         {@code null} will be returned.
+     */
+    public static <E> List<E> toList(Collection<E> c) {
+        final List<E> l;
+        
+        if(c == null) {
+            l = null;
+        } else {
+            l = new ArrayList<E>(c.size());
+            l.addAll(c);
+        }
+        
+        return l;
     }
     
     /* ******************** */

@@ -10,6 +10,7 @@ public class RepoManager {
     
     private volatile SongInfoRepository songInfo;
     private volatile MusicDirectoryRepository musicDirectory;
+    private volatile QueueRepository queue;
     
     /* ************ */
     /* Constructors */
@@ -48,5 +49,13 @@ public class RepoManager {
     
     public void setMusicDirectory(MusicDirectoryRepository musicDirectory) {
         this.musicDirectory = musicDirectory;
+    }
+
+    public QueueRepository getQueue() {
+        return queue;
+    }
+
+    public void setQueue(QueueRepository queue) {
+        this.queue = queue;
     }
 }
