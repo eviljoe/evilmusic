@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A class containing useful utility functions.
@@ -93,6 +94,19 @@ public class EMUtils {
         return l;
     }
     
+    public static <E, S extends Set<E>> S toSet(Collection<E> c, S s) {
+        final S rset;
+        
+        if(c == null) {
+            rset = null;
+        } else {
+            rset = s;
+            rset.addAll(c);
+        }
+        
+        return rset;
+    }
+    
     /* ******************** */
     /* Comparison Functions */
     /* ******************** */
@@ -140,6 +154,59 @@ public class EMUtils {
      */
     public static boolean equalsIgnoreCase(String a, String b) {
         return (a == b) || (a != null && a.equalsIgnoreCase(b));
+    }
+    
+    public static <B> int compare(Comparable<B> a, B b) {
+        return compare(a, b, null);
+    }
+    
+    public static <B> int compare(Comparable<B> a, B b, NullComparator.Order order) {
+        final boolean nullA;
+        final boolean nullB;
+        final int compare;
+        boolean reverse;
+        boolean nullsLast;
+        
+        if(order == null) {
+            order = NullComparator.Order.ASC_NULLS_LAST;
+            reverse = false;
+        }
+        
+        switch(order) {
+            case ASC_NULLS_FIRST:
+                nullsLast = false;
+                reverse = false;
+                break;
+            case ASC_NULLS_LAST:
+                nullsLast = true;
+                reverse = false;
+                break;
+            case DESC_NULLS_FIRST:
+                nullsLast = false;
+                reverse = true;
+                break;
+            case DESC_NULLS_LAST:
+                nullsLast = true;
+                reverse = true;
+                break;
+            default:
+                throw new UnknownSortOrderException("Unknown sort order: " + order);
+        }
+        
+        nullA = a == null;
+        nullB = b == null;
+        
+        if(nullA && nullB) {
+            compare = 0;
+        } else if(!nullA && nullB) {
+            compare = nullsLast ? -1 : 1;
+        } else if(nullA && !nullB) {
+            compare = nullsLast ? 1 : -1;
+        } else {
+            compare = reverse ? -(a.compareTo(b)) : a.compareTo(b);
+        }
+        
+        return compare;
     }
     
     /* ********************** */

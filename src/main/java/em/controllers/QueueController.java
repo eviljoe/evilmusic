@@ -65,7 +65,7 @@ public class QueueController {
         final Set<Queue> allQueues;
         final Queue queue;
         
-        LogUtils.createRESTCallEntry(LOG, "/rest/queue", RequestMethod.GET, "Requesting queue, maybe create");
+        LogUtils.createRESTCallEntry(LOG, "/rest/queue/current", RequestMethod.GET, "Requesting queue, maybe create");
         
         allQueues = queueDAO.findAll();
         

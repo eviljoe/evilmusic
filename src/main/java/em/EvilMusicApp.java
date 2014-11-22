@@ -24,7 +24,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import em.model.SongInfo;
 import em.prefs.EMPreferencesManager;
-import em.repos.MusicDirectoryRepository;
+import em.repos.EqualizerRepository;
 import em.repos.QueueRepository;
 import em.repos.RepoManager;
 import em.repos.SongInfoRepository;
@@ -64,9 +64,9 @@ public class EvilMusicApp {
     private static void configureRepoManager(ConfigurableApplicationContext context) {
         final RepoManager rmgr = RepoManager.getInstance();
         
-        rmgr.setMusicDirectory(context.getBean(MusicDirectoryRepository.class));
         rmgr.setSongInfo(context.getBean(SongInfoRepository.class));
         rmgr.setQueue(context.getBean(QueueRepository.class));
+        rmgr.setEqualizer(context.getBean(EqualizerRepository.class));
     }
     
     @Bean

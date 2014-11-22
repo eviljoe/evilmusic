@@ -161,4 +161,78 @@ public class EMUtilsTest {
     public void testToList_Null() {
         assertNull(EMUtils.toList(null));
     }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#compare(Comparable, Object)} function can correctly compare two non-
+     * {@code null} values.
+     */
+    @Test
+    public void testCompare_NoNull() {
+        final Integer less = new Integer(7);
+        final Integer greater = new Integer(11);
+        
+        assertTrue(EMUtils.compare(less, greater) < 0);
+        assertTrue(EMUtils.compare(greater, less) > 0);
+        assertTrue(EMUtils.compare(less, less) == 0);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#compare(Comparable, Object, NullComparator.Order)} will consider a
+     * {@code null} value to be less than a non-{@code null} value when using the order
+     * {@link NullComparator.Order#ASC_NULLS_FIRST}.
+     */
+    @Test
+    public void testCompare_AscNullsFirst() {
+        final Integer less = null;
+        final Integer greater = new Integer(11);
+        
+        assertTrue(EMUtils.compare(less, greater, NullComparator.Order.ASC_NULLS_FIRST) < 0);
+        assertTrue(EMUtils.compare(greater, less, NullComparator.Order.ASC_NULLS_FIRST) > 0);
+        assertTrue(EMUtils.compare(null, null, NullComparator.Order.ASC_NULLS_FIRST) == 0);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#compare(Comparable, Object, NullComparator.Order)} will consider a
+     * {@code null} value to be greater than a non-{@code null} value when using the order
+     * {@link NullComparator.Order#ASC_NULLS_LAST}.
+     */
+    @Test
+    public void testCompare_AscNullsLast() {
+        final Integer less = new Integer(7);
+        final Integer greater = null;
+        
+        assertTrue(EMUtils.compare(less, greater, NullComparator.Order.ASC_NULLS_LAST) < 0);
+        assertTrue(EMUtils.compare(greater, less, NullComparator.Order.ASC_NULLS_LAST) > 0);
+        assertTrue(EMUtils.compare(null, null, NullComparator.Order.ASC_NULLS_LAST) == 0);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#compare(Comparable, Object, NullComparator.Order)} will consider a
+     * {@code null} value to be greater than a non-{@code null} value when using the order
+     * {@link NullComparator.Order#DSC_NULLS_FIRST}.
+     */
+    @Test
+    public void testCompare_DescNullsFirst() {
+        final Integer less = new Integer(7);
+        final Integer greater = null;
+        
+        assertTrue(EMUtils.compare(less, greater, NullComparator.Order.DESC_NULLS_FIRST) > 0);
+        assertTrue(EMUtils.compare(greater, less, NullComparator.Order.DESC_NULLS_FIRST) < 0);
+        assertTrue(EMUtils.compare(null, null, NullComparator.Order.ASC_NULLS_FIRST) == 0);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#compare(Comparable, Object, NullComparator.Order)} will consider a
+     * {@code null} value to be less than a non-{@code null} value when using the order
+     * {@link NullComparator.Order#DESC_NULLS_LAST}.
+     */
+    @Test
+    public void testCompare_DescNullsLast() {
+        final Integer less = new Integer(7);
+        final Integer greater = null;
+        
+        assertTrue(EMUtils.compare(less, greater, NullComparator.Order.DESC_NULLS_LAST) < 0);
+        assertTrue(EMUtils.compare(greater, less, NullComparator.Order.DESC_NULLS_LAST) > 0);
+        assertTrue(EMUtils.compare(null, null, NullComparator.Order.ASC_NULLS_LAST) == 0);
+    }
 }

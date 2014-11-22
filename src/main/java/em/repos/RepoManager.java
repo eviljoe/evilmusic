@@ -9,8 +9,8 @@ public class RepoManager {
     private static RepoManager instance;
     
     private volatile SongInfoRepository songInfo;
-    private volatile MusicDirectoryRepository musicDirectory;
     private volatile QueueRepository queue;
+    private volatile EqualizerRepository equalizer;
     
     /* ************ */
     /* Constructors */
@@ -43,19 +43,19 @@ public class RepoManager {
         this.songInfo = songInfo;
     }
     
-    public MusicDirectoryRepository getMusicDirectory() {
-        return musicDirectory;
-    }
-    
-    public void setMusicDirectory(MusicDirectoryRepository musicDirectory) {
-        this.musicDirectory = musicDirectory;
-    }
-
     public QueueRepository getQueue() {
         return queue;
     }
-
+    
     public void setQueue(QueueRepository queue) {
         this.queue = queue;
+    }
+    
+    public EqualizerRepository getEqualizer() {
+        return equalizer;
+    }
+    
+    public void setEqualizer(EqualizerRepository equalizer) {
+        this.equalizer = equalizer;
     }
 }
