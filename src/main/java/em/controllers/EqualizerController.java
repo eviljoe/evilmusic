@@ -8,6 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import em.dao.EqualizerDAO;
 import em.model.Equalizer;
 import em.utils.EMUtils;
+import em.utils.EqualizerUtils;
 import em.utils.LogUtils;
 
 /**
@@ -55,9 +57,17 @@ public class EqualizerController {
         if(EMUtils.hasValues(allEQs)) {
             eq = allEQs.iterator().next();
         } else {
-            eq = eqDAO.save(new Equalizer());
+            eq = eqDAO.save(EqualizerUtils.createDefaultEqualizer());
         }
         
         return eq;
+    }
+    
+    @Transactional
+    @RequestMapping(value = "/rest/eq/{eqID}", method = RequestMethod.GET)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Equalizer getEqualizer(@PathVariable("eqID") int eqID) {
+        LogUtils.createRESTCallEntry(LOG, "/rest/eq/{eqID}", RequestMethod.GET, "Requesting equalizer: " + eqID);
+        return eqDAO.findByID(eqID);
     }
 }

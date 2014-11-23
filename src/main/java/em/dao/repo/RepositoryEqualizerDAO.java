@@ -2,6 +2,8 @@ package em.dao.repo;
 
 import java.util.Set;
 
+import org.springframework.stereotype.Service;
+
 import em.dao.EqualizerDAO;
 import em.model.Equalizer;
 import em.repos.EqualizerRepository;
@@ -11,6 +13,7 @@ import em.utils.IDSet;
  * @since v0.1
  * @author eviljoe
  */
+@Service
 public class RepositoryEqualizerDAO extends AbstractRepositoryDAO implements EqualizerDAO {
     
     private EqualizerRepository eqRepo;
@@ -36,6 +39,11 @@ public class RepositoryEqualizerDAO extends AbstractRepositoryDAO implements Equ
         }
         
         return eqs;
+    }
+    
+    @Override
+    public Equalizer findByID(int id) {
+        return getEqualizerRepo().findOne(id);
     }
     
     @Override

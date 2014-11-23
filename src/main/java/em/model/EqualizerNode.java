@@ -1,5 +1,8 @@
 package em.model;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +16,9 @@ import em.utils.NullComparator;
  * @author eviljoe
  */
 @Entity
-public class EqualizerNode implements Identifiable {
+public class EqualizerNode implements Identifiable, Cloneable {
+    
+    private static final Logger LOG = Logger.getLogger(EqualizerNode.class.getName());
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,7 +33,12 @@ public class EqualizerNode implements Identifiable {
     /* ************ */
     
     public EqualizerNode() {
+        this(null);
+    }
+    
+    public EqualizerNode(Integer id) {
         super();
+        setID(id);
     }
     
     /* ***************** */
@@ -67,6 +77,27 @@ public class EqualizerNode implements Identifiable {
     
     public void setGain(double gain) {
         this.gain = gain;
+    }
+    
+    @Override
+    public EqualizerNode clone() {
+        EqualizerNode clone = null;
+        
+        try {
+            clone = (EqualizerNode)super.clone();
+        } catch(CloneNotSupportedException e) {
+            LOG.log(Level.SEVERE, "Could not clone " + EqualizerNode.class.getName(), e);
+            clone = null;
+        }
+        
+        if(clone != null) {
+            clone.id = id;
+            clone.frequency = frequency;
+            clone.q = q;
+            clone.gain = gain;
+        }
+        
+        return clone;
     }
     
     /* *********** */

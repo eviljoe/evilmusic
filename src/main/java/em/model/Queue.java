@@ -174,7 +174,7 @@ public class Queue implements Identifiable, Cloneable {
         try {
             clone = (Queue)super.clone();
         } catch(CloneNotSupportedException e) {
-            LOG.log(Level.SEVERE, "Could not clone " + Queue.class, e);
+            LOG.log(Level.SEVERE, "Could not clone " + Queue.class.getName(), e);
             clone = null;
         }
         

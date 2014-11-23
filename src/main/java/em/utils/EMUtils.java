@@ -3,10 +3,14 @@ package em.utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import em.model.Identifiable;
 
 /**
  * A class containing useful utility functions.
@@ -94,17 +98,60 @@ public class EMUtils {
         return l;
     }
     
-    public static <E, S extends Set<E>> S toSet(Collection<E> c, S s) {
+    /**
+     * Adds the given collection to the given set.
+     * 
+     * @param c The collection to be converted to a set. If {@code null}, {@code null} will always be returned.
+     * @param s The set that the collection's elements will be added to. If {@code null}, an exception will be thrown.
+     * 
+     * @return Returns the set that the elements are to be added to or {@code null} if the given collection was
+     *         {@code null}.
+     * 
+     * @throws NullPointerException Thrown if set that the collection's elements will be added to is {@code null}.
+     */
+    public static <E, S extends Set<E>> S toSet(Collection<E> c, S s) throws NullPointerException {
         final S rset;
         
         if(c == null) {
             rset = null;
+        } else if(s == null) {
+            throw new NullPointerException("Cannot add elements to a null set.");
         } else {
             rset = s;
             rset.addAll(c);
         }
         
         return rset;
+    }
+    
+    /**
+     * Searches through the given collection to find an {@link Identifiable} whose ID is equal to the given ID.
+     * 
+     * @param c The collection that is to be searched. If {@code null}, {@code null} will be returned.
+     * @param id The ID that is to be searched for. If {@code null}, an {@code Identifiable} with a {@code null} ID will
+     *        be searched for.
+     * 
+     * @return Returns the {@code Identifiable} whose ID is equal to the given ID. If no {@code Identifiable} can be
+     *         found, {@code null} will be returned.
+     * 
+     * @see Identifiable
+     */
+    public static <I extends Identifiable> I findByID(Collection<I> c, Integer id) {
+        I identifiable = null;
+        
+        if(c != null) {
+            final Iterator<I> it = c.iterator();
+            
+            while(it.hasNext() && identifiable == null) {
+                final I i = it.next();
+                
+                if(i != null && Objects.equals(i.getID(), id)) {
+                    identifiable = i;
+                }
+            }
+        }
+        
+        return identifiable;
     }
     
     /* ******************** */
@@ -156,10 +203,62 @@ public class EMUtils {
         return (a == b) || (a != null && a.equalsIgnoreCase(b));
     }
     
+    /**
+     * Compares the given two objects. The result of the comparison is as follows:
+     * <p>
+     * <table border="1">
+     * <tr>
+     * <th>{@code a == null}</th>
+     * <th>{@code b == null}</th>
+     * <th>{@code result}</th>
+     * </tr>
+     * <tr>
+     * <td>{@code true}</td>
+     * <td>{@code true}</td>
+     * <td>{@code 0}</td>
+     * </tr>
+     * <tr>
+     * <td>{@code true}</td>
+     * <td>{@code false}</td>
+     * <td>{@code 0}</td>
+     * </tr>
+     * <tr>
+     * <td>{@code false}</td>
+     * <td>{@code true}</td>
+     * <td>{@code 0}</td>
+     * </tr>
+     * <tr>
+     * <td>{@code false}</td>
+     * <td>{@code false}</td>
+     * <td>{@code a.}{@link Compare#compareTo compareTo}{@code (b)}</td>
+     * </tr>
+     * </table>
+     * 
+     * @param a The first object.
+     * @param b The seconds object.
+     * 
+     * @return Returns...
+     *         <ul>
+     *         <li>a positive number if {@code a} is greater than {@code b}</li> <li>a negative number if {@code a} is
+     *         less than {@code b}</li> <li>{@code 0} if {@code a} is equal to {@code b}</li>
+     *         </ul>
+     * 
+     * @see Comparator#compare
+     */
     public static <B> int compare(Comparable<B> a, B b) {
         return compare(a, b, null);
     }
     
+    /**
+     * Compares the two objects based on the given order.
+     * 
+     * @param a The first object.
+     * @param b The second object.
+     * @param order The order to be enforced by the comparison. If {@code null},
+     *        {@link NullComparator.Order#ASC_NULLS_LAST} will be used.
+     * 
+     * @return Returns the result of the comparison.
+     */
     public static <B> int compare(Comparable<B> a, B b, NullComparator.Order order) {
         final boolean nullA;
         final boolean nullB;

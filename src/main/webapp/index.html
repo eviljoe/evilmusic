@@ -2,7 +2,7 @@
 <html ng-app="EvilMusicApp">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Evil Music - Library</title>
+    <title>Evil Music</title>
     <link rel="stylesheet" type="text/css" href="/css/library.css">
     <script type="text/javascript" src="/js/angular.js"></script>
     <script type="text/javascript" src="/js/emcontroller.js"></script>
@@ -11,7 +11,7 @@
     <script type="text/javascript" src="/js/flac.js"></script>
 </head>
 <body ng-controller="EMLibraryController">
-    <h1>Evil Music - Library</h1>
+    <h1>Evil Music</h1>
     <div>
         <input type="button" value="clear library" ng-click="clearLibrary()"/>
         <input type="button" value="rebuild library" ng-click="rebuildLibrary()"/>
@@ -22,7 +22,7 @@
     <div>
         <div><h2>EQ</h2></div>
         <div>
-            <div class="eq-node-slider-div" ng-repeat="node in nodes">
+            <div class="eq-node-slider-div" ng-repeat="node in eq.nodes">
                 <div class="centered">
                     {{hertzToString(node.frequency)}}
                 </div>

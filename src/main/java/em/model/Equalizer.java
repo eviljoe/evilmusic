@@ -3,6 +3,8 @@ package em.model;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,7 +22,9 @@ import em.utils.EMUtils;
  * @author eviljoe
  */
 @Entity
-public class Equalizer implements Identifiable {
+public class Equalizer implements Identifiable, Cloneable {
+    
+    private static final Logger LOG = Logger.getLogger(Equalizer.class.getName());
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -56,6 +60,37 @@ public class Equalizer implements Identifiable {
     }
     
     public void setNodes(Collection<EqualizerNode> nodes) {
-        this.nodes = EMUtils.toSet(nodes, new TreeSet<EqualizerNode>(new FrequencyEqualizerNodeComparator()));
+        this.nodes = EMUtils.toSet(nodes, createNodesSet());
+    }
+    
+    private Set<EqualizerNode> createNodesSet() {
+        return new TreeSet<EqualizerNode>(new FrequencyEqualizerNodeComparator());
+    }
+    
+    @Override
+    public Equalizer clone() {
+        Equalizer clone = null;
+        
+        try {
+            clone = (Equalizer)super.clone();
+        } catch(CloneNotSupportedException e) {
+            LOG.log(Level.SEVERE, "Could not clone " + Equalizer.class.getName(), e);
+            clone = null;
+        }
+        
+        if(clone != null) {
+            clone.id = id;
+            
+            if(nodes == null) {
+                clone.nodes = nodes;
+            } else {
+                clone.nodes = createNodesSet();
+                for(EqualizerNode node : nodes) {
+                    clone.nodes.add(node == null ? null : node.clone());
+                }
+            }
+        }
+        
+        return clone;
     }
 }

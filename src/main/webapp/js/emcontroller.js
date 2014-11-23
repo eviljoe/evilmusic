@@ -1,3 +1,5 @@
+'use strict';
+
 var emApp = angular.module('EvilMusicApp', []);
 
 emApp.controller('EMLibraryController', function($scope, $http) {
@@ -6,10 +8,9 @@ emApp.controller('EMLibraryController', function($scope, $http) {
     $scope.player = null;
     $scope.testOutput = null;
     $scope.nodes = [];
+    $scope.eq = null;
 
     $scope.loadLibrary = function() {
-        $scope.library = null;
-
         $http.get('/rest/library')
             .success(function (data, status, headers, config) {
                 $scope.library = data;
@@ -17,7 +18,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
             .error(function (data, status, headers, config) {
                 alert('Could not get library.\n\n' + JSON.stringify(data));
             });
-    }
+    };
 
     $scope.loadQueue = function(loadNew) {
         var url = '/rest/queue/';
@@ -35,7 +36,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
             .error(function (data, status, headers, config) {
                 alert('Could not get queue.\n\n' + JSON.stringify(data));
             });
-    }
+    };
 
     $scope.clearLibrary = function() {
         $http.delete('/rest/library')
@@ -46,7 +47,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
             .error(function (data, status, headers, config) {
                 alert('Clear library failed.\n\n' + JSON.stringify(data));
             });
-    }
+    };
 
     $scope.clearQueue = function() {
         if($scope.queue && $scope.queue.id) {
@@ -58,7 +59,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
                     alert('Clear queue failed.\n\n' + JSON.stringify(data));
                 });
         }
-    }
+    };
 
     $scope.rebuildLibrary = function() {
         $http.post('/rest/library')
@@ -69,7 +70,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
             .error(function (data, status, headers, config) {
                 alert('Library rebuilding failed.\n\n' + JSON.stringify(data));
             });
-    }
+    };
 
     $scope.enqueueLast = function(songID) {
         if($scope.queue && $scope.queue.id) {
@@ -81,7 +82,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
                     alert('Failed to enqueue last.\n\n' + JSON.stringify(data));
                 });
         }
-    }
+    };
 
     $scope.removeFromQueue = function(queueIndex) {
         if($scope.queue && $scope.queue.id) {
@@ -93,7 +94,35 @@ emApp.controller('EMLibraryController', function($scope, $http) {
                     alert('Failed to remove from queue (' + queueIndex + ')\n\n' + JSON.stringify(data));
                 });
         }
-    }
+    };
+
+    $scope.loadEqualizer = function(loadNew) {
+        var url = '/rest/eq/';
+
+        if(loadNew) {
+            url += 'current';
+        } else {
+            url += $scope.eq.id;
+        }
+
+        $http.get(url)
+            .success(function (data, status, headers, config) {
+                if(data && data.nodes) {
+                    for(var x = 0; x < data.nodes.length; x++) {
+                        data.nodes[x].webAuidioNodes = [];
+                    }
+
+                    data.nodes.sort(function(a, b) {
+                        return a.frequency - b.frequency;
+                    });
+                }
+
+                $scope.eq = data;
+            })
+            .error(function (data, status, headers, config) {
+                alert('Could not get equalizer.\n\n' + JSON.stringify(data));
+            });
+    };
 
     $scope.play = function(queueIndex) {
         if($scope.player) {
@@ -111,7 +140,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
             $scope.player.play();
             $scope.loadQueue();
         }
-    }
+    };
 
     $scope.seek = function(millis) {
         var newMillis = null;
@@ -121,7 +150,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
         }
 
         return newMillis;
-    }
+    };
 
     $scope.togglePlayback = function() {
         var toggled = false;
@@ -132,40 +161,17 @@ emApp.controller('EMLibraryController', function($scope, $http) {
         }
 
         return toggled;
-    }
-
-    $scope.createEMEQNodes = function() {
-        var prevNode = null;
-        var freqs = [55, 77, 110, 156, 311, 440, 622, 880, 1200, 1800, 3500, 5000, 7000, 10000, 14000, 20000];
-
-        for(var x = 0; x < freqs.length; x++) {
-            var eqNode = this.createEMEQNode(freqs[x], 2.5);
-            $scope.nodes.push(eqNode);
-        }
-
-        return $scope.nodes;
-    };
-
-    $scope.createEMEQNode = function(freq, q) {
-        var node = new EM.EQNode();
-
-        node.frequency = freq;
-        node.q = q;
-
-        return node;
     };
 
     $scope.createEQNodes = function(context) {
-        var prevEQNode = null;
         var eqNodes = [];
 
-        for(var x = 0; x < $scope.nodes.length; x++) {
-            var emNode = $scope.nodes[x];
+        for(var x = 0; x < $scope.eq.nodes.length; x++) {
+            var emNode = $scope.eq.nodes[x];
             var eqNode = $scope.createEQNode(context, emNode);
 
-            emNode.nodes.push(eqNode);
+            emNode.webAuidioNodes.push(eqNode);
             eqNodes.push(eqNode);
-            prevNode = eqNode;
         }
 
         return eqNodes;
@@ -182,32 +188,34 @@ emApp.controller('EMLibraryController', function($scope, $http) {
         return node;
     };
 
+    $scope.updateNodeGain = function(emNode) {
+        if(typeof emNode.gain !== 'number') {
+            emNode.gain = parseInt(emNode.gain);
+        }
+
+        for(var x = 0; x < emNode.webAuidioNodes.length; x++) {
+            var eqNode = emNode.webAuidioNodes[x];
+            eqNode.gain.value = emNode.gain;
+        }
+    };
+
     $scope.hertzToString = function(hertz) {
         var str = null;
 
         if(hertz) {
             if(hertz < 1000) {
-                str = hertz + " Hz";
+                str = hertz + ' Hz';
             } else if(hertz < 100000) {
-                str = hertz / 1000 + " kHz"
+                str = hertz / 1000 + ' kHz';
             } else {
-                str = hertz + " Hz";
+                str = hertz + ' Hz';
             }
         }
 
         return str;
     };
 
-    $scope.updateNodeGain = function(emNode) {
-        emNode.gain = parseInt(emNode.gain);
-
-        for(var x = 0; x < emNode.nodes.length; x++) {
-            var eqNode = emNode.nodes[x];
-            eqNode.gain.value = emNode.gain;
-        }
-    };
-
-    $scope.loadLibrary();
+    $scope.loadEqualizer(true);
     $scope.loadQueue(true);
-    $scope.createEMEQNodes();
+    $scope.loadLibrary();
 });

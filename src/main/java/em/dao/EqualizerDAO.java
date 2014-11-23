@@ -12,5 +12,7 @@ public interface EqualizerDAO {
     
     public Set<Equalizer> findAll();
     
+    public Equalizer findByID(int id);
+    
     public Equalizer save(Equalizer eq);
 }

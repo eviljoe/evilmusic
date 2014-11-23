@@ -1,0 +1,35 @@
+{
+
+    /* ***************** */
+    /* Enforcing Options */
+    /* ***************** */
+
+    "camelcase" : true,
+    "curly" : true,
+    "eqeqeq" : true,
+    "newcap" : true,
+    "latedef" : true,
+    "noempty" : true,
+    "nonew" : true,
+    "quotmark" : "single",
+    "undef" : true,
+    "unused" : "vars",
+    "strict" : true,
+    "maxcomplexity" : 10,
+
+    /* **************** */
+    /* Relaxing Options */
+    /* **************** */
+
+    "globalstrict" : true,
+    "laxbreak" : true,
+    "maxerr" : 1000,
+
+    /* ************ */
+    /* Environments */
+    /* ************ */
+
+    "devel" : true,
+    "predef" : ["angular", "AV"]
+
+}

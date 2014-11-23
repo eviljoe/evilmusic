@@ -2,6 +2,7 @@ package em.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -13,8 +14,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
+
+import em.model.Identifiable;
 
 /**
  * A class containing JUnit tests to {@link EMUtils}.
@@ -25,6 +29,10 @@ import org.junit.Test;
  * @author eviljoe
  */
 public class EMUtilsTest {
+    
+    /* ************** */
+    /* Test Functions */
+    /* ************** */
     
     /**
      * Tests to ensure that the {@link EMUtils#hasValues(CharSequence)} function only returns <code>true</code> when
@@ -234,5 +242,169 @@ public class EMUtilsTest {
         assertTrue(EMUtils.compare(less, greater, NullComparator.Order.DESC_NULLS_LAST) < 0);
         assertTrue(EMUtils.compare(greater, less, NullComparator.Order.DESC_NULLS_LAST) > 0);
         assertTrue(EMUtils.compare(null, null, NullComparator.Order.ASC_NULLS_LAST) == 0);
+    }
+    
+    /** Tests that the {@link EMUtils#toSet(Collection, Set)} function will convert a collection into a set. */
+    @Test
+    public void testToSet() {
+        final Integer a = 5;
+        final Integer b = 7;
+        final Integer c = 11;
+        final ArrayList<Integer> list = new ArrayList<>();
+        final Set<Integer> set;
+        
+        list.add(a);
+        list.add(b);
+        list.add(c);
+        
+        set = EMUtils.toSet(list, new HashSet<Integer>());
+        
+        assertEquals(3, set.size());
+        assertTrue(set.containsAll(list));
+    }
+    
+    /**
+     * Tests that the {@link EMUtils#toSet(Collection, Set)} function will return a {@code null} set when given a
+     * {@code null} collection.
+     */
+    @Test
+    public void testToSet_NullCollection() {
+        assertNull(EMUtils.toSet(null, new HashSet<Integer>()));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toSet(Collection, Set)} function will throw a
+     * {@link NullPointerException} when given a {@code null} set to add the collection elements to.
+     */
+    @Test(expected = NullPointerException.class)
+    public void testToSet_NullSet() {
+        EMUtils.toSet(new ArrayList<Integer>(), null);
+    }
+    
+    /**
+     * Tests that the {@link EMUtils#toSet(Collection, Set)} function will return an empty set when given an empty
+     * collection.
+     */
+    @Test
+    public void testToSet_EmptyCollection() {
+        final HashSet<Integer> set = EMUtils.toSet(new ArrayList<Integer>(), new HashSet<Integer>());
+        
+        assertNotNull(set);
+        assertTrue(set.isEmpty());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#findByID(Collection, Integer)} function can find an element in a
+     * collection using that element's ID.
+     */
+    @Test
+    public void testFindByID() {
+        final TestIdentifiable a = new TestIdentifiable(5);
+        final TestIdentifiable b = new TestIdentifiable(7);
+        final TestIdentifiable c = new TestIdentifiable(null);
+        final TestIdentifiable d = new TestIdentifiable(11);
+        final TestIdentifiable e = new TestIdentifiable(17);
+        final List<TestIdentifiable> list = Arrays.asList(a, b, c, d, e);
+        final TestIdentifiable found = EMUtils.findByID(list, d.getID());
+        
+        assertNotNull(found);
+        assertEquals(d, found);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#findByID(Collection, Integer)} function will return {@code null} when
+     * given an ID that does not correspond to an element in the collection.
+     */
+    @Test
+    public void testFindByID_IDNotInCollection() {
+        final TestIdentifiable a = new TestIdentifiable(5);
+        final TestIdentifiable b = new TestIdentifiable(7);
+        final TestIdentifiable c = new TestIdentifiable(null);
+        final TestIdentifiable d = new TestIdentifiable(11);
+        final TestIdentifiable e = new TestIdentifiable(17);
+        final List<TestIdentifiable> list = Arrays.asList(a, b, c, d, e);
+        final TestIdentifiable found = EMUtils.findByID(list, 19);
+        
+        assertNull(found);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#findByID(Collection, Integer)} function will return {@code null} when
+     * trying to find an element in an empty collection.
+     */
+    @Test
+    public void testFindByID_EmptyCollection() {
+        assertNull(EMUtils.findByID(new ArrayList<TestIdentifiable>(), 5));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#findByID(Collection, Integer)} function will return {@code null} when
+     * trying to find an element in a {@code null} collection.
+     */
+    @Test
+    public void testFindByID_NullCollection() {
+        assertNull(EMUtils.findByID(null, 5));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#findByID(Collection, Integer)} function can find an element whose ID is
+     * {@code null}.
+     */
+    @Test
+    public void testFindByID_NullIDInCollection() {
+        final TestIdentifiable a = new TestIdentifiable(5);
+        final TestIdentifiable b = new TestIdentifiable(7);
+        final TestIdentifiable c = new TestIdentifiable(null);
+        final TestIdentifiable d = new TestIdentifiable(11);
+        final TestIdentifiable e = new TestIdentifiable(17);
+        final List<TestIdentifiable> list = Arrays.asList(a, b, c, d, e);
+        final TestIdentifiable found = EMUtils.findByID(list, c.getID());
+        
+        assertNotNull(found);
+        assertEquals(c, found);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#findByID(Collection, Integer)} function will return {@code null} when
+     * trying to find a {@code null} ID within a collection with no {@code null} IDs.
+     */
+    @Test
+    public void testFindByID_NullIDNotInCollection() {
+        final TestIdentifiable a = new TestIdentifiable(5);
+        final TestIdentifiable b = new TestIdentifiable(7);
+        final TestIdentifiable c = new TestIdentifiable(11);
+        final TestIdentifiable d = new TestIdentifiable(13);
+        final TestIdentifiable e = new TestIdentifiable(17);
+        final List<TestIdentifiable> list = Arrays.asList(a, b, c, d, e);
+        
+        assertNull(EMUtils.findByID(list, null));
+    }
+    
+    /* *************** */
+    /* Utility Classes */
+    /* *************** */
+    
+    /**
+     * @since v0.1
+     * @author eviljoe
+     */
+    private static class TestIdentifiable implements Identifiable {
+        
+        private Integer id;
+        
+        public TestIdentifiable(Integer id) {
+            super();
+            setID(id);
+        }
+        
+        @Override
+        public Integer getID() {
+            return id;
+        }
+        
+        @Override
+        public void setID(Integer id) {
+            this.id = id;
+        }
     }
 }

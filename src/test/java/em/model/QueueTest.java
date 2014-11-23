@@ -2,6 +2,7 @@ package em.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -11,7 +12,48 @@ import java.util.List;
 
 import org.junit.Test;
 
+import em.utils.EMUtils;
+
+/**
+ * A class containing unit tests for {@link Queue}.
+ * 
+ * @see Queue
+ * 
+ * @since v0.1
+ * @author eviljoe
+ */
 public class QueueTest {
+    
+    /** Tests to ensure that the {@link Queue#clone()} method will correctly create a deep clone. */
+    @Test
+    public void testClone() {
+        final Queue orig = new Queue();
+        final Queue cloneQueue;
+        final QueueElement elem1 = new QueueElement(1);
+        final QueueElement elem2 = new QueueElement(2);
+        final QueueElement cloneElem1;
+        final QueueElement cloneElem2;
+        
+        orig.setID(5);
+        orig.setPlayIndex(1);
+        orig.setElements(Arrays.asList(elem1, elem2));
+        
+        cloneQueue = orig.clone();
+        assertNotNull(cloneQueue);
+        assertTrue(orig != cloneQueue);
+        assertEquals(orig.getID(), cloneQueue.getID());
+        assertEquals(orig.getPlayIndex(), cloneQueue.getPlayIndex());
+        
+        cloneElem1 = EMUtils.findByID(cloneQueue.getElements(), elem1.getID());
+        assertNotNull(cloneElem1);
+        assertTrue(elem1 != cloneElem1);
+        assertEquals(elem1.getID(), cloneElem1.getID());
+        
+        cloneElem2 = EMUtils.findByID(cloneQueue.getElements(), elem2.getID());
+        assertNotNull(cloneElem2);
+        assertTrue(elem2 != cloneElem2);
+        assertEquals(elem2.getID(), cloneElem2.getID());
+    }
     
     /** Tests to ensure that the {@link Queue#addLast(SongInfo)} function will add a song to the queue. */
     @Test

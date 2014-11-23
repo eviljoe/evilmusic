@@ -152,19 +152,15 @@ public class SongInfo implements Identifiable, Cloneable {
         }
         
         if(clone != null) {
-            update(clone);
+            clone.id = id;
+            clone.artist = artist;
+            clone.album = album;
+            clone.year = year;
+            clone.title = title;
+            clone.seconds = seconds;
+            clone.file = file;
         }
         
         return clone;
-    }
-    
-    public void update(SongInfo other) {
-        other.id = id;
-        other.artist = artist;
-        other.album = album;
-        other.year = year;
-        other.title = title;
-        other.seconds = seconds;
-        other.file = file;
     }
 }
