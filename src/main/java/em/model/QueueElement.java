@@ -7,6 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+/**
+ * @since v0.1
+ * @author eviljoe
+ */
 @Entity
 public class QueueElement implements Identifiable, Cloneable {
     
