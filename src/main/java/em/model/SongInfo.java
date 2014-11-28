@@ -27,7 +27,7 @@ public class SongInfo implements Identifiable, Cloneable {
     /** "year" is a keyword in Derby, so specify a different column name. */
     @Column(name = "albumYear")
     private int year;
-    private int seconds;
+    private int millis;
     private int trackNumber;
     private int sampleRate;
     private int sampleCount;
@@ -101,12 +101,12 @@ public class SongInfo implements Identifiable, Cloneable {
         this.genre = genre;
     }
     
-    public int getSeconds() {
-        return seconds;
+    public int getMillis() {
+        return millis;
     }
     
-    public void setSeconds(int seconds) {
-        this.seconds = seconds;
+    public void setMillis(int seconds) {
+        this.millis = seconds;
     }
     
     public int getSampleRate() {
@@ -157,7 +157,7 @@ public class SongInfo implements Identifiable, Cloneable {
             clone.album = album;
             clone.year = year;
             clone.title = title;
-            clone.seconds = seconds;
+            clone.millis = millis;
             clone.file = file;
         }
         

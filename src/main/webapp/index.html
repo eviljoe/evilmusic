@@ -1,9 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html ng-app="EvilMusicApp">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Evil Music</title>
-    <link rel="stylesheet" type="text/css" href="/css/library.css">
+    <link rel="stylesheet" type="text/css" href="/css/evilmusic.css">
     <script type="text/javascript" src="/js/angular.js"></script>
     <script type="text/javascript" src="/js/emcontroller.js"></script>
     <script type="text/javascript" src="/js/emeq.js"></script>
@@ -12,13 +12,6 @@
 </head>
 <body ng-controller="EMLibraryController">
     <h1>Evil Music</h1>
-    <div>
-        <input type="button" value="clear library" ng-click="clearLibrary()"/>
-        <input type="button" value="rebuild library" ng-click="rebuildLibrary()"/>
-        <input type="button" value="clear queue" ng-click="clearQueue()"/>
-        <input type="button" value="play/pause" ng-click="togglePlayback()"/>
-        <input type="button" value="move 10s" ng-click="moveToTime(10000)"/>
-    </div>
     <div>
         <div><h2>EQ</h2></div>
         <div>
@@ -40,8 +33,28 @@
             <div style="clear:both"></div>
         </div>
     </div>
+    <div>
+        <div><h2>Player Controls</h2></div>
+        <div>
+            <input type="button" value="play/pause" ng-click="togglePlayback()"/>
+            <input type="button" value="move 10s" ng-click="seekToMillis(10000)"/>
+            <input type="button" value="move 10.5s" ng-click="seekToMillis(10500)"/>
+            <input type="button" value="move 11s" ng-click="seekToMillis(11000)"/>
+        </div>
+        <div id="progressBar" class="em-progress-bar">
+            <div class="em-progress-row">
+                <div id="progressBarGutter" class="em-progress-gutter" ng-click="progressBarClicked($event)">
+                    <span id="progressBarMeter" class="em-progress-meter" ng-style="{width: playerProgress + '%'}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
     <div style="float:left">
         <div><h2>Library</h2></div>
+        <div>
+            <input type="button" value="clear library" ng-click="clearLibrary()"/>
+            <input type="button" value="rebuild library" ng-click="rebuildLibrary()"/>
+        </div>
         <table>
             <tr>
                 <th>ID</th>
@@ -60,7 +73,7 @@
                 <td>{{song.album}}</td>
                 <td align="right">{{song.trackNumber}}</td>
                 <td>{{song.title}}</td>
-                <td>{{song.seconds}} s</td>
+                <td>{{secondsToString(song.seconds)}} s</td>
                 <td>{{song.sampleRate}} Hz</td>
                 <td>{{song.sampleCount}}</td>
                 <td><input type="button" value="qL" ng-click="enqueueLast(song.id)"/></td>
@@ -69,6 +82,9 @@
     </div>
     <div style="float:right">
         <div><h2>Queue</h2></div>
+        <div>
+            <input type="button" value="clear queue" ng-click="clearQueue()"/>
+        </div>
         <table>
             <tr>
                 <th>pI</th>

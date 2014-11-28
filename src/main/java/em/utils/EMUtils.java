@@ -3,7 +3,6 @@ package em.utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -230,7 +229,7 @@ public class EMUtils {
      * <tr>
      * <td>{@code false}</td>
      * <td>{@code false}</td>
-     * <td>{@code a.}{@link Compare#compareTo compareTo}{@code (b)}</td>
+     * <td>{@code a.}{@link Comparable#compareTo compareTo}{@code (b)}</td>
      * </tr>
      * </table>
      * 
@@ -243,7 +242,8 @@ public class EMUtils {
      *         less than {@code b}</li> <li>{@code 0} if {@code a} is equal to {@code b}</li>
      *         </ul>
      * 
-     * @see Comparator#compare
+     * @see #compare(Comparable, Object, NullComparator.Order)
+     * @see Comparable#compareTo
      */
     public static <B> int compare(Comparable<B> a, B b) {
         return compare(a, b, null);
@@ -258,6 +258,9 @@ public class EMUtils {
      *        {@link NullComparator.Order#ASC_NULLS_LAST} will be used.
      * 
      * @return Returns the result of the comparison.
+     * 
+     * @see #compare(Comparable, Object)
+     * @see Comparable#compareTo(Object)
      */
     public static <B> int compare(Comparable<B> a, B b, NullComparator.Order order) {
         final boolean nullA;
@@ -414,5 +417,241 @@ public class EMUtils {
         }
         
         return ext;
+    }
+    
+    /* **************************** */
+    /* Wrapper Conversion Functions */
+    /* **************************** */
+    
+    /**
+     * Converts the given {@link Boolean} wrapper to a primitive {@code boolean} value. If the wrapper is {@code null},
+     * {@code false} will be returned.
+     * 
+     * @param b The wrapper to be converted to a primitive. If {@code null}, {@code false} will be returned.
+     * 
+     * @return Returns the wrapper's primitive value or {@code false} if the wrapper is {@code null}.
+     * 
+     * @see #toBoolean(Boolean, boolean)
+     */
+    public static boolean toBoolean(Boolean b) {
+        return toBoolean(b, false);
+    }
+    
+    /**
+     * Converts the given {@link Boolean} wrapper to a primitive {@code boolean} value. If the wrapper is {@code null},
+     * the given default value will be returned.
+     * 
+     * @param b The wrapper to be converted to a primitive. If {@code null}, the default value will be returned.
+     * @param def The value to be returned if the wrapper is {@code null}.
+     * 
+     * @return Returns the wrapper's primitive value or the default value if the wrapper is {@code null}.
+     * 
+     * @see #toBoolean(Boolean)
+     */
+    public static boolean toBoolean(Boolean b, boolean def) {
+        return b == null ? def : b;
+    }
+    
+    /**
+     * Converts the given {@link Byte} wrapper to a primitive {@code byte} value. If the wrapper is {@code null},
+     * {@code 0} will be returned.
+     * 
+     * @param b The wrapper to be converted to a primitive. If {@code null}, {@code 0} will be returned.
+     * 
+     * @return Returns the wrapper's primitive value or {@code 0} if the wrapper is {@code null}.
+     * 
+     * @see #toByte(Byte, byte)
+     */
+    public static byte toByte(Byte b) {
+        return toByte(b, (byte)0);
+    }
+    
+    /**
+     * Converts the given {@link Byte} wrapper to a primitive {@code byte} value. If the wrapper is {@code null}, the
+     * given default value will be returned.
+     * 
+     * @param b The wrapper to be converted to a primitive. If {@code null}, the default value will be returned.
+     * @param def The value to be returned if the wrapper is {@code null}.
+     * 
+     * @return Returns the wrapper's primitive value or the default value if the wrapper is {@code null}.
+     * 
+     * @see #toByte(Byte)
+     */
+    public static byte toByte(Byte b, byte def) {
+        return b == null ? def : b;
+    }
+    
+    /**
+     * Converts the given {@link Short} wrapper to a primitive {@code short} value. If the wrapper is {@code null},
+     * {@code 0} will be returned.
+     * 
+     * @param s The wrapper to be converted to a primitive. If {@code null}, {@code 0} will be returned.
+     * 
+     * @return Returns the wrapper's primitive value or {@code 0} if the wrapper is {@code null}.
+     * 
+     * @see #toShort(Short, short)
+     */
+    public static short toShort(Short s) {
+        return toShort(s, (short)0);
+    }
+    
+    /**
+     * Converts the given {@link Short} wrapper to a primitive {@code short} value. If the wrapper is {@code null}, the
+     * given default value will be returned.
+     * 
+     * @param s The wrapper to be converted to a primitive. If {@code null}, the default value will be returned.
+     * @param def The value to be returned if the wrapper is {@code null}.
+     * 
+     * @return Returns the wrapper's primitive value or the default value if the wrapper is {@code null}.
+     * 
+     * @see #toShort(Short)
+     */
+    public static short toShort(Short s, short def) {
+        return s == null ? def : s;
+    }
+    
+    /**
+     * Converts the given {@link Integer} wrapper to a primitive {@code int} value. If the wrapper is {@code null},
+     * {@code 0} will be returned.
+     * 
+     * @param i The wrapper to be converted to a primitive. If {@code null}, {@code 0} will be returned.
+     * 
+     * @return Returns the wrapper's primitive value or {@code 0} if the wrapper is {@code null}.
+     * 
+     * @see #toInt(Integer, int)
+     */
+    public static int toInt(Integer i) {
+        return toInt(i, 0);
+    }
+    
+    /**
+     * Converts the given {@link Integer} wrapper to a primitive {@code int} value. If the wrapper is {@code null}, the
+     * given default value will be returned.
+     * 
+     * @param i The wrapper to be converted to a primitive. If {@code null}, the default value will be returned.
+     * @param def The value to be returned if the wrapper is {@code null}.
+     * 
+     * @return Returns the wrapper's primitive value or the default value if the wrapper is {@code null}.
+     * 
+     * @see #toInt(Integer)
+     */
+    public static int toInt(Integer i, int def) {
+        return i == null ? def : i;
+    }
+    
+    /**
+     * Converts the given {@link Long} wrapper to a primitive {@code long} value. If the wrapper is {@code null},
+     * {@code 0} will be returned.
+     * 
+     * @param l The wrapper to be converted to a primitive. If {@code null}, {@code 0} will be returned.
+     * 
+     * @return Returns the wrapper's primitive value or {@code 0} if the wrapper is {@code null}.
+     * 
+     * @see #toLong(Long, long)
+     */
+    public static long toLong(Long l) {
+        return toLong(l, 0L);
+    }
+    
+    /**
+     * Converts the given {@link Long} wrapper to a primitive {@code long} value. If the wrapper is {@code null}, the
+     * given default value will be returned.
+     * 
+     * @param l The wrapper to be converted to a primitive. If {@code null}, the default value will be returned.
+     * @param def The value to be returned if the wrapper is {@code null}.
+     * 
+     * @return Returns the wrapper's primitive value or the default value if the wrapper is {@code null}.
+     * 
+     * @see #toLong(Long)
+     */
+    public static long toLong(Long l, long def) {
+        return l == null ? def : l;
+    }
+    
+    /**
+     * Converts the given {@link Float} wrapper to a primitive {@code float} value. If the wrapper is {@code null},
+     * {@code 0.0} will be returned.
+     * 
+     * @param b The wrapper to be converted to a primitive. If {@code null}, {@code 0.0} will be returned.
+     * 
+     * @return Returns the wrapper's primitive value or {@code 0.0} if the wrapper is {@code null}.
+     * 
+     * @see #toFloat(Float, float)
+     */
+    public static float toFloat(Float b) {
+        return toFloat(b, 0.0f);
+    }
+    
+    /**
+     * Converts the given {@link Float} wrapper to a primitive {@code float} value. If the wrapper is {@code null}, the
+     * given default value will be returned.
+     * 
+     * @param f The wrapper to be converted to a primitive. If {@code null}, the default value will be returned.
+     * @param def The value to be returned if the wrapper is {@code null}.
+     * 
+     * @return Returns the wrapper's primitive value or the default value if the wrapper is {@code null}.
+     * 
+     * @see #toFloat(Float)
+     */
+    public static float toFloat(Float f, float def) {
+        return f == null ? def : f;
+    }
+    
+    /**
+     * Converts the given {@link Double} wrapper to a primitive {@code double} value. If the wrapper is {@code null},
+     * {@code 0.0} will be returned.
+     * 
+     * @param b The wrapper to be converted to a primitive. If {@code null}, {@code 0.0} will be returned.
+     * 
+     * @return Returns the wrapper's primitive value or {@code 0.0} if the wrapper is {@code null}.
+     * 
+     * @see #toDouble(Double, double)
+     */
+    public static double toDouble(Double b) {
+        return toDouble(b, 0.0);
+    }
+    
+    /**
+     * Converts the given {@link Double} wrapper to a primitive {@code double} value. If the wrapper is {@code null},
+     * the given default value will be returned.
+     * 
+     * @param b The wrapper to be converted to a primitive. If {@code null}, the default value will be returned.
+     * @param def The value to be returned if the wrapper is {@code null}.
+     * 
+     * @return Returns the wrapper's primitive value or the default value if the wrapper is {@code null}.
+     * 
+     * @see #toDouble(Double)
+     */
+    public static double toDouble(Double b, double def) {
+        return b == null ? def : b;
+    }
+    
+    /**
+     * Converts the given {@link Character} wrapper to a primitive {@code char} value. If the wrapper is {@code null},
+     * {@code '\0'} will be returned.
+     * 
+     * @param b The wrapper to be converted to a primitive. If {@code null}, {@code '\0'} will be returned.
+     * 
+     * @return Returns the wrapper's primitive value or {@code '\0'} if the wrapper is {@code null}.
+     * 
+     * @see #toChar(Character, char)
+     */
+    public static char toChar(Character b) {
+        return toChar(b, (char)0);
+    }
+    
+    /**
+     * Converts the given {@link Character} wrapper to a primitive {@code char} value. If the wrapper is {@code null},
+     * the given default value will be returned.
+     * 
+     * @param b The wrapper to be converted to a primitive. If {@code null}, the default value will be returned.
+     * @param def The value to be returned if the wrapper is {@code null}.
+     * 
+     * @return Returns the wrapper's primitive value or the default value if the wrapper is {@code null}.
+     * 
+     * @see #toChar(Character)
+     */
+    public static char toChar(Character b, char def) {
+        return b == null ? def : b;
     }
 }

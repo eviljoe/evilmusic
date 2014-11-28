@@ -380,6 +380,78 @@ public class EMUtilsTest {
         assertNull(EMUtils.findByID(list, null));
     }
     
+    /** Tests to ensure that the {@code toBoolean} functions will correctly convert a boolean wrapper to a primitive. */
+    @Test
+    public void testToBoolean() {
+        assertEquals(true, EMUtils.toBoolean(Boolean.TRUE));
+        assertEquals(false, EMUtils.toBoolean(null));
+        assertEquals(false, EMUtils.toBoolean(Boolean.FALSE, true));
+        assertEquals(true, EMUtils.toBoolean(null, true));
+    }
+    
+    /** Tests to ensure that the {@code toByte} functions will correctly convert a byte wrapper to a primitive. */
+    @Test
+    public void testToByte() {
+        assertEquals((byte)7, EMUtils.toByte(new Byte((byte)7)));
+        assertEquals((byte)0, EMUtils.toByte(null));
+        assertEquals((byte)11, EMUtils.toByte(new Byte((byte)11), (byte)13));
+        assertEquals((byte)13, EMUtils.toByte(null, (byte)13));
+    }
+    
+    /** Tests to ensure that the {@code toShort} functions will correctly convert a short wrapper to a primitive. */
+    @Test
+    public void testToShort() {
+        assertEquals((short)7, EMUtils.toShort(new Short((short)7)));
+        assertEquals((short)0, EMUtils.toShort(null));
+        assertEquals((short)11, EMUtils.toShort(new Short((short)11), (short)13));
+        assertEquals((short)13, EMUtils.toShort(null, (short)13));
+    }
+    
+    /** Tests to ensure that the {@code toInt} functions will correctly convert an integer wrapper to a primitive. */
+    @Test
+    public void testToInt() {
+        assertEquals(7, EMUtils.toInt(new Integer(7)));
+        assertEquals(0, EMUtils.toInt(null));
+        assertEquals(11, EMUtils.toInt(new Integer(11), 13));
+        assertEquals(13, EMUtils.toInt(null, 13));
+    }
+    
+    /** Tests to ensure that the {@code toLong} functions will correctly convert a long wrapper to a primitive. */
+    @Test
+    public void testToLong() {
+        assertEquals(7L, EMUtils.toLong(new Long(7L)));
+        assertEquals(0L, EMUtils.toLong(null));
+        assertEquals(11L, EMUtils.toLong(new Long(11L), 13L));
+        assertEquals(13L, EMUtils.toLong(null, 13L));
+    }
+    
+    /** Tests to ensure that the {@code toFloat} functions will correctly convert a float wrapper to a primitive. */
+    @Test
+    public void testToFloat() {
+        assertEquals(7.0f, EMUtils.toFloat(new Float(7.0f)), 0.0f);
+        assertEquals(0.0f, EMUtils.toFloat(null), 0.0f);
+        assertEquals(11.0f, EMUtils.toFloat(new Float(11.0f), 13.0f), 0.0f);
+        assertEquals(13.0f, EMUtils.toFloat(null, 13.0f), 0.0f);
+    }
+    
+    /** Tests to ensure that the {@code toDouble} functions will correctly convert a double wrapper to a primitive. */
+    @Test
+    public void testToDouble() {
+        assertEquals(7.0, EMUtils.toDouble(new Double(7.0)), 0.0);
+        assertEquals(0.0, EMUtils.toDouble(null), 0.0);
+        assertEquals(11.0, EMUtils.toDouble(new Double(11.0), 13.0), 0.0);
+        assertEquals(13.0, EMUtils.toDouble(null, 13.0), 0.0);
+    }
+    
+    /** Tests to ensure that the {@code toChar} functions will correctly convert a character wrapper to a primitive. */
+    @Test
+    public void testToChar() {
+        assertEquals('a', EMUtils.toChar(new Character('a')));
+        assertEquals('\0', EMUtils.toChar(null));
+        assertEquals('b', EMUtils.toChar(new Character('b'), 'c'));
+        assertEquals('c', EMUtils.toChar(null, 'c'));
+    }
+    
     /* *************** */
     /* Utility Classes */
     /* *************** */

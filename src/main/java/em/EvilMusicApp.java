@@ -28,6 +28,7 @@ import em.repos.EqualizerRepository;
 import em.repos.QueueRepository;
 import em.repos.RepoManager;
 import em.repos.SongInfoRepository;
+import em.utils.EMUtils;
 
 /**
  * @since v0.1
@@ -38,6 +39,18 @@ import em.repos.SongInfoRepository;
 @EnableJpaRepositories
 @EnableAutoConfiguration
 public class EvilMusicApp {
+    
+    // Derby Properties
+    
+    private static final String DERBY_HOME_PROP = "derby.system.home";
+    private static final String DEFAULT_DERBY_HOME = System.getProperty("user.home" + "/.evilmusic");
+    
+    // Hibernate Properties
+    
+    private static final String HIBERNATE_AUTO_DDL_PROP = "hibernate.hbm2ddl.auto";
+    private static final String HIBERNATE_AUTO_DDL_UPDATE = "update";
+    private static final String HIBERNATE_AUTO_DDL_CREATE_DROP = "";
+    private static final String HIBERNATE_DIALECT_PROP = "hibernate.dialect";
     
     /* *********** */
     /* Main Method */
@@ -58,7 +71,9 @@ public class EvilMusicApp {
     /* *********************** */
     
     private static void configureDerby() {
-        System.setProperty("derby.system.home", "/home/joe/derbyhome");
+        final String dbHome = EMPreferencesManager.getInstance().getPreferences().getDatabaseHome();
+        System.setProperty(DERBY_HOME_PROP, EMUtils.hasValues(dbHome) ? dbHome : DEFAULT_DERBY_HOME);
+        
     }
     
     private static void configureRepoManager(ConfigurableApplicationContext context) {
@@ -74,7 +89,7 @@ public class EvilMusicApp {
         final DataSource ds = new DataSource();
         
         ds.setDefaultAutoCommit(false);
-        ds.setUrl("jdbc:derby:directory/em;create=true");
+        ds.setUrl("jdbc:derby:em;create=true");
         ds.setDriverClassName(EmbeddedDriver.class.getName());
         
         return ds;
@@ -111,8 +126,13 @@ public class EvilMusicApp {
         final Properties properties = new Properties();
         
         // Setting this to "create-drop" configure hibernate to drop all created tables when the JVM dies.
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.dialect", DerbyTenSevenDialect.class.getName());
+        if(EMUtils.toBoolean(EMPreferencesManager.getInstance().getPreferences().getDatabaseRollback())) {
+            properties.setProperty(HIBERNATE_AUTO_DDL_PROP, HIBERNATE_AUTO_DDL_CREATE_DROP);
+        } else {
+            properties.setProperty(HIBERNATE_AUTO_DDL_PROP, HIBERNATE_AUTO_DDL_UPDATE);
+        }
+        
+        properties.setProperty(HIBERNATE_DIALECT_PROP, DerbyTenSevenDialect.class.getName());
         
         return properties;
     }

@@ -14,6 +14,8 @@ public class EMPreferences implements Cloneable {
     
     private String[] musicDirectories;
     private String metaFLACCommand;
+    private String databaseHome;
+    private Boolean databaseRollback;
     
     /* ************ */
     /* Constructors */
@@ -43,6 +45,22 @@ public class EMPreferences implements Cloneable {
         this.metaFLACCommand = metaflacCommand;
     }
     
+    public String getDatabaseHome() {
+        return databaseHome;
+    }
+    
+    public void setDatabaseHome(String databaseHome) {
+        this.databaseHome = databaseHome;
+    }
+    
+    public Boolean getDatabaseRollback() {
+        return databaseRollback;
+    }
+    
+    public void setDatabaseRollback(Boolean databaseRollback) {
+        this.databaseRollback = databaseRollback;
+    }
+    
     @Override
     public EMPreferences clone() {
         EMPreferences clone = null;
@@ -58,6 +76,8 @@ public class EMPreferences implements Cloneable {
             clone.musicDirectories =
                     musicDirectories == null ? null : Arrays.copyOf(musicDirectories, musicDirectories.length);
             clone.metaFLACCommand = metaFLACCommand;
+            clone.databaseHome = databaseHome;
+            clone.databaseRollback = databaseRollback;
         }
         
         return clone;

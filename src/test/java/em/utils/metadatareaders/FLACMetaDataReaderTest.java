@@ -146,6 +146,7 @@ public class FLACMetaDataReaderTest {
                 new ByteArrayInputStream(createFLACMetaDataString(trackNum, artist, album, title, genre, year,
                         sampleRate, sampleCount).getBytes());
         final SongInfo info = FLACMetaDataReader.parseMetaData(in);
+        double seconds = (double)sampleCount / (double)sampleRate;
         
         assertEquals(trackNum, info.getTrackNumber());
         assertEquals(artist, info.getArtist());
@@ -155,7 +156,7 @@ public class FLACMetaDataReaderTest {
         assertEquals(year, info.getYear());
         assertEquals(sampleRate, info.getSampleRate());
         assertEquals(sampleCount, info.getSampleCount());
-        assertEquals((int)Math.ceil((double)sampleCount / (double)sampleRate), info.getSeconds());
+        assertEquals((int)Math.ceil(seconds * 1000.0), info.getMillis());
     }
     
     /**

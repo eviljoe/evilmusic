@@ -126,7 +126,7 @@ public class FLACMetaDataReader extends MetaDataReader {
         }
         
         if(sampleRate > -1 && sampleCount > -1) {
-            info.setSeconds((int)Math.ceil((double)sampleCount / (double)sampleRate));
+            info.setMillis((int)Math.ceil((double)sampleCount / (double)sampleRate * 1000.0));
         }
         
         return info;
@@ -195,6 +195,7 @@ public class FLACMetaDataReader extends MetaDataReader {
             this.info = null;
         }
         
+        @Override
         public void run() {
             try {
                 info = parseMetaData(in);
@@ -217,6 +218,7 @@ public class FLACMetaDataReader extends MetaDataReader {
             this.in = new BufferedInputStream(in);
         }
         
+        @Override
         public void run() {
             final byte[] buf = new byte[1024];
             

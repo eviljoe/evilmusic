@@ -28,3 +28,27 @@
     height: 200px;
     text-align: center;
 }
+
+.em-progress-bar {
+    width: 100%;
+    height: 10px;
+    padding: 5px;
+    display: table;
+}
+
+.em-progress-row {
+    display: table-row;
+}
+
+.em-progress-gutter {
+    width: 100%;
+    height: 10px;
+    background: gray;
+    display: table-cell;
+}
+
+.em-progress-meter {
+    height: 10px;
+    background: blue;
+    display: block;
+}

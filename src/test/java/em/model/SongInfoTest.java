@@ -30,7 +30,7 @@ public class SongInfoTest {
         song.setTitle("test title");
         song.setGenre("test genre");
         song.setYear(2014);
-        song.setSeconds(250);
+        song.setMillis(250000);
         song.setTrackNumber(3);
         song.setSampleRate(44000);
         song.setSampleCount(123456);
@@ -45,7 +45,7 @@ public class SongInfoTest {
         assertEquals(song.getTitle(), clone.getTitle());
         assertEquals(song.getGenre(), clone.getGenre());
         assertEquals(song.getYear(), clone.getYear());
-        assertEquals(song.getSeconds(), clone.getSeconds());
+        assertEquals(song.getMillis(), clone.getMillis());
         assertEquals(song.getTrackNumber(), clone.getTrackNumber());
         assertEquals(song.getSampleRate(), clone.getSampleRate());
         assertEquals(song.getSampleCount(), clone.getSampleCount());

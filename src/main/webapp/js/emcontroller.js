@@ -6,8 +6,10 @@ emApp.controller('EMLibraryController', function($scope, $http) {
     $scope.library = [];
     $scope.queue = null;
     $scope.player = null;
+    $scope.playerProgress = 25;
+    $scope.currentSong = null;
     $scope.testOutput = null;
-    $scope.nodes = [];
+    $scope.webAudioNodes = {};
     $scope.eq = null;
 
     /** Loads the contents of the library using a REST call. */
@@ -148,10 +150,6 @@ emApp.controller('EMLibraryController', function($scope, $http) {
         $http.get(url)
             .success(function (data, status, headers, config) {
                 if(data && data.nodes) {
-                    for(var x = 0; x < data.nodes.length; x++) {
-                        data.nodes[x].webAuidioNodes = [];
-                    }
-
                     data.nodes.sort(function(a, b) {
                         return a.frequency - b.frequency;
                     });
@@ -166,23 +164,32 @@ emApp.controller('EMLibraryController', function($scope, $http) {
 
     $scope.play = function(queueIndex) {
         if($scope.player) {
-            $scope.togglePlayback();
-        } else if($scope.queue && $scope.queue.id) {
+            $scope.player.stop();
+        }
+
+        if($scope.queue && $scope.queue.id) {
+            var song = $scope.getSongFromQueue(queueIndex);
+
             $scope.player = AV.Player.fromURL(
-                '/rest/queue/' + $scope.queue.id +
-                '/stream/queueindex/' + queueIndex +
-                '?updatePlayIndex=true');
+                '/rest/queue/' + $scope.queue.id + '/stream/queueindex/' + queueIndex + '?updatePlayIndex=true');
+
             $scope.player.nodeCreationCallback = $scope.createEQNodes;
+            $scope.player.on('progress', function(progress) {
+                $scope.playerProgress = progress / song.millis * 100;
+                $scope.$apply();
+            });
             $scope.player.on('end', function() {
                 $scope.player = null;
+                $scope.currentSong = null;
             });
 
+            $scope.currentSong = song;
             $scope.player.play();
             $scope.loadQueue();
         }
     };
 
-    $scope.seek = function(millis) {
+    $scope.seekToMillis = function(millis) {
         var newMillis = null;
 
         if($scope.player) {
@@ -190,6 +197,29 @@ emApp.controller('EMLibraryController', function($scope, $http) {
         }
 
         return newMillis;
+    };
+
+    $scope.seekToPercent = function(percent) {
+        var newMillis = null;
+
+        if($scope.player) {
+            newMillis = $scope.seekToMillis(Math.floor($scope.player.duration * percent));
+        }
+
+        return newMillis;
+    };
+
+    $scope.progressBarClicked = function(event) {
+        var x = event.offsetX;
+        var width;
+
+        if(event.target.id === 'progressBarGutter') {
+            width = event.target.offsetWidth;
+        } else {
+            width = document.getElementById('progressBarGutter').offsetWidth;
+        }
+
+        $scope.seekToPercent(x / width);
     };
 
     $scope.togglePlayback = function() {
@@ -211,15 +241,18 @@ emApp.controller('EMLibraryController', function($scope, $http) {
      * @return {BiquadFilterNode[]} Returns an array of filter nodes.  That should be connected to the audio graph.
      */
     $scope.createEQNodes = function(context) {
+        var map = {};
         var eqNodes = [];
 
         for(var x = 0; x < $scope.eq.nodes.length; x++) {
             var emNode = $scope.eq.nodes[x];
             var eqNode = $scope.createEQNode(context, emNode);
 
-            emNode.webAuidioNodes.push(eqNode);
+            map[emNode.id] = eqNode;
             eqNodes.push(eqNode);
         }
+
+        $scope.webAudioNodes = map;
 
         return eqNodes;
     };
@@ -246,17 +279,14 @@ emApp.controller('EMLibraryController', function($scope, $http) {
     /**
      * Updates the gain for each Web Audio API filter node contained within the given EqualizerNode.
      *
-     * @param  {EqualizerNode} emNode The node that can contain 0 or more Web Audio API filter nodes.
+     * @param {EqualizerNode} emNode The node that can contain 0 or more Web Audio API filter nodes.
      */
     $scope.updateNodeGain = function(emNode) {
         if(typeof emNode.gain !== 'number') {
             emNode.gain = parseInt(emNode.gain);
         }
 
-        for(var x = 0; x < emNode.webAuidioNodes.length; x++) {
-            var eqNode = emNode.webAuidioNodes[x];
-            eqNode.gain.value = emNode.gain;
-        }
+        $scope.webAudioNodes[emNode.id].gain.value = emNode.gain;
     };
 
     /**
@@ -264,11 +294,11 @@ emApp.controller('EMLibraryController', function($scope, $http) {
      * returned:
      *
      *    HERTZ | OUTPUT                 | EXAMPLE
-     * -------------------------------------------
+     * ---------+------------------------+--------
      *  < 1,000 | <magnitude> Hz         | 128 Hz
      * >= 1,000 | <magnitude / 1000> kHz | 1.8 kHz
      *
-     * @param {Number} hertz The Hertz magnitude.  If null, an empty string will be returned.
+     * @param {Number} hertz The Hertz magnitude.  If null, an null will be returned.
      *
      * @return {String} Returns the string representation of the Hertz magnitude.
      */
@@ -278,6 +308,8 @@ emApp.controller('EMLibraryController', function($scope, $http) {
         if(hertz) {
             str = hertz < 0 ? '-' : '';
 
+            hertz = Math.abs(hertz);
+
             if(hertz < 1000) {
                 str += hertz + ' Hz';
             } else {
@@ -286,6 +318,59 @@ emApp.controller('EMLibraryController', function($scope, $http) {
         }
 
         return str;
+    };
+
+    /**
+     * Converts the given seconds magnitude to a string with units.  The following table describes the string that will
+     * be returned:
+     *
+     * SECONDS | OUTPUT              | EXAMPLE
+     * --------+---------------------+------
+     *    < 60 | 0:<seconds>         | 0:05
+     *   >= 60 | <minutes>:<seconds> | 3:59
+     *
+     * @param {Number} seconds The seconds magnitude.  If null, null will be returned.
+     *
+     * @return {String} Returns the string representation of the seconds magnitude.
+     */
+    $scope.secondsToString = function(seconds) {
+        var str = null;
+
+        if(seconds) {
+            str = seconds < 0 ? '-' : '';
+
+            seconds = Math.abs(seconds);
+
+            if(seconds < 60) {
+                str += '0:';
+                str += seconds < 10 ? '0' + seconds : seconds;
+            } else {
+                var minutes = Math.floor(seconds / 60);
+                seconds = seconds % 60;
+
+                str += minutes;
+                str += ':';
+                str += seconds < 10 ? '0' + seconds : seconds;
+            }
+        }
+
+        return str;
+    };
+
+    $scope.getSongFromQueue = function(queueIndex) {
+        var song = null;
+
+        if($scope.queue && $scope.queue.elements) {
+            for(var x = 0; x < $scope.queue.elements.length; x++) {
+                var elem = $scope.queue.elements[x];
+
+                if(elem && elem.queueIndex === queueIndex) {
+                    song = elem.song;
+                }
+            }
+        }
+
+        return song;
     };
 
     $scope.loadEqualizer(true);

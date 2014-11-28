@@ -1,7 +1,9 @@
 package em.prefs;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
@@ -28,11 +30,15 @@ public class EMPreferencesManagerTest {
         final String allMusicDirs =
                 musicDir1 + EMPreferencesManager.DELIMITER + musicDir2 + EMPreferencesManager.DELIMITER + musicDir3;
         final String metaFLACCommand = "/usr/bin/metaflac";
+        final String dbHome = "/home/test/db/home";
+        final Boolean dbRollback = Boolean.TRUE;
         final Properties props = new Properties();
         final EMPreferences emPrefs;
         
         props.put(EMPreferencesKey.MUSIC_DIRECTORIES.toString(), allMusicDirs);
         props.put(EMPreferencesKey.METAFLAC.toString(), metaFLACCommand);
+        props.put(EMPreferencesKey.DATABASE_HOME.toString(), dbHome);
+        props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), dbRollback.toString());
         
         emPrefs = EMPreferencesManager.getInstance().createPreferences(props);
         
@@ -41,6 +47,8 @@ public class EMPreferencesManagerTest {
         assertEquals(musicDir2, emPrefs.getMusicDirectories()[1]);
         assertEquals(musicDir3, emPrefs.getMusicDirectories()[2]);
         assertEquals(metaFLACCommand, emPrefs.getMetaFLACCommand());
+        assertEquals(dbHome, emPrefs.getDatabaseHome());
+        assertEquals(dbRollback, emPrefs.getDatabaseRollback());
     }
     
     /**
@@ -133,6 +141,95 @@ public class EMPreferencesManagerTest {
         final String[] a =
                 EMPreferencesManager.getInstance().getStringArray(new Properties(), EMPreferencesKey.MUSIC_DIRECTORIES);
         
+        assertNull(a);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getBoolean(Properties, EMPreferencesKey)} function returns
+     * {@code true} when a boolean property's value is set to {@code "true"}.
+     */
+    @Test
+    public void testGetBoolean_True() {
+        final Properties props = new Properties();
+        final Boolean a;
+        
+        props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "true");
+        
+        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertTrue(a);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getBoolean(Properties, EMPreferencesKey)} function returns
+     * {@code true} when a boolean property's value is set to {@code "true"} (ignoring leading and trailing whitespace).
+     */
+    @Test
+    public void testGetBoolean_TrueWithWhitespace() {
+        final Properties props = new Properties();
+        final Boolean a;
+        
+        props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "\ttrue \n ");
+        
+        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertTrue(a);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getBoolean(Properties, EMPreferencesKey)} function returns
+     * {@code false} when a boolean property's value is set to {@code "false"}.
+     */
+    @Test
+    public void testGetBoolean_False() {
+        final Properties props = new Properties();
+        final Boolean a;
+        
+        props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "false");
+        
+        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertFalse(a);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getBoolean(Properties, EMPreferencesKey)} function returns
+     * {@code false} when a boolean property's value is set to {@code "false"} (ignoring leading and trailing
+     * whitespace).
+     */
+    @Test
+    public void testGetBoolean_FalseWithWhitespace() {
+        final Properties props = new Properties();
+        final Boolean a;
+        
+        props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "\tfalse \n ");
+        
+        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertFalse(a);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getBoolean(Properties, EMPreferencesKey)} function returns
+     * {@code null} when a boolean property's value is set to an empty string.
+     */
+    @Test
+    public void testGetBoolean_Empty() {
+        final Properties props = new Properties();
+        final Boolean a;
+        
+        props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "");
+        
+        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertNull(a);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getBoolean(Properties, EMPreferencesKey)} function returns
+     * {@code null} when a boolean property's value is not set.
+     */
+    @Test
+    public void testGetBoolean_Null() {
+        final Properties props = new Properties();
+        final Boolean a;
+        
+        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
         assertNull(a);
     }
 }

@@ -29,7 +29,5 @@
     /* Environments */
     /* ************ */
 
-    "devel" : true,
-    "predef" : ["angular", "AV"]
-
+    "predef" : ["alert", "angular", "AV", "document"]
 }

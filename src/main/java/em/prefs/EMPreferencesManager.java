@@ -66,13 +66,19 @@ public class EMPreferencesManager {
         if(props != null) {
             final String[] musicDirs = getStringArray(props, EMPreferencesKey.MUSIC_DIRECTORIES);
             final String metaflac = props.getProperty(EMPreferencesKey.METAFLAC.toString());
+            final String dbHome = props.getProperty(EMPreferencesKey.DATABASE_HOME.toString());
+            final Boolean dbRollback = getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
             
             emPrefs.setMusicDirectories(musicDirs);
             emPrefs.setMetaFLACCommand(metaflac);
+            emPrefs.setDatabaseHome(dbHome);
+            emPrefs.setDatabaseRollback(dbRollback);
             
             LOG.info("=== Loaded Preferences ===");
             LOG.info("Music Directories: " + Arrays.toString(musicDirs));
-            LOG.info("MetaFLAC Command: " + metaflac);
+            LOG.info("MetaFLAC Command:  " + metaflac);
+            LOG.info("Database Home:     " + dbHome);
+            LOG.info("Database Rollback: " + dbRollback);
             LOG.info("===== End Preferences ====");
         }
         
@@ -99,6 +105,23 @@ public class EMPreferencesManager {
         return array;
     }
     
+    Boolean getBoolean(Properties props, EMPreferencesKey key) {
+        String str = props.getProperty(EMPreferencesKey.DATABASE_ROLLBACK.toString());
+        Boolean b = null;
+        
+        if(str != null) {
+            str = str.trim();
+            
+            if("true".equalsIgnoreCase(str)) {
+                b = Boolean.TRUE;
+            } else if("false".equalsIgnoreCase(str)) {
+                b = Boolean.FALSE;
+            }
+        }
+        
+        return b;
+    }
+    
     public EMPreferences getPreferences() {
         if(preferences == null) {
             try {
@@ -116,7 +139,11 @@ public class EMPreferencesManager {
     /* *********************** */
     
     public static enum EMPreferencesKey {
-        MUSIC_DIRECTORIES("em.music_directories"), METAFLAC("em.metaflac");
+        
+        MUSIC_DIRECTORIES("em.music_directories"),
+        METAFLAC("em.metaflac_command"),
+        DATABASE_HOME("em.database.home"),
+        DATABASE_ROLLBACK("em.database.rollback_on_close");
         
         private final String key;
         
@@ -124,6 +151,7 @@ public class EMPreferencesManager {
             this.key = key;
         }
         
+        @Override
         public String toString() {
             return key;
         }
