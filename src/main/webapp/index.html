@@ -4,11 +4,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Evil Music</title>
     <link rel="stylesheet" type="text/css" href="/css/evilmusic.css">
-    <script type="text/javascript" src="/js/angular.js"></script>
-    <script type="text/javascript" src="/js/emcontroller.js"></script>
-    <script type="text/javascript" src="/js/emeq.js"></script>
-    <script type="text/javascript" src="/js/aurora.js"></script>
-    <script type="text/javascript" src="/js/flac.js"></script>
+    <script type="text/javascript" src="/js/emaurora.js" defer></script>
+    <script type="text/javascript" src="/js/lib/flac.js" defer></script>
+    <script type="text/javascript" src="/js/lib/jquery.js" defer></script>
+    <script type="text/javascript" src="/js/lib/angular.js" defer></script>
+    <script type="text/javascript" src="/js/emcontroller.js" defer></script>
+    <script type="text/javascript" src="/js/emeq.js" defer></script>
 </head>
 <body ng-controller="EMLibraryController">
     <h1>Evil Music</h1>
@@ -41,13 +42,7 @@
             <input type="button" value="move 10.5s" ng-click="seekToMillis(10500)"/>
             <input type="button" value="move 11s" ng-click="seekToMillis(11000)"/>
         </div>
-        <div id="progressBar" class="em-progress-bar">
-            <div class="em-progress-row">
-                <div id="progressBarGutter" class="em-progress-gutter" ng-click="progressBarClicked($event)">
-                    <span id="progressBarMeter" class="em-progress-meter" ng-style="{width: playerProgress + '%'}"></span>
-                </div>
-            </div>
-        </div>
+        <em-progress-bar progress="playerProgress" onseek="seekToPercent"></em-progress-bar>
     </div>
     <div style="float:left">
         <div><h2>Library</h2></div>

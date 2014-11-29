@@ -1,5 +1,6 @@
 package em;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -29,6 +30,7 @@ import em.repos.QueueRepository;
 import em.repos.RepoManager;
 import em.repos.SongInfoRepository;
 import em.utils.EMUtils;
+import em.utils.LibraryUtils;
 
 /**
  * @since v0.1
@@ -71,8 +73,16 @@ public class EvilMusicApp {
     /* *********************** */
     
     private static void configureDerby() {
-        final String dbHome = EMPreferencesManager.getInstance().getPreferences().getDatabaseHome();
-        System.setProperty(DERBY_HOME_PROP, EMUtils.hasValues(dbHome) ? dbHome : DEFAULT_DERBY_HOME);
+        String dbHome = EMPreferencesManager.getInstance().getPreferences().getDatabaseHome();
+        
+        if(EMUtils.hasValues(dbHome)) {
+            final File f = LibraryUtils.convertToFile(dbHome);
+            dbHome = f == null ? DEFAULT_DERBY_HOME : f.getPath();
+        } else {
+            dbHome = DEFAULT_DERBY_HOME;
+        }
+        
+        System.setProperty(DERBY_HOME_PROP, dbHome);
         
     }
     
