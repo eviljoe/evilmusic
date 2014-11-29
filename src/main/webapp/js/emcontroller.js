@@ -6,7 +6,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
     $scope.library = [];
     $scope.queue = null;
     $scope.player = null;
-    $scope.playerProgress = 25;
+    $scope.playerProgress = 0;
     $scope.currentSong = null;
     $scope.testOutput = null;
     $scope.webAudioNodes = {};
