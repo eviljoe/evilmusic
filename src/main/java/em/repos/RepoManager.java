@@ -1,5 +1,6 @@
 package em.repos;
 
+
 /**
  * @since v0.1
  * @author eviljoe
@@ -11,6 +12,7 @@ public class RepoManager {
     private volatile SongInfoRepository songInfo;
     private volatile QueueRepository queue;
     private volatile EqualizerRepository equalizer;
+    private volatile ClientConfigurationRepository clientConfig;
     
     /* ************ */
     /* Constructors */
@@ -57,5 +59,13 @@ public class RepoManager {
     
     public void setEqualizer(EqualizerRepository equalizer) {
         this.equalizer = equalizer;
+    }
+    
+    public ClientConfigurationRepository getClientConfiguration() {
+        return clientConfig;
+    }
+    
+    public void setClientConfiguration(ClientConfigurationRepository clientConfig) {
+        this.clientConfig = clientConfig;
     }
 }

@@ -11,6 +11,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
     $scope.testOutput = null;
     $scope.webAudioNodes = {};
     $scope.eq = null;
+    $scope.volume = 100;
 
     /** Loads the contents of the library using a REST call. */
     $scope.loadLibrary = function() {
@@ -174,6 +175,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
                 '/rest/queue/' + $scope.queue.id + '/stream/queueindex/' + queueIndex + '?updatePlayIndex=true');
 
             $scope.player.nodeCreationCallback = $scope.createEQNodes;
+            $scope.player.volume = $scope.volume;
             $scope.player.on('progress', function(progress) {
                 $scope.playerProgress = progress / song.millis * 100;
                 $scope.$apply();
@@ -373,54 +375,31 @@ emApp.controller('EMLibraryController', function($scope, $http) {
         return song;
     };
 
+    $scope.setVolume = function(volume) {
+        if($scope.player) {
+            $scope.player.volume = volume;
+        }
+
+        $scope.volume = volume;
+
+        $http.put('/rest/config/volume/' + volume)
+            .error(function (data, status, headers, config) {
+                alert('Could not update volume.\n\n' + JSON.stringify(data));
+            });
+    };
+
+    $scope.loadVolume = function() {
+      $http.get('/rest/config/volume')
+            .success(function (data, status, headers, config) {
+                $scope.volume = data;
+            })
+            .error(function (data, status, headers, config) {
+                alert('Could not load volume.\n\n' + JSON.stringify(data));
+            });
+    };
+
+    $scope.loadVolume();
     $scope.loadEqualizer(true);
     $scope.loadQueue(true);
     $scope.loadLibrary();
-});
-
-emApp.directive('emProgressBar', function() {
-    return {
-        'restrict' : 'E',
-        'templateUrl' : 'emprogressbar.html',
-        'scope' : {
-            'progress' : '=',
-            'onseek' : '='
-        },
-        'controller' : function($scope) {
-            $scope.progressMeterClicked = function(xPos, width) {
-                $scope.onseek(xPos / width);
-            };
-        }
-    };
-});
-
-emApp.directive('emProgressGutter', function() {
-    return {
-        'restrict' : 'A',
-        'require' : ['^emProgressBar'],
-        'link' : function link(scope, element, attrs) {
-            element.on('click', function(event) {
-                event.stopPropagation();
-                scope.progressMeterClicked(event.offsetX, element.width());
-            });
-        }
-    };
-});
-
-
-emApp.directive('emProgressMeter', function() {
-    return {
-        'restrict' : 'A',
-        'require' : ['^emProgressBar'],
-        'link' : function link(scope, element, attrs) {
-            scope.$watch('progress', function(value) {
-                element.width(value + '%');
-            });
-
-            element.on('click', function(event) {
-                event.stopPropagation();
-                scope.progressMeterClicked(event.offsetX, element.parent().width());
-            });
-        }
-    };
 });

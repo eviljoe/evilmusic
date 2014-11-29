@@ -8,8 +8,10 @@
     <script type="text/javascript" src="/js/lib/flac.js" defer></script>
     <script type="text/javascript" src="/js/lib/jquery.js" defer></script>
     <script type="text/javascript" src="/js/lib/angular.js" defer></script>
-    <script type="text/javascript" src="/js/emcontroller.js" defer></script>
     <script type="text/javascript" src="/js/emeq.js" defer></script>
+    <script type="text/javascript" src="/js/emcontroller.js" defer></script>
+    <script type="text/javascript" src="/js/directives/emprogressbar.js" defer></script>
+    <script type="text/javascript" src="/js/directives/emvolumecontrol.js" defer></script>
 </head>
 <body ng-controller="EMLibraryController">
     <h1>Evil Music</h1>
@@ -38,9 +40,7 @@
         <div><h2>Player Controls</h2></div>
         <div>
             <input type="button" value="play/pause" ng-click="togglePlayback()"/>
-            <input type="button" value="move 10s" ng-click="seekToMillis(10000)"/>
-            <input type="button" value="move 10.5s" ng-click="seekToMillis(10500)"/>
-            <input type="button" value="move 11s" ng-click="seekToMillis(11000)"/>
+            <div em-volume-control style="display:inline-block" volume="volume" onvolumechange="setVolume"></div>
         </div>
         <em-progress-bar progress="playerProgress" onseek="seekToPercent"></em-progress-bar>
     </div>
