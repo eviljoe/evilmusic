@@ -284,11 +284,15 @@ emApp.controller('EMLibraryController', function($scope, $http) {
      * @param {EqualizerNode} emNode The node that can contain 0 or more Web Audio API filter nodes.
      */
     $scope.updateNodeGain = function(emNode) {
+        var webAudioNode = $scope.webAudioNodes[emNode.id];
+
         if(typeof emNode.gain !== 'number') {
             emNode.gain = parseInt(emNode.gain);
         }
 
-        $scope.webAudioNodes[emNode.id].gain.value = emNode.gain;
+        if(webAudioNode) {
+            webAudioNode.gain.value = emNode.gain;
+        }
     };
 
     /**
