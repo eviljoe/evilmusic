@@ -4,6 +4,7 @@
 /*derby.log
 /*derbyDB
 /.gradle/
+/node_modules/
 /.project
 /.settings/
 /*.sublime-project

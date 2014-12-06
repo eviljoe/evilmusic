@@ -1,8 +1,7 @@
 'use strict';
 
-var emApp = angular.module('EvilMusicApp', []);
-
-emApp.controller('EMLibraryController', function($scope, $http) {
+angular.module('EvilMusicApp', [])
+.controller('EMLibraryController', function($scope, $http) {
     $scope.library = [];
     $scope.queue = null;
     $scope.player = null;
@@ -311,7 +310,7 @@ emApp.controller('EMLibraryController', function($scope, $http) {
     $scope.hertzToString = function(hertz) {
         var str = null;
 
-        if(hertz) {
+        if(hertz && !isNaN(hertz)) {
             str = hertz < 0 ? '-' : '';
 
             hertz = Math.abs(hertz);
