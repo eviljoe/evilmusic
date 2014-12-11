@@ -52,26 +52,26 @@
         </div>
         <table>
             <tr>
-                <th>ID</th>
-                <th>Artist</th>
-                <th>Album</th>
+                <th align="right">ID</th>
+                <th align="left">Artist</th>
+                <th align="left">Album</th>
                 <th align="right">Track #</th>
-                <th>Title</th>
-                <th>Length</th>
-                <th>Sample Rate</th>
-                <th>Sample Count</th>
-                <th>Controls</th>
+                <th align="left">Title</th>
+                <th align="right">Length</th>
+                <th align="right">Sample Rate</th>
+                <th align="right">Sample Count</th>
+                <th align="left">Controls</th>
             </tr>
             <tr ng-repeat="song in library | orderBy : ['artist','trackNumber']">
-                <td>{{song.id}}</td>
-                <td>{{song.artist}}</td>
-                <td>{{song.album}}</td>
+                <td align="right">{{song.id}}</td>
+                <td align="left">{{song.artist}}</td>
+                <td align="left">{{song.album}}</td>
                 <td align="right">{{song.trackNumber}}</td>
-                <td>{{song.title}}</td>
-                <td>{{secondsToString(song.seconds)}} s</td>
-                <td>{{song.sampleRate}} Hz</td>
-                <td>{{song.sampleCount}}</td>
-                <td><input type="button" value="qL" ng-click="enqueueLast(song.id)"/></td>
+                <td align="left">{{song.title}}</td>
+                <td align="right">{{millisecondsToString(song.millis)}} s</td>
+                <td align="right">{{hertzToString(song.sampleRate)}}</td>
+                <td align="right">{{song.sampleCount}}</td>
+                <td align="left"><input type="button" value="qL" ng-click="enqueueLast(song.id)"/></td>
             </tr>
         </table>
     </div>

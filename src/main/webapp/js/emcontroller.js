@@ -303,14 +303,15 @@ angular.module('EvilMusicApp', [])
      *  < 1,000 | <magnitude> Hz         | 128 Hz
      * >= 1,000 | <magnitude / 1000> kHz | 1.8 kHz
      *
-     * @param {Number} hertz The Hertz magnitude.  If null, an null will be returned.
+     * @param {Number} hertz The Hertz magnitude.  If null, undefined, or NaN, null will be returned.
      *
-     * @return {String} Returns the string representation of the Hertz magnitude.
+     * @return {String} Returns the string representation of the Hertz magnitude.  If the magnitude is null, undefined,
+     *         or NaN, null will be returned.
      */
     $scope.hertzToString = function(hertz) {
         var str = null;
 
-        if(hertz && !isNaN(hertz)) {
+        if(hertz !== null && hertz !== undefined && !isNaN(hertz)) {
             str = hertz < 0 ? '-' : '';
 
             hertz = Math.abs(hertz);
@@ -334,28 +335,36 @@ angular.module('EvilMusicApp', [])
      *    < 60 | 0:<seconds>         | 0:05
      *   >= 60 | <minutes>:<seconds> | 3:59
      *
-     * @param {Number} seconds The seconds magnitude.  If null, null will be returned.
+     * In the above format, <seconds> will always be at least two digits.  If it is representing a value less than ten,
+     * a leading zero will be added.  For example, "07" will be used to represent seven.
      *
-     * @return {String} Returns the string representation of the seconds magnitude.
+     * @param {Number} seconds The seconds magnitude.  If null, undefined, or NaN, null will be returned.
+     *
+     * @return {String} Returns the string representation of the seconds magnitude.  If the magnitude is null,
+     *         undefined, or NaN, null will be returned.
      */
-    $scope.secondsToString = function(seconds) {
+    $scope.millisecondsToString = function(millis) {
         var str = null;
 
-        if(seconds) {
-            str = seconds < 0 ? '-' : '';
+         if(millis !== null && millis !== undefined &&  !isNaN(millis)) {
+            str = millis < 0 ? '-' : '';
 
-            seconds = Math.abs(seconds);
+            millis = Math.abs(millis);
 
-            if(seconds < 60) {
-                str += '0:';
-                str += seconds < 10 ? '0' + seconds : seconds;
+            if(millis === 0) {
+                str = '0:00';
+            } else if(millis <= 1000) {
+                str += '0:01';
+            } else if(millis < 60000) {
+                str += millis < 10000 ? '0:0' : '0:';
+                str += Math.ceil(millis / 1000);
             } else {
-                var minutes = Math.floor(seconds / 60);
-                seconds = seconds % 60;
+                var minutes = Math.floor(millis / 60000);
 
+                millis = millis % 60000;
                 str += minutes;
-                str += ':';
-                str += seconds < 10 ? '0' + seconds : seconds;
+                str += millis < 10000 ? ':0' : ':';
+                str += Math.ceil(millis / 1000);
             }
         }
 

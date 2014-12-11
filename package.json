@@ -1,23 +1,54 @@
 {
-  "name": "evilmusic",
-  "description": "A web-based music player for lossless formats",
-  "author": "eviljoe",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/eviljoe/evilmusic.git"
-  },
-  "license": "",
-  "bugs": {
-    "url": "https://github.com/eviljoe/evilmusic/issues"
-  },
-  "homepage": "https://github.com/eviljoe/evilmusic",
-  "devDependencies": {
-    "angular": "^1.3.5",
-    "angular-mocks": "^1.3.5",
-    "jasmine-core": "^2.1.3",
-    "karma": "^0.12.28",
-    "karma-jasmine": "^0.3.2",
-    "karma-phantomjs-launcher": "^0.1.4",
-    "phantomjs": "^1.9.12"
-  }
+    "name": "evilmusic",
+    "description": "A web-based music player for lossless formats",
+    "author": "eviljoe",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/eviljoe/evilmusic.git"
+        },
+    "license": "",
+    "bugs": {
+        "url": "https://github.com/eviljoe/evilmusic/issues"
+    },
+    "homepage": "https://github.com/eviljoe/evilmusic",
+    "devDependencies": {
+        "angular": "^1.3.5",
+        "angular-mocks": "^1.3.5",
+        "jasmine-core": "^2.1.3",
+        "karma": "^0.12.28",
+        "karma-jasmine": "^0.3.2",
+        "karma-phantomjs-launcher": "^0.1.4",
+        "phantomjs": "^1.9.12"
+    },
+    "jshintConfig" : {
+        "camelcase" : true,
+        "curly" : true,
+        "eqeqeq" : true,
+        "newcap" : true,
+        "latedef" : true,
+        "noempty" : true,
+        "nonew" : true,
+        "quotmark" : "single",
+        "undef" : true,
+        "unused" : "vars",
+        "strict" : true,
+        "maxcomplexity" : 10,
+
+        "globalstrict" : true,
+        "laxbreak" : true,
+        "maxerr" : 1000,
+
+        "predef" : [
+            "alert",
+            "angular",
+            "AV",
+            "beforeEach",
+            "describe",
+            "document",
+            "expect",
+            "inject",
+            "it",
+            "module"
+        ]
+    }
 }
