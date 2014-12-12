@@ -3,7 +3,7 @@
 angular.module('EvilMusicApp').directive('emProgressBar', function() {
     return {
         'restrict' : 'E',
-        'templateUrl' : 'emprogressbar.html',
+        'templateUrl' : '/shared/progressbar/emprogressbar.html',
         'scope' : {
             'progress' : '=',
             'onseek' : '='

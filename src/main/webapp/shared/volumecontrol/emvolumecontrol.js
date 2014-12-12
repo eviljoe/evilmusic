@@ -3,7 +3,7 @@
 angular.module('EvilMusicApp').directive('emVolumeControl', function() {
     return {
         'restrict' : 'A',
-        'templateUrl' : 'emvolumecontrol.html',
+        'templateUrl' : '/shared/volumecontrol/emvolumecontrol.html',
         'scope' : {
             'volume' : '=',
             'onvolumechange' : '='
