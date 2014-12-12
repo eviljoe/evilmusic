@@ -7,8 +7,14 @@ Web based music player for lossless formats.
  * [FLAC](https://xiph.org/flac)
 
 ## External Dependencies
- * `gradle`: Gradle is used to build (and currently to run) EvilMusic.  It can be obtained from https://www.gradle.org.
- * `metaflac`: The `metaflac` command is required to read meta data from FLAC files.  It can be obtained from the `flac` package using the command, `apt-get install flac`.
+#### Gradle
+Gradle is used to build (and currently to run) EvilMusic.  It can be obtained from https://www.gradle.org.
+
+#### Java
+Necessary to run the EvilMusic server.  If you are on Linux, it can be obtained by using the command `apt-get install openjdk-7-jre`.  The Oracle implementation of Java can be obtained from https://www.oracle.com/java.
+
+#### metaflac
+The `metaflac` command is required to read meta data from FLAC files.  If you are on Linux, it can be obtained from the `flac` package using the command, `apt-get install flac`.  Otherwise, it can be obtained from https://xiph.org/flac.
 
 ## Building
 In the project's root directory, execute `gradle build`.
