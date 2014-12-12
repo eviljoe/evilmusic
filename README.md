@@ -19,7 +19,7 @@ In the project's root directory, execute `gradle bootrun`.  This uses [Spring Bo
 **Note:** Issue [#20](https://github.com/eviljoe/evilmusic/issues/20) has been created to address how confusing starting the server is for a non-tech-savvy user.
 
 ## Configuration
-The `/src/main/resources/em.properties` file can be used to configure EvilMusic [2].  The following are settings that can be specified within it.
+The `/src/main/resources/em.properties` file can be used to configure EvilMusic.  The following are settings that can be specified within it.
 
 **Note:** Issue [#21](https://github.com/eviljoe/evilmusic/issues/21) has been created to address how confusing the configuration file is for a non-tech-savvy user.
 
