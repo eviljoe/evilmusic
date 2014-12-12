@@ -4,14 +4,25 @@ module.exports = function(config) {
     config.set({
         basePath : '',
         files : [
-            'src/main/webapp/js/emaurora.js',
-            'src/main/webapp/js/lib/flac.js',
-            'src/main/webapp/js/lib/jquery.js',
-            'src/main/webapp/js/lib/angular.js',
+            // Third party libraries
+            'src/main/webapp/assets/libs/aurora.js',
+            'src/main/webapp/assets/libs/flac.js',
+            'src/main/webapp/assets/libs/query.js',
+            'src/main/webapp/assets/libs/angular.js',
             'node_modules/angular-mocks/angular-mocks.js',
-            'src/main/webapp/js/*.js',
-            'src/main/webapp/js/directives/*.js',
-            'src/test/webapp/js/**/*.js',
+
+            // Root level HTML & JavaScript files
+            'src/main/webapp/index.html',
+            'src/main/webapp/emcontroller.js',
+
+            // EvilMusic non-AngularJS JavaScript Files
+            'src/main/webapp/assets/js/**/*.js',
+
+            // AngularJS Directives
+            'src/main/webapp/shared/**/*',
+
+            // Unit Tests
+            'src/test/webapp/**/*',
         ],
         frameworks : ['jasmine'],
         browsers : ['PhantomJS'],
