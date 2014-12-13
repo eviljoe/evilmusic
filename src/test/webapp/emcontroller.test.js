@@ -4,6 +4,7 @@ describe('EMLibraryController', function() {
 
     var ctrlName = 'EMLibraryController';
     var $controller;
+    var $httpBackend;
 
     beforeEach(module('EvilMusicApp'));
 
@@ -12,22 +13,35 @@ describe('EMLibraryController', function() {
 
     }));
 
+    beforeEach(inject(function(_$httpBackend_){
+        $httpBackend = _$httpBackend_;
+        $httpBackend.when('GET', '/rest/queue/current').respond({});
+    }));
+
     describe('hertzToString', function() {
         var scope;
 
-        beforeEach(inject(function($httpBackend, $http) {
+        beforeEach(inject(function(_$http_, emUtils, queue) {
             scope = {};
 
-            $httpBackend.when('GET', '/rest/config/volume').respond(1.0);
-            $httpBackend.when('GET', '/rest/eq/current').respond({});
-            $httpBackend.when('GET', '/rest/queue/current').respond({});
-            $httpBackend.when('GET', '/rest/library').respond({});
+            $httpBackend.expect('GET', '/rest/config/volume').respond('1');
+            $httpBackend.expect('GET', '/rest/eq/current').respond({});
+            $httpBackend.expect('GET', '/rest/library').respond({});
 
             $controller(ctrlName, {
                 $scope : scope,
-                $http : $http,
+                $http : _$http_,
+                emUtils : emUtils,
+                queue : queue
             });
+
+            $httpBackend.flush();
         }));
+
+        afterEach(function() {
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
 
         it('converts a value equal to zero correctly', function() {
             expect(scope.hertzToString(0)).toEqual('0 Hz');
@@ -62,19 +76,29 @@ describe('EMLibraryController', function() {
     describe('millisecondsToString', function() {
         var scope;
 
-        beforeEach(inject(function($httpBackend, $http) {
+        beforeEach(inject(function(_$httpBackend_, _$http_, emUtils, queue) {
             scope = {};
+            $httpBackend = _$httpBackend_;
 
-            $httpBackend.when('GET', '/rest/config/volume').respond(1.0);
-            $httpBackend.when('GET', '/rest/eq/current').respond({});
-            $httpBackend.when('GET', '/rest/queue/current').respond({});
-            $httpBackend.when('GET', '/rest/library').respond({});
+
+            $httpBackend.expect('GET', '/rest/config/volume').respond('1');
+            $httpBackend.expect('GET', '/rest/eq/current').respond({});
+            $httpBackend.expect('GET', '/rest/library').respond({});
 
             $controller(ctrlName, {
                 $scope : scope,
-                $http : $http,
+                $http : _$http_,
+                emUtils : emUtils,
+                queue : queue
             });
+
+            $httpBackend.flush();
         }));
+
+        afterEach(function() {
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
 
         it('converts a value equal to zero seconds', function() {
             expect(scope.millisecondsToString(0)).toEqual('0:00');
@@ -118,7 +142,7 @@ describe('EMLibraryController', function() {
         });
 
         it('returns null when given a value that is not a number', function() {
-            expect(scope.millisecondsToString('foo bar')).toBeNull();
+            expect(scope.millisecondsToString('hello world')).toBeNull();
         });
     });
 });

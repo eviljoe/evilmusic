@@ -19,7 +19,7 @@ module.exports = function(config) {
             'src/main/webapp/assets/js/**/*.js',
 
             // AngularJS Directives
-            'src/main/webapp/shared/**/*',
+            'src/main/webapp/components/**/*',
 
             // Unit Tests
             'src/test/webapp/**/*',

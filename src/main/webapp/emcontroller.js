@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('EvilMusicApp', [])
-.controller('EMLibraryController', function($scope, $http) {
+.controller('EMLibraryController', ['$scope', '$http', 'emUtils', 'queue', function($scope, $http, emUtils, queue) {
     $scope.library = [];
-    $scope.queue = null;
     $scope.player = null;
     $scope.playerProgress = 0;
     $scope.currentSong = null;
@@ -11,6 +10,7 @@ angular.module('EvilMusicApp', [])
     $scope.webAudioNodes = {};
     $scope.eq = null;
     $scope.volume = 100;
+    $scope.queue = queue;
 
     /** Loads the contents of the library using a REST call. */
     $scope.loadLibrary = function() {
@@ -24,30 +24,6 @@ angular.module('EvilMusicApp', [])
     };
 
     /**
-     * Loads the contents of the queue using a REST call.  A new queue can be loaded, or the same queue can be
-     * re-loaded.
-     *
-     * @param {Boolean} loadNew Whether or not to load a new queue or reload the current queue.
-     */
-    $scope.loadQueue = function(loadNew) {
-        var url = '/rest/queue/';
-
-        if(loadNew) {
-            url += 'current';
-        } else {
-            url += $scope.queue.id;
-        }
-
-        $http.get(url)
-            .success(function (data, status, headers, config) {
-                $scope.queue = data;
-            })
-            .error(function (data, status, headers, config) {
-                alert('Could not get queue.\n\n' + JSON.stringify(data));
-            });
-    };
-
-    /**
      * Makes a REST call to delete all of the library's contents.  After the library is cleared, it and the queue will
      * be reloaded.
      */
@@ -55,27 +31,11 @@ angular.module('EvilMusicApp', [])
         $http.delete('/rest/library')
             .success(function (data, status, headers, config) {
                 $scope.loadLibrary();
-                $scope.loadQueue(true);
+                queue.load(true);
             })
             .error(function (data, status, headers, config) {
                 alert('Clear library failed.\n\n' + JSON.stringify(data));
             });
-    };
-
-    /**
-     * Makes a REST call to empty out the queue.  After the queue has been emptied on the server, the queue will be
-     * reloaded.
-     */
-    $scope.clearQueue = function() {
-        if($scope.queue && $scope.queue.id) {
-            $http.delete('/rest/queue/' + $scope.queue.id)
-                .success(function (data, status, headers, config) {
-                    $scope.loadQueue();
-                })
-                .error(function (data, status, headers, config) {
-                    alert('Clear queue failed.\n\n' + JSON.stringify(data));
-                });
-        }
     };
 
     /**
@@ -87,49 +47,11 @@ angular.module('EvilMusicApp', [])
         $http.post('/rest/library')
             .success(function (data, status, headers, config) {
                 $scope.loadLibrary();
-                $scope.loadQueue(true);
+                queue.load(true);
             })
             .error(function (data, status, headers, config) {
                 alert('Library rebuilding failed.\n\n' + JSON.stringify(data));
             });
-    };
-
-    /**
-     * Makes a REST call to add the song with the given ID to the end of the queue.  After the song has been enqueued,
-     * the queue will be reloaded.  If a queue has not already been loaded, the song will not be enqueued because there
-     * is no way to know which queue should be altered.
-     *
-     * @param {Number} songID The ID of the song to be enqueued.
-     */
-    $scope.enqueueLast = function(songID) {
-        if($scope.queue && $scope.queue.id) {
-            $http.put('/rest/queue/' + $scope.queue.id + '/last', [songID])
-                .success(function (data, status, headers, config) {
-                    $scope.loadQueue();
-                })
-                .error(function (data, status, headers, config) {
-                    alert('Failed to enqueue last.\n\n' + JSON.stringify(data));
-                });
-        }
-    };
-
-    /**
-     * Makes a REST call to remove the song at the given queue index from the queue.  After the queue has been updated,
-     * the queue will be reloaded.  If a queue has not already been loaded, the song will not be removed because there
-     * is no way to know which queue should be altered.
-     *
-     * @param {Number} queueIndex The index within the queue that should be removed.
-     */
-    $scope.removeFromQueue = function(queueIndex) {
-        if($scope.queue && $scope.queue.id) {
-            $http.delete('/rest/queue/' + $scope.queue.id + '/queueindex/' + queueIndex)
-                .success(function (data, status, headers, config) {
-                    $scope.loadQueue();
-                })
-                .error(function (data, status, headers, config) {
-                    alert('Failed to remove from queue (' + queueIndex + ')\n\n' + JSON.stringify(data));
-                });
-        }
     };
 
     /**
@@ -167,11 +89,11 @@ angular.module('EvilMusicApp', [])
             $scope.player.stop();
         }
 
-        if($scope.queue && $scope.queue.id) {
-            var song = $scope.getSongFromQueue(queueIndex);
+        if(queue.q && queue.q.id) {
+            var song = queue.getSong(queueIndex);
 
             $scope.player = AV.Player.fromURL(
-                '/rest/queue/' + $scope.queue.id + '/stream/queueindex/' + queueIndex + '?updatePlayIndex=true');
+                '/rest/queue/' + queue.q.id + '/stream/queueindex/' + queueIndex + '?updatePlayIndex=true');
 
             $scope.player.nodeCreationCallback = $scope.createEQNodes;
             $scope.player.volume = $scope.volume;
@@ -186,7 +108,7 @@ angular.module('EvilMusicApp', [])
 
             $scope.currentSong = song;
             $scope.player.play();
-            $scope.loadQueue();
+            queue.load();
         }
     };
 
@@ -371,22 +293,6 @@ angular.module('EvilMusicApp', [])
         return str;
     };
 
-    $scope.getSongFromQueue = function(queueIndex) {
-        var song = null;
-
-        if($scope.queue && $scope.queue.elements) {
-            for(var x = 0; x < $scope.queue.elements.length; x++) {
-                var elem = $scope.queue.elements[x];
-
-                if(elem && elem.queueIndex === queueIndex) {
-                    song = elem.song;
-                }
-            }
-        }
-
-        return song;
-    };
-
     $scope.setVolume = function(volume) {
         if($scope.player) {
             $scope.player.volume = volume;
@@ -412,6 +318,5 @@ angular.module('EvilMusicApp', [])
 
     $scope.loadVolume();
     $scope.loadEqualizer(true);
-    $scope.loadQueue(true);
     $scope.loadLibrary();
-});
+}]);

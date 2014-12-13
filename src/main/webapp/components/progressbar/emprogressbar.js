@@ -1,18 +1,19 @@
 'use strict';
 
-angular.module('EvilMusicApp').directive('emProgressBar', function() {
+angular.module('EvilMusicApp')
+.directive('emProgressBar', function() {
     return {
         'restrict' : 'E',
-        'templateUrl' : '/shared/progressbar/emprogressbar.html',
+        'templateUrl' : '/components/progressbar/emprogressbar.html',
         'scope' : {
             'progress' : '=',
             'onseek' : '='
         },
-        'controller' : function($scope) {
+        'controller' : ['$scope', function($scope) {
             $scope.progressMeterClicked = function(xPos, width) {
                 $scope.onseek(xPos / width);
             };
-        }
+        }]
     };
 })
 .directive('emProgressGutter', function() {

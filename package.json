@@ -39,6 +39,7 @@
         "maxerr" : 1000,
 
         "predef" : [
+            "afterEach",
             "alert",
             "angular",
             "AV",

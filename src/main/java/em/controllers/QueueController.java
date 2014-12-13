@@ -94,7 +94,7 @@ public class QueueController {
     }
     
     @Transactional
-    @RequestMapping(value = "/rest/queue/{queueID}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/rest/queue/{queueID}/elements", method = RequestMethod.DELETE)
     @Produces(MediaType.APPLICATION_JSON)
     public Queue clearQueue(@PathVariable("queueID") int queueID) {
         final Queue queue;
