@@ -60,7 +60,7 @@ angular.module('EvilMusicApp')
         if(that.q && that.q.id) {
             $http.delete('/rest/queue/' + that.q.id + '/queueindex/' + queueIndex)
             .success(function (data, status, headers, config) {
-                that.load();
+                that.load(false);
             })
             .error(function (data, status, headers, config) {
                 alert('Failed to remove from queue (' + queueIndex + ')\n\n' + JSON.stringify(data));
@@ -76,7 +76,7 @@ angular.module('EvilMusicApp')
         if(that.q && that.q.id) {
             $http.delete('/rest/queue/' + that.q.id + '/elements')
             .success(function (data, status, headers, config) {
-                that.load();
+                that.load(false);
             })
             .error(function (data, status, headers, config) {
                 alert('Clear queue failed.\n\n' + JSON.stringify(data));

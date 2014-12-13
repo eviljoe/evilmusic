@@ -13,6 +13,7 @@
     <script type="text/javascript" src="/components/progressbar/emprogressbar.js" defer></script>
     <script type="text/javascript" src="/components/volumecontrol/emvolumecontrol.js" defer></script>
     <script type="text/javascript" src="/components/queue/queue.srv.js" defer></script>
+    <script type="text/javascript" src="/components/queue/queue.dir.js" defer></script>
     <script type="text/javascript" src="/components/utils/emutils.srv.js" defer></script>
 </head>
 <body ng-controller="EMLibraryController">
@@ -78,29 +79,7 @@
         </table>
     </div>
     <div style="float:right">
-        <div><h2>Queue</h2></div>
-        <div>
-            <input type="button" value="clear queue" ng-click="queue.clear()"/>
-        </div>
-        <table>
-            <tr>
-                <th>pI</th>
-                <th>qI</th>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Controls</th>
-            </tr>
-            <tr ng-repeat="elem in queue.q.elements">
-                <td>{{elem.playIndex}}</td>
-                <td>{{elem.queueIndex}}</td>
-                <td>{{elem.song.id}}</td>
-                <td>{{elem.song.title}}</td>
-                <td>
-                    <input type="button" value="play" ng-click="play(elem.queueIndex)"/>
-                    <input type="button" value="remove" ng-click="queue.remove(elem.queueIndex)"/>
-                </td>
-            </tr>
-        </table>
+        <em-queue></em-queue>
     </div>
     <div style="clear:both"></div>
     <pre>{{testOutput}}</pre>
