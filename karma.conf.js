@@ -7,7 +7,7 @@ module.exports = function(config) {
             // Third party libraries
             'src/main/webapp/assets/libs/aurora.js',
             'src/main/webapp/assets/libs/flac.js',
-            'src/main/webapp/assets/libs/query.js',
+            'src/main/webapp/assets/libs/jquery.js',
             'src/main/webapp/assets/libs/angular.js',
             'node_modules/angular-mocks/angular-mocks.js',
 

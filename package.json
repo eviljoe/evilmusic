@@ -49,7 +49,9 @@
             "expect",
             "inject",
             "it",
-            "module"
+            "jasmine",
+            "module",
+            "spyOn"
         ]
     }
 }
