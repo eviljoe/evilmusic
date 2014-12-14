@@ -16,5 +16,6 @@ describe('EMLibraryController', function() {
     beforeEach(inject(function(_$httpBackend_){
         $httpBackend = _$httpBackend_;
         $httpBackend.when('GET', '/rest/queue/current').respond({});
+        $httpBackend.when('GET', '/rest/eq/current').respond({});
     }));
 });

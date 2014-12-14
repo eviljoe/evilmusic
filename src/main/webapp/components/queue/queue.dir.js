@@ -10,7 +10,8 @@ angular.module('EvilMusicApp')
         controllerAs: 'ctrl'
     };
 })
-.controller('EMQueueController', ['queue', function(queue) {
+.controller('EMQueueController', ['queue', 'player', function(queue, player) {
     var that = this;
     that.queue  = queue;
+    that.player = player;
 }]);
