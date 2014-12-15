@@ -3,44 +3,54 @@
 angular.module('EvilMusicApp')
 .directive('emProgressBar', function() {
     return {
-        'restrict' : 'E',
-        'templateUrl' : '/components/progressbar/emprogressbar.html',
-        'scope' : {
-            'progress' : '=',
-            'onseek' : '='
+        restrict : 'E',
+        templateUrl : '/components/progressbar/emprogressbar.html',
+        scope : {
+            onseek : '='
         },
-        'controller' : ['$scope', function($scope) {
-            $scope.progressMeterClicked = function(xPos, width) {
-                $scope.onseek(xPos / width);
-            };
-        }]
-    };
-})
-.directive('emProgressGutter', function() {
-    return {
-        'restrict' : 'A',
-        'require' : ['^emProgressBar'],
-        'link' : function link(scope, element, attrs) {
-            element.on('click', function(event) {
+        link : function (scope, element, attrs) {
+            scope.barElem = element;
+            scope.gutterElem = angular.element(element[0].querySelector('.em-progress-gutter'));
+            scope.meterElem = angular.element(element[0].querySelector('.em-progress-meter'));
+
+            scope.gutterElem.on('click', function(event) {
                 event.stopPropagation();
-                scope.progressMeterClicked(event.offsetX, element.width());
-            });
-        }
-    };
-})
-.directive('emProgressMeter', function() {
-    return {
-        'restrict' : 'A',
-        'require' : ['^emProgressBar'],
-        'link' : function link(scope, element, attrs) {
-            scope.$watch('progress', function(value) {
-                element.width(value + '%');
+                scope.progressMeterClicked(event.offsetX, scope.gutterElem.width());
             });
 
-            element.on('click', function(event) {
+            scope.meterElem.on('click', function(event) {
                 event.stopPropagation();
-                scope.progressMeterClicked(event.offsetX, element.parent().width());
+                scope.progressMeterClicked(event.offsetX, scope.gutterElem.width());
             });
+
+            scope.updateMeterWidth();
+        },
+        controller : 'EMProgressBarController',
+        controllerAs : 'ctrl'
+    };
+})
+.controller('EMProgressBarController',
+['$scope', '$rootScope', 'player', 'emUtils', function($scope, $rootScope, player, emUtils) {
+
+    $scope.progressMeterClicked = function(xPos, width) {
+        if(emUtils.isNumber(xPos) && emUtils.isNumber(width)) {
+            $scope.onseek(xPos / width);
         }
     };
-});
+
+    $scope.updateMeterWidth = function() {
+        var p = player.playerProgress;
+
+        if(!emUtils.isNumber(p)) {
+            p = 0;
+        } else {
+            p = Math.max(0, p);
+            p = Math.min(100, p);
+        }
+
+        $scope.meterElem.width(p + '%');
+
+    };
+
+    $rootScope.$on(player.playerProgressChangedEventName, $scope.updateMeterWidth);
+}]);

@@ -47,7 +47,7 @@
             <input type="button" value="play/pause" ng-click="player.togglePlayback()"/>
             <div em-volume-control style="display:inline-block" volume="player.volume" onvolumechange="player.setVolume"></div>
         </div>
-        <em-progress-bar progress="player.playerProgress" onseek="player.seekToPercent"></em-progress-bar>
+        <em-progress-bar onseek="player.seekToPercent"></em-progress-bar>
     </div>
     <div style="float:left">
         <div><h2>Library</h2></div>

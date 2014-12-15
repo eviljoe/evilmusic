@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('EvilMusicApp')
-.factory('player', ['$http', 'emUtils', 'queue', 'eq', function($http, emUtils, queue, eq) {
+.factory('player', ['$http', '$rootScope', 'emUtils', 'queue', 'eq', function($http, $rootScope, emUtils, queue, eq) {
 
     var that = this;
 
+    that.playerProgressChangedEventName = 'emPlayerProgressChanged';
     that.avPlayer = null;
     that.currentSong = null;
     that.playerProgress = null;
@@ -38,6 +39,7 @@ angular.module('EvilMusicApp')
 
             avPlayer.on('progress', function(progress) {
                 that.playerProgress = progress / song.millis * 100;
+                $rootScope.$broadcast(that.playerProgressChangedEventName);
             });
 
             avPlayer.on('end', function() {
