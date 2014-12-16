@@ -1,0 +1,9 @@
+<div><h2>Player Controls</h2></div>
+<div>
+    <input type="button" value="play/pause" ng-click="ctrl.player.togglePlayback()"/>
+    <div
+        em-volume-control
+        style="display:inline-block"
+        volume="ctrl.player.volume"
+        onvolumechange="ctrl.player.setVolume"></div>
+</div>

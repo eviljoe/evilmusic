@@ -17,6 +17,7 @@
     <script type="text/javascript" src="/components/utils/emutils.srv.js" defer></script>
     <script type="text/javascript" src="/components/eq/emeq.srv.js" defer></script>
     <script type="text/javascript" src="/components/player/emplayer.srv.js" defer></script>
+    <script type="text/javascript" src="/components/player/player.dir.js" defer></script>
     <script type="text/javascript" src="/components/library/library.srv.js" defer></script>
     <script type="text/javascript" src="/components/library/library.dir.js" defer></script>
 </head>
@@ -44,11 +45,7 @@
         </div>
     </div>
     <div>
-        <div><h2>Player Controls</h2></div>
-        <div>
-            <input type="button" value="play/pause" ng-click="player.togglePlayback()"/>
-            <div em-volume-control style="display:inline-block" volume="player.volume" onvolumechange="player.setVolume"></div>
-        </div>
+        <em-player-controls></em-player-controls>
         <em-progress-bar onseek="player.seekToPercent"></em-progress-bar>
     </div>
     <div style="float:left">
