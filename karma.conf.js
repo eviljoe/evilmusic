@@ -13,10 +13,7 @@ module.exports = function(config) {
 
             // Root level HTML & JavaScript files
             'src/main/webapp/index.html',
-            'src/main/webapp/emcontroller.js',
-
-            // EvilMusic non-AngularJS JavaScript Files
-            'src/main/webapp/assets/js/**/*.js',
+            'src/main/webapp/evilmusic.js',
 
             // EvilMusic AngularJS files
             'src/main/webapp/components/**/*',

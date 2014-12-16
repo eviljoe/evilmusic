@@ -12,8 +12,17 @@ apply plugin: 'spring-boot'
 //////////////
 
 sourceCompatibility = '1.7'
-version = '0.0.1.a'
+version = '0.1.a'
 applicationDefaultJvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"]
+
+/** Necessary to set the embedded Tomcat version. */
+configurations.all {
+  resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+    if (details.requested.group == 'org.apache.tomcat.embed') {
+        details.useVersion '8.0.15'
+    }
+  }
+}
 
 /////////////////////////////////
 // Repositories & Dependencies //
@@ -39,21 +48,6 @@ dependencies {
     compile 'commons-cli:commons-cli:1.2'
     compile 'junit:junit:4.11'
     compile 'org.easymock:easymock:3.2'
-}
-
-////////////////////////////
-// JAR Creation Functions //
-////////////////////////////
-
-task emManagerJAR(type: Jar) {
-    manifest {
-        attributes 'Main-Class': 'em.EvilMusicApp',
-                   'version' : version
-    }
-
-    from(sourceSets.main.output) {
-        exclude 'em/controllers'
-    }
 }
 
 //////////////////////
