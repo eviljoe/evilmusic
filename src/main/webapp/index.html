@@ -17,8 +17,10 @@
     <script type="text/javascript" src="/components/utils/emutils.srv.js" defer></script>
     <script type="text/javascript" src="/components/eq/emeq.srv.js" defer></script>
     <script type="text/javascript" src="/components/player/emplayer.srv.js" defer></script>
+    <script type="text/javascript" src="/components/library/library.srv.js" defer></script>
+    <script type="text/javascript" src="/components/library/library.dir.js" defer></script>
 </head>
-<body ng-controller="EMLibraryController">
+<body ng-controller="EMController">
     <h1>Evil Music</h1>
     <div>
         <div><h2>EQ</h2></div>
@@ -50,35 +52,7 @@
         <em-progress-bar onseek="player.seekToPercent"></em-progress-bar>
     </div>
     <div style="float:left">
-        <div><h2>Library</h2></div>
-        <div>
-            <input type="button" value="clear library" ng-click="clearLibrary()"/>
-            <input type="button" value="rebuild library" ng-click="rebuildLibrary()"/>
-        </div>
-        <table>
-            <tr>
-                <th align="right">ID</th>
-                <th align="left">Artist</th>
-                <th align="left">Album</th>
-                <th align="right">Track #</th>
-                <th align="left">Title</th>
-                <th align="right">Length</th>
-                <th align="right">Sample Rate</th>
-                <th align="right">Sample Count</th>
-                <th align="left">Controls</th>
-            </tr>
-            <tr ng-repeat="song in library | orderBy : ['artist','trackNumber']">
-                <td align="right">{{song.id}}</td>
-                <td align="left">{{song.artist}}</td>
-                <td align="left">{{song.album}}</td>
-                <td align="right">{{song.trackNumber}}</td>
-                <td align="left">{{song.title}}</td>
-                <td align="right">{{emUtils.millisecondsToString(song.millis)}} s</td>
-                <td align="right">{{emUtils.hertzToString(song.sampleRate)}}</td>
-                <td align="right">{{song.sampleCount}}</td>
-                <td align="left"><input type="button" value="qL" ng-click="queue.addLast(song.id)"/></td>
-            </tr>
-        </table>
+        <em-library></em-library>
     </div>
     <div style="float:right">
         <em-queue></em-queue>

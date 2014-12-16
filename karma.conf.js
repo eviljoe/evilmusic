@@ -18,7 +18,7 @@ module.exports = function(config) {
             // EvilMusic non-AngularJS JavaScript Files
             'src/main/webapp/assets/js/**/*.js',
 
-            // AngularJS Directives
+            // EvilMusic AngularJS files
             'src/main/webapp/components/**/*',
 
             // Unit Tests

@@ -1,0 +1,29 @@
+<div><h2>Library</h2></div>
+<div>
+    <input type="button" value="clear library" ng-click="ctrl.library.clear()"/>
+    <input type="button" value="rebuild library" ng-click="ctrl.library.rebuild()"/>
+</div>
+<table>
+    <tr>
+        <th align="right">ID</th>
+        <th align="left">Artist</th>
+        <th align="left">Album</th>
+        <th align="right">Track #</th>
+        <th align="left">Title</th>
+        <th align="right">Length</th>
+        <th align="right">Sample Rate</th>
+        <th align="right">Sample Count</th>
+        <th align="left">Controls</th>
+    </tr>
+    <tr ng-repeat="song in ctrl.library.library | orderBy : ['artist','trackNumber']">
+        <td align="right">{{song.id}}</td>
+        <td align="left">{{song.artist}}</td>
+        <td align="left">{{song.album}}</td>
+        <td align="right">{{song.trackNumber}}</td>
+        <td align="left">{{song.title}}</td>
+        <td align="right">{{ctrl.emUtils.millisecondsToString(song.millis)}} s</td>
+        <td align="right">{{ctrl.emUtils.hertzToString(song.sampleRate)}}</td>
+        <td align="right">{{song.sampleCount}}</td>
+        <td align="left"><input type="button" value="qL" ng-click="ctrl.queue.addLast(song.id)"/></td>
+    </tr>
+</table>
