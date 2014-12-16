@@ -8,34 +8,20 @@
     <script type="text/javascript" src="/assets/libs/flac.js" defer></script>
     <script type="text/javascript" src="/assets/libs/jquery.js" defer></script>
     <script type="text/javascript" src="/assets/libs/angular.js" defer></script>
-    <script type="text/javascript" src="/assets/js/emutils.js" defer></script>
-    <script type="text/javascript" src="/emcontroller.js" defer></script>
-    <script type="text/javascript" src="/components/progressbar/emprogressbar.dir.js" defer></script>
-    <script type="text/javascript" src="/components/volumecontrol/emvolumecontrol.dir.js" defer></script>
+    <script type="text/javascript" src="/evilmusic.js" defer></script>
+    <script type="text/javascript" src="/components/evilmusic/evilmusic.dir.js" defer></script>
+    <script type="text/javascript" src="/components/progressbar/progressbar.dir.js" defer></script>
+    <script type="text/javascript" src="/components/volumecontrol/volumecontrol.dir.js" defer></script>
     <script type="text/javascript" src="/components/queue/queue.srv.js" defer></script>
     <script type="text/javascript" src="/components/queue/queue.dir.js" defer></script>
     <script type="text/javascript" src="/components/utils/emutils.srv.js" defer></script>
-    <script type="text/javascript" src="/components/eq/emeq.srv.js" defer></script>
+    <script type="text/javascript" src="/components/eq/eq.srv.js" defer></script>
     <script type="text/javascript" src="/components/eq/eq.dir.js" defer></script>
-    <script type="text/javascript" src="/components/player/emplayer.srv.js" defer></script>
+    <script type="text/javascript" src="/components/player/player.srv.js" defer></script>
     <script type="text/javascript" src="/components/player/player.dir.js" defer></script>
     <script type="text/javascript" src="/components/library/library.srv.js" defer></script>
     <script type="text/javascript" src="/components/library/library.dir.js" defer></script>
 </head>
-<body ng-controller="EMController">
-    <h1>Evil Music</h1>
-    <div>
-        <em-eq></em-eq>
-    </div>
-    <div>
-        <em-player-controls></em-player-controls>
-        <em-progress-bar onseek="player.seekToPercent"></em-progress-bar>
-    </div>
-    <div style="float:left">
-        <em-library></em-library>
-    </div>
-    <div style="float:right">
-        <em-queue></em-queue>
-    </div>
-    <div style="clear:both"></div>
+<body>
+    <evil-music></evil-music>
 </body>

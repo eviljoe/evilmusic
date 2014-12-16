@@ -3,10 +3,11 @@
 angular.module('EvilMusicApp')
 .directive('emLibrary', function() {
     return {
+        restrict : 'E',
         scope : {},
         controller : 'EMLibraryController',
         controllerAs : 'ctrl',
-        templateUrl: '/components/library/library.html'
+        templateUrl : '/components/library/library.html'
     };
 })
 .controller('EMLibraryController', ['library', 'queue', 'emUtils', function(library, queue, emUtils) {
