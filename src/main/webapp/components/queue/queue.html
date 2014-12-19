@@ -1,8 +1,8 @@
 <div><h2>Queue</h2></div>
-<div>
-    <input type="button" value="clear queue" ng-click="ctrl.queue.clear()"/>
+<div class="em-top-table-controls-container">
+    <input type="button" class="btn btn-xs btn-default" value="clear queue" ng-click="ctrl.queue.clear()"/>
 </div>
-<table>
+<table class="table table-striped table-condensed">
     <tr>
         <th>pI</th>
         <th>qI</th>
@@ -16,8 +16,10 @@
         <td>{{elem.song.id}}</td>
         <td>{{elem.song.title}}</td>
         <td>
-            <input type="button" value="play" ng-click="ctrl.player.play(elem.queueIndex)"/>
-            <input type="button" value="remove" ng-click="ctrl.queue.remove(elem.queueIndex)"/>
+            <input type="button" class="btn btn-xs btn-default"
+            value="play" ng-click="ctrl.player.play(elem.queueIndex)"/>
+            <input type="button" class="btn btn-xs btn-default"
+            value="remove" ng-click="ctrl.queue.remove(elem.queueIndex)"/>
         </td>
     </tr>
 </table>

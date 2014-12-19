@@ -1,9 +1,9 @@
 <div><h2>Library</h2></div>
-<div>
-    <input type="button" value="clear library" ng-click="ctrl.library.clear()"/>
-    <input type="button" value="rebuild library" ng-click="ctrl.library.rebuild()"/>
+<div class="em-top-table-controls-container">
+    <input type="button" class="btn btn-xs btn-default" value="clear library" ng-click="ctrl.library.clear()"/>
+    <input type="button" class="btn btn-xs btn-default" value="rebuild library" ng-click="ctrl.library.rebuild()"/>
 </div>
-<table>
+<table class="table table-striped table-condensed">
     <tr>
         <th align="right">ID</th>
         <th align="left">Artist</th>
@@ -24,6 +24,9 @@
         <td align="right">{{ctrl.emUtils.millisecondsToString(song.millis)}} s</td>
         <td align="right">{{ctrl.emUtils.hertzToString(song.sampleRate)}}</td>
         <td align="right">{{song.sampleCount}}</td>
-        <td align="left"><input type="button" value="qL" ng-click="ctrl.queue.addLast(song.id)"/></td>
+        <td align="left">
+            <input type="button" class="btn btn-xs btn-default" value="queue" ng-click="ctrl.queue.addLast(song.id)"
+                   title="Enqueue last"/>
+        </td>
     </tr>
 </table>

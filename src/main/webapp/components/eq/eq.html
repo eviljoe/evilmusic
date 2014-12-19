@@ -1,19 +1,22 @@
 <div><h2>EQ</h2></div>
-<div>
-    <div class="eq-node-slider-div" ng-repeat="node in ctrl.eq.eq.nodes">
-        <div class="centered">
-            {{ctrl.emUtils.hertzToString(node.frequency)}}
-        </div>
-        <div class="centered">
-            <input class="eq-node-slider"
-            type="range" min="-40" max="10" step="0.1" orient="vertical"
-            ng-model="node.gain" ng-change="ctrl.eq.updateNodeGain(node)"/>
-        </div>
-        <div class="centered">
-            <input class="width-45"
-            type="number" min="-10" max="10" step="0.1"
-            ng-model="node.gain" ng-change="ctrl.eq.updateNodeGain(node)"/>
-        </div>
-    </div>
-    <div style="clear:both"></div>
-</div>
+<form class="form-inline">
+    <table class="container">
+        <tbody>
+            <td class="eq-slider-container" ng-repeat="node in ctrl.eq.eq.nodes">
+                <div class="text-center">
+                    {{ctrl.emUtils.hertzToString(node.frequency)}}
+                </div>
+                <div class="text-center">
+                    <input class="eq-slider"
+                    type="range" min="-40" max="10" step="0.1" orient="vertical"
+                    ng-model="node.gain" ng-change="ctrl.eq.updateNodeGain(node)"/>
+                </div>
+                <div class="text-center">
+                    <input class="eq-slider-text-field"
+                    type="number" min="-10" max="10" step="0.1"
+                    ng-model="node.gain" ng-change="ctrl.eq.updateNodeGain(node)"/>
+                </div>
+            </td>
+        </tbody>
+    </table>
+</form>

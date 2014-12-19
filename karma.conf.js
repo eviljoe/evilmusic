@@ -12,8 +12,8 @@ module.exports = function(config) {
             'node_modules/angular-mocks/angular-mocks.js',
 
             // Root level HTML & JavaScript files
+            'src/main/webapp/index.js',
             'src/main/webapp/index.html',
-            'src/main/webapp/evilmusic.js',
 
             // EvilMusic AngularJS files
             'src/main/webapp/components/**/*',

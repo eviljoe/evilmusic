@@ -1,54 +1,44 @@
-/* ************ */
-/* Basic Styles */
-/* ************ */
-
-.centered { text-align: center; }
-
-.float-left { float: left; }
-.float-right { float: right; }
-.clear-both { clear: both; }
-
-.width-45 { width: 45px; }
-
-/* *************** */
-/* Specific Styles */
-/* *************** */
-
-.eq-node-slider-div {
-    float: left;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 12px;
+.eq-slider-container {
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 12px;
 }
+.eq-slider {
+  writing-mode: bt-lr;
+  /* IE */
 
-.eq-node-slider {
-    writing-mode: bt-lr; /* IE */
-    -webkit-appearance: slider-vertical; /* WebKit */
-    width: 8px;
-    height: 200px;
-    text-align: center;
+  -webkit-appearance: slider-vertical;
+  /* WebKit */
+
+  width: 8px;
+  height: 200px;
+  margin-bottom: 3px;
+  text-align: center;
 }
-
+.eq-slider-text-field {
+  width: 45px;
+}
 .em-progress-bar {
-    width: 100%;
-    height: 10px;
-    padding: 5px;
-    display: table;
+  width: 100%;
+  height: 10px;
+  padding: 5px;
+  display: table;
 }
-
 .em-progress-row {
-    display: table-row;
+  display: table-row;
 }
-
 .em-progress-gutter {
-    width: 100%;
-    height: 10px;
-    background: gray;
-    display: table-cell;
+  width: 100%;
+  height: 10px;
+  background: gray;
+  display: table-cell;
+}
+.em-progress-meter {
+  height: 10px;
+  background: blue;
+  display: block;
+}
+.em-top-table-controls-container {
+  margin-bottom: 5px;
 }
 
-.em-progress-meter {
-    height: 10px;
-    background: blue;
-    display: block;
-}
