@@ -25,6 +25,17 @@ configurations.all {
   }
 }
 
+/////////////////
+// Source Sets //
+/////////////////
+
+sourceSets {
+    intTest {
+        java.srcDir file('src/inttest/java')
+        resources.srcDir file('src/inttest/resources')
+    }
+}
+
 /////////////////////////////////
 // Repositories & Dependencies //
 /////////////////////////////////
@@ -47,8 +58,15 @@ dependencies {
     compile 'org.apache.derby:derby:10.11.1.1'
     compile 'org.hibernate:hibernate-entitymanager:4.3.6.Final'
     compile 'commons-cli:commons-cli:1.2'
-    compile 'junit:junit:4.11'
-    compile 'org.easymock:easymock:3.2'
+
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.easymock:easymock:3.2'
+    testCompile 'com.jayway.restassured:rest-assured:2.4.0'
+
+    intTestCompile sourceSets.main.output
+    intTestCompile configurations.testCompile
+    intTestCompile sourceSets.test.output
+    intTestRuntime configurations.testRuntime
 }
 
 //////////////////////
@@ -75,6 +93,12 @@ buildscript {
 // Tasks //
 ///////////
 
+/* Integration Test Task */
+task intTest(type: Test) {
+    testClassesDir = sourceSets.intTest.output.classesDir
+    classpath = sourceSets.intTest.runtimeClasspath
+}
+
 /* LESS Task */
 lesscss {
     source = fileTree('src/main/webapp/assets/less') {
@@ -88,7 +112,6 @@ processResources {
     // 'lesscss' will be invoked every time 'processResources' is invoked
     dependsOn 'lesscss'
 }
-
 
 war {
     // Ensures LESS files do not make it into the WAR
