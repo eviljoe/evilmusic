@@ -20,13 +20,11 @@ public class ClientConfigRESTCalls {
         final ResponseSpecification res;
         final Response r;
         
-        req.when().get(RESTTestConfig.getInstance().getFullURL("/config/volume"));
-        
         res = req.then();
         res.expect().statusCode(200);
         res.expect().contentType(ContentType.JSON);
         
-        r = res.get();
+        r = res.get(RESTTestConfig.getInstance().getFullURL("/config/volume"));
         
         return Double.parseDouble(r.getBody().asString());
     }

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -450,6 +451,219 @@ public class EMUtilsTest {
         assertEquals('\0', EMUtils.toChar(null));
         assertEquals('b', EMUtils.toChar(new Character('b'), 'c'));
         assertEquals('c', EMUtils.toChar(null, 'c'));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Appendable, Iterable, String)} function will throw a
+     * {@link NullPointerException} when given a null {@link Appendable}.
+     */
+    @Test(expected = NullPointerException.class)
+    public void testToCSV_AppendableIterableString_NullAppendable() throws IOException {
+        EMUtils.toCSV(null, Arrays.asList(1, 2, 3), ":");
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Appendable, Iterable, String)} function will not append anything
+     * when given a {@code null} iterable.
+     */
+    @Test
+    public void testToCSV_AppendableIterableString_NullIterable() throws IOException {
+        final StringBuilder csv = new StringBuilder();
+        
+        EMUtils.toCSV(csv, null, ":");
+        assertEquals(0, csv.length());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Appendable, Iterable, String)} function will not append anything
+     * when given an empty iterable.
+     */
+    @Test
+    public void testToCSV_AppendableIterableString_EmptyIterable() throws IOException {
+        final StringBuilder csv = new StringBuilder();
+        
+        EMUtils.toCSV(csv, Arrays.asList(new String[0]), ":");
+        assertEquals(0, csv.length());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Appendable, Iterable, String)} function will use the default
+     * delimiter when given a {@code null} delimiter.
+     */
+    @Test
+    public void testToCSV_AppendableIterableString_NullDelimiter() throws IOException {
+        final StringBuilder csv = new StringBuilder();
+        
+        EMUtils.toCSV(csv, Arrays.asList("a", "b", "c"), null);
+        assertEquals("a, b, c", csv.toString());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Appendable, Iterable, String)} function will not use a delimiter
+     * when given an empty delimiter.
+     */
+    @Test
+    public void testToCSV_AppendableIterableString_EmptyDelimiter() throws IOException {
+        final StringBuilder csv = new StringBuilder();
+        
+        EMUtils.toCSV(csv, Arrays.asList("a", "b", "c"), "");
+        assertEquals("abc", csv.toString());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Appendable, Iterable, String)} function will use a custom delimiter
+     * when given a custom delimiter.
+     */
+    @Test
+    public void testToCSV_AppendableIterableString_CustomDelimiter() throws IOException {
+        final StringBuilder csv = new StringBuilder();
+        
+        EMUtils.toCSV(csv, Arrays.asList("a", "b", "c"), ":zz:");
+        assertEquals("a:zz:b:zz:c", csv.toString());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Appendable, Iterable, String)} function will convert null values
+     * correctly.
+     */
+    @Test
+    public void testToCSV_AppendableIterableString_IterableWithNullValues() throws IOException {
+        final StringBuilder csv = new StringBuilder();
+        
+        EMUtils.toCSV(csv, Arrays.asList("a", null, "c"), ":");
+        assertEquals("a:null:c", csv.toString());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Object[], String)} function will return an empty string when given
+     * a {@code null} array.
+     */
+    @Test
+    public void testToCSV_ArrayString_NullArray() {
+        assertEquals("", EMUtils.toCSV((String[])null, ":"));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Object[], String)} function will return an empty string when given
+     * an empty array.
+     */
+    @Test
+    public void testToCSV_ArrayString_EmptyArray() {
+        assertEquals("", EMUtils.toCSV(new String[0], ":"));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Object[], String)} function will use the default delimiter when
+     * given a {@code null} delimiter.
+     */
+    @Test
+    public void testToCSV_ArrayString_NullDelimiter() {
+        assertEquals("a, b, c", EMUtils.toCSV(new String[] {"a", "b", "c"}, null));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Object[], String)} function will not use a delimiter when given an
+     * empty delimiter.
+     */
+    @Test
+    public void testToCSV_ArrayString_EmptyDelimiter() {
+        assertEquals("abc", EMUtils.toCSV(new String[] {"a", "b", "c"}, ""));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Object[], String)} function will use a custom delimiter when given
+     * a custom delimiter.
+     */
+    @Test
+    public void testToCSV_ArrayString_CustomDelimiter() {
+        assertEquals("a::b::c", EMUtils.toCSV(new String[] {"a", "b", "c"}, "::"));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Object[], String)} function will not throw exceptions when creating
+     * CSV from an array containing {@code null} values.
+     */
+    @Test
+    public void testToCSV_ArrayString_ArrayWithNullValues() {
+        assertEquals("a:null:c", EMUtils.toCSV(new String[] {"a", null, "c"}, ":"));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Collection, String)} function will return an empty string when
+     * given a {@code null} array.
+     */
+    @Test
+    public void testToCSV_CollectionString_NullArray() {
+        assertEquals("", EMUtils.toCSV((Collection<String>)null, ":"));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Collection, String)} function will return an empty string when
+     * given an empty array.
+     */
+    @Test
+    public void testToCSV_CollectionString_EmptyArray() {
+        assertEquals("", EMUtils.toCSV(new ArrayList<String>(0), ":"));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Collection, String)} function will use the default delimiter when
+     * given a {@code null} delimiter.
+     */
+    @Test
+    public void testToCSV_CollectionString_NullDelimiter() {
+        final ArrayList<String> l = new ArrayList<String>();
+        
+        l.add("a");
+        l.add("b");
+        l.add("c");
+        
+        assertEquals("a, b, c", EMUtils.toCSV(l, null));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Collection, String)} function will not use a delimiter when given
+     * an empty delimiter.
+     */
+    @Test
+    public void testToCSV_CollectionString_EmptyDelimiter() {
+        final ArrayList<String> l = new ArrayList<String>();
+        
+        l.add("a");
+        l.add("b");
+        l.add("c");
+        
+        assertEquals("abc", EMUtils.toCSV(l, ""));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Collection, String)} function will use a custom delimiter when
+     * given a custom delimiter.
+     */
+    @Test
+    public void testToCSV_CollectionString_CustomDelimiter() {
+        final ArrayList<String> l = new ArrayList<String>();
+        
+        l.add("a");
+        l.add("b");
+        l.add("c");
+        
+        assertEquals("a.b.c", EMUtils.toCSV(l, "."));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(Collection, String)} function will not throw exceptions when
+     * creating CSV from an array containing {@code null} values.
+     */
+    @Test
+    public void testToCSV_CollectionString_ArrayWithNullValues() {
+        final ArrayList<String> l = new ArrayList<String>();
+        
+        l.add("a");
+        l.add(null);
+        l.add("c");
+        
+        assertEquals("a.null.c", EMUtils.toCSV(l, "."));
     }
     
     /* *************** */

@@ -12,17 +12,25 @@ apply plugin: 'lesscss'
 // Settings //
 //////////////
 
+// Sets the Java source version to Java v1.7
 sourceCompatibility = '1.7'
+
+// The current version of EvilMusic
 version = '0.1.a'
+
+// Allows Tomcat to be debuged
 applicationDefaultJvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"]
 
-/* Necessary to set the embedded Tomcat version. */
+// Can be populated with the EvilMusic properties file that will be used instead of the default one.
+def configFile = null;
+
+// Sets the embedded Tomcat version
 configurations.all {
-  resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-    if (details.requested.group == 'org.apache.tomcat.embed') {
-        details.useVersion '8.0.15'
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.apache.tomcat.embed') {
+            details.useVersion '8.0.15'
+        }
     }
-  }
 }
 
 /////////////////
@@ -109,11 +117,30 @@ lesscss {
 }
 
 processResources {
-    // 'lesscss' will be invoked every time 'processResources' is invoked
-    dependsOn 'lesscss'
+    dependsOn 'lesscss' // 'lesscss' will be invoked every time 'processResources' is invoked
 }
 
 war {
-    // Ensures LESS files do not make it into the WAR
-    exclude 'assets/less'
+    exclude 'assets/less' // Ensures LESS files do not make it into the WAR
+}
+
+/* Configures the "bootRun" task to start EvilMusic with the development test properties file. */
+task configDev {
+    doFirst { configFile = 'config/dev.properties' }
+}
+
+/* Configures the "bootRun" task to start EvilMusic with the integration test properties file. */
+task configIntTest {
+    doFirst { configFile = 'config/int-test.properties' }
+}
+
+bootRun {
+    mustRunAfter 'configDev'
+    mustRunAfter 'configIntTest'
+
+    doFirst {
+        if(configFile != null) {
+            args '--emproperties', configFile
+        }
+    }
 }

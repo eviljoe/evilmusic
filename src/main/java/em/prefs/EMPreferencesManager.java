@@ -1,5 +1,8 @@
 package em.prefs;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -24,6 +27,7 @@ public class EMPreferencesManager {
     static EMPreferencesManager instance;
     
     private volatile EMPreferences preferences;
+    private volatile File commandLinePreferencesFile;
     
     /* ************ */
     /* Constructors */
@@ -49,12 +53,37 @@ public class EMPreferencesManager {
     /* Preferences Functions */
     /* ********************* */
     
+    public InputStream getPreferencesStream() {
+        final File clFile = getCommandLinePreferencesFile();
+        InputStream in = null;
+        
+        if(clFile != null && clFile.exists() && !clFile.isDirectory()) {
+            LOG.info("Using command line specified properties file: " + clFile.getAbsolutePath());
+            
+            try {
+                in = new FileInputStream(clFile);
+            } catch(FileNotFoundException e) {
+                LOG.log(Level.SEVERE, "Could not find preferences file", e);
+                in = null;
+            }
+        } else {
+            LOG.info("Using default properties file: " + DEFAULT_PREFS_FILE_NAME);
+            in = EMPreferencesManager.class.getClassLoader().getResourceAsStream(DEFAULT_PREFS_FILE_NAME);
+        }
+        
+        return in;
+    }
+    
     public synchronized EMPreferences loadPreferences() throws IOException {
         final Properties props = new Properties();
-        final InputStream in = EMPreferencesManager.class.getClassLoader().getResourceAsStream(DEFAULT_PREFS_FILE_NAME);
+        final InputStream in = getPreferencesStream();
         
         if(in != null) {
-            props.load(in);
+            try {
+                props.load(in);
+            } finally {
+                in.close();
+            }
         }
         
         return createPreferences(props);
@@ -132,6 +161,14 @@ public class EMPreferencesManager {
             }
         }
         return preferences;
+    }
+    
+    public synchronized File getCommandLinePreferencesFile() {
+        return commandLinePreferencesFile;
+    }
+    
+    public synchronized void setCommandLinePreferencesFile(File commandLinePreferencesFile) {
+        this.commandLinePreferencesFile = commandLinePreferencesFile;
     }
     
     /* *********************** */

@@ -14,5 +14,4 @@ public class ClientConfigRESTTest {
     public void testGetVolume() {
         ClientConfigRESTCalls.getVolume();
     }
-    
 }

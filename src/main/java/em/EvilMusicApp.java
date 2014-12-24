@@ -3,9 +3,12 @@ package em;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.apache.commons.cli.ParseException;
 import org.apache.derby.jdbc.EmbeddedDriver;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.hibernate.dialect.DerbyTenSevenDialect;
@@ -23,6 +26,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import em.cli.EMCommandLine;
 import em.model.SongInfo;
 import em.prefs.EMPreferencesManager;
 import em.repos.ClientConfigurationRepository;
@@ -43,6 +47,8 @@ import em.utils.LibraryUtils;
 @EnableAutoConfiguration
 public class EvilMusicApp {
     
+    private static final Logger LOG = Logger.getLogger(EvilMusicApp.class.getName());
+    
     // Derby Properties
     
     private static final String DERBY_HOME_PROP = "derby.system.home";
@@ -62,11 +68,24 @@ public class EvilMusicApp {
     public static void main(String[] args) throws IOException {
         final ConfigurableApplicationContext context;
         
+        readCommandLineArgs(args);
         loadEMPreferences();
         configureDerby();
         
         context = SpringApplication.run(EvilMusicApp.class, args);
         configureRepoManager(context);
+    }
+    
+    /* ******************************** */
+    /* Command Line Arguments Functions */
+    /* ******************************** */
+    
+    private static void readCommandLineArgs(String[] args) {
+        try {
+            EMCommandLine.parseAndAct(args);
+        } catch(ParseException e) {
+            LOG.log(Level.SEVERE, "Exception while parsing command line arguments", e);
+        }
     }
     
     /* *********************** */

@@ -1,6 +1,7 @@
 package em.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -8,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import em.model.Identifiable;
 
@@ -19,6 +22,9 @@ import em.model.Identifiable;
  */
 public class EMUtils {
     
+    private static final Logger LOG = Logger.getLogger(EMUtils.class.getName());
+    private static final String NULL_STRING = "null";
+    
     /* ************ */
     /* Constructors */
     /* ************ */
@@ -28,9 +34,9 @@ public class EMUtils {
         super();
     }
     
-    /* ************************* */
-    /* General Utility Functions */
-    /* ************************* */
+    /* ******************** */
+    /* Collection Functions */
+    /* ******************** */
     
     /**
      * Checks the given {@link CharSequence} to see if it contains any characters.
@@ -151,6 +157,93 @@ public class EMUtils {
         }
         
         return identifiable;
+    }
+    
+    /**
+     * Creates CSV from the given array's elements.
+     * 
+     * @param a The array containing the elements to be converted to CSV. If {@code null} or empty, an empty string will
+     *        be returned.
+     * @param delim The delimiter between each of the array's elements in the CSV. If {@code null}, the default
+     *        delimiter {@code ", "} (comma, space) will be used. If empty, no delimiter will be used.
+     * 
+     * @return Returns the CSV of the array's elements.
+     */
+    public static <E> String toCSV(E[] a, String delim) {
+        final StringBuilder csv = new StringBuilder();
+        
+        try {
+            toCSV(csv, new ArrayIterator<E>(a), delim);
+        } catch(IOException e) {
+            // This should never happen because StringBuilder does not throw IOExceptions from its append(CharSequence)
+            // function. If somehow this actually does happen, log it and hope for the best.
+            LOG.log(Level.SEVERE, "Exception while converting collection to CSV", e);
+        }
+        
+        return csv.toString();
+    }
+    
+    /**
+     * Creates CSV from the given collection's elements.
+     * 
+     * @param c The collection containing the elements to be converted to CSV. If {@code null} or empty, an empty string
+     *        will be returned.
+     * @param delim The delimiter between each of the collection's elements in the CSV. If {@code null}, the default
+     *        delimiter {@code ", "} (comma, space) will be used. If empty, no delimiter will be used.
+     * 
+     * @return Returns the CSV of the collection's elements.
+     */
+    public static String toCSV(Collection<?> c, String delim) {
+        final StringBuilder csv = new StringBuilder();
+        
+        try {
+            toCSV(csv, c, delim);
+        } catch(IOException e) {
+            // This should never happen because StringBuilder does not throw IOExceptions from its append(CharSequence)
+            // function. If somehow this actually does happen, log it and hope for the best.
+            LOG.log(Level.SEVERE, "Exception while converting collection to CSV", e);
+        }
+        
+        return csv.toString();
+    }
+    
+    /**
+     * Creates CSV from the given collection's elements.
+     * 
+     * @param csv The {@code Appendable} that the CSV will be appended to. If {@code null}, an exception will be thrown.
+     * @param c The iterable containing the elements to be converted to CSV. If {@code null} or empty, an empty string
+     *        will be returned.
+     * @param delim The delimiter between each of the collection's elements in the CSV. If {@code null}, the default
+     *        delimiter {@code ", "} (comma, space) will be used. If empty, no delimiter will be used.
+     * 
+     * @throws NullPointerException Thrown if the given {@code Appendable} is {@code null}.
+     * @throws IOException Thrown from the given {@link Appendable#append(CharSequence)} function if an I/O error
+     *         occurs.
+     */
+    public static void toCSV(Appendable csv, Iterable<?> i, String delim) throws NullPointerException, IOException {
+        if(csv == null) {
+            throw new NullPointerException("Cannot append CSV to a null Appendable");
+        }
+        
+        if(i != null) {
+            boolean first = true;
+            
+            if(delim == null) {
+                delim = ", ";
+            }
+            
+            for(Object obj : i) {
+                final String str = obj == null ? NULL_STRING : obj.toString();
+                
+                if(first) {
+                    first = false;
+                } else {
+                    csv.append(delim);
+                }
+                
+                csv.append(str == null ? NULL_STRING : str);
+            }
+        }
     }
     
     /* ******************** */

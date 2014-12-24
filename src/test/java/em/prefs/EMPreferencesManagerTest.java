@@ -56,7 +56,7 @@ public class EMPreferencesManagerTest {
      * empty {@link EMPreferences} object when given an empty value.
      */
     @Test
-    public void testCreatePreferences_empty() {
+    public void testCreatePreferences_Empty() {
         final EMPreferences emPrefs = EMPreferencesManager.getInstance().createPreferences(new Properties());
         
         assertNull(emPrefs.getMusicDirectories());
@@ -68,7 +68,7 @@ public class EMPreferencesManagerTest {
      * empty {@link EMPreferences} object when given a {@code null} value.
      */
     @Test
-    public void testCreatePreferences_null() {
+    public void testCreatePreferences_Null() {
         final EMPreferences emPrefs = EMPreferencesManager.getInstance().createPreferences(null);
         
         assertNull(emPrefs.getMusicDirectories());

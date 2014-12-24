@@ -1,8 +1,10 @@
 package em.cli;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -10,12 +12,16 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import em.prefs.EMPreferencesManager;
+import em.utils.EMUtils;
+
 /**
  * @since v0.1
  * @author eviljoe
  */
 public class EMCommandLine {
     
+    private static final Logger LOG = Logger.getLogger(EMCommandLine.class.getName());
     private static final List<EMOption> OPTIONS;
     
     /* ************ */
@@ -25,14 +31,7 @@ public class EMCommandLine {
     static {
         final ArrayList<EMOption> options = new ArrayList<>();
         
-        options.add(new EMOption(null, "add-music-dir", true, "Add a directory that will be scanned for audio files",
-                new AddMusicDirCallback()));
-        options.add(new EMOption(null, "remove-music-dir", true,
-                "Remove a directory from those that are scanned for audio files", new RemoveMusicDirCallback()));
-        options.add(new EMOption(null, "list-music-dirs", false,
-                "List the directories that will be scanned for audio files", new ListMusicDirsCallback()));
-        options.add(new EMOption(null, "scan-music-dirs", false, "Scan the music directories for audio files",
-                new ScanMusicDirsCallback()));
+        options.add(new EMOption(null, "emproperties", true, "Specify the properties file", new EMPropertiesCallback()));
         
         OPTIONS = Collections.unmodifiableList(options);
     }
@@ -65,7 +64,8 @@ public class EMCommandLine {
             final String longOpt = opt.getLongOption();
             
             if(cmd.hasOption(longOpt)) {
-                opt.getCallback().performAction(cmd.getOptionValues(longOpt));
+                final String[] optVals = cmd.getOptionValues(longOpt);
+                opt.getCallback().performAction(optVals == null ? new String[0] : optVals);
             }
         }
     }
@@ -74,31 +74,17 @@ public class EMCommandLine {
     /* Option Callbacks */
     /* **************** */
     
-    private static class AddMusicDirCallback implements EMOptionCallback {
+    private static class EMPropertiesCallback implements EMOptionCallback {
         
+        @Override
         public void performAction(String[] args) {
+            final String fullPath = EMUtils.toCSV(args, " ");
             
-        }
-    }
-    
-    private static class RemoveMusicDirCallback implements EMOptionCallback {
-        
-        public void performAction(String[] args) {
+            LOG.info("Command line specified properties file: " + fullPath);
             
-        }
-    }
-    
-    private static class ListMusicDirsCallback implements EMOptionCallback {
-        
-        public void performAction(String[] args) {
-            
-        }
-    }
-    
-    private static class ScanMusicDirsCallback implements EMOptionCallback {
-        
-        public void performAction(String[] args) {
-            
+            if(EMUtils.hasValues(fullPath)) {
+                EMPreferencesManager.getInstance().setCommandLinePreferencesFile(new File(fullPath));
+            }
         }
     }
 }
