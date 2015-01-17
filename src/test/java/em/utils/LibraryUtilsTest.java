@@ -3,10 +3,14 @@ package em.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -24,10 +28,20 @@ public class LibraryUtilsTest {
     
     /**
      * Tests to ensure that {@link LibraryUtils#convertToFile(String)} will correctly convert a music directory string
-     * to a file.
+     * containing no keywords to a file.
      */
     @Test
-    public void convertToFile() {
+    public void convertToFile_NoKeywords() {
+        final String sep = File.separator;
+        assertEquals("foo" + sep + "bar", LibraryUtils.convertToFile("foo" + sep + "bar").getPath());
+    }
+    
+    /**
+     * Tests to ensure that {@link LibraryUtils#convertToFile(String)} will correctly convert a music directory string
+     * containing the {@code $home} keyword to a file.
+     */
+    @Test
+    public void convertToFile_HomeKeyword() {
         final String home = System.getProperty("user.home");
         final String sep = File.separator;
         
@@ -35,9 +49,45 @@ public class LibraryUtilsTest {
         assertNull(LibraryUtils.convertToFile(null));
         assertEquals(home + sep + "docs", LibraryUtils.convertToFile("$home" + sep + "docs").getPath());
         assertEquals("foo" + sep + "bar", LibraryUtils.convertToFile("foo" + sep + "bar").getPath());
+    }
+    
+    /**
+     * Tests to ensure that {@link LibraryUtils#convertToFile(String)} will correctly convert a music directory string
+     * containing a {@code $timestamp} keyword to a file.
+     */
+    @Test
+    public void convertToFile_TimestampKeyword() throws ParseException {
+        final String sep = File.separator;
+        final String prefix = sep + "foo" + sep;
+        final String suffix = "bar";
+        final File f = LibraryUtils.convertToFile(prefix + "$timestamp" + suffix);
+        final Date now = new Date();
+        final Date timestamp;
+        final String path = f.getPath();
+        final String timestampStr = path.substring(prefix.length(), path.length() - suffix.length());
         
-        System.out.println();
+        timestamp = new SimpleDateFormat(LibraryUtils.TIMESTAMP_FORMAT).parse(timestampStr);
         
+        // Make sure the timestamp is within two seconds of the current time. This is being pretty generous, but I am
+        // trying to avoid false failures.
+        assertTrue((timestamp.getTime() - now.getTime()) < 2000);
+    }
+    
+    /**
+     * Tests to ensure that {@link LibraryUtils#convertToFile(String)} will return {@code null} when given an empty
+     * string.
+     */
+    @Test
+    public void convertToFile_Empty() {
+        assertNull(LibraryUtils.convertToFile(""));
+    }
+    
+    /**
+     * Tests to ensure that {@link LibraryUtils#convertToFile(String)} will return {@code null} when given {@code null}.
+     */
+    @Test
+    public void convertToFile_Null() {
+        assertNull(LibraryUtils.convertToFile(null));
     }
     
     /**

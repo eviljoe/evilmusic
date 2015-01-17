@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +28,9 @@ import em.utils.metadatareaders.MetaDataReader;
 public class LibraryUtils {
     
     private static final String HOME_DIR_KEYWORD = "$home";
+    private static final String TIMESTAMP_KEYWORD = "$timestamp";
     private static final String HOME_DIR_PROP_NAME = "user.home";
+    static final String TIMESTAMP_FORMAT = "yyyy-MM-dd-HH-mm-ss-S";
     
     private static final Logger LOG = Logger.getLogger(LibraryUtils.class.getName());
     
@@ -102,6 +106,15 @@ public class LibraryUtils {
         if(EMUtils.hasValues(dir)) {
             if(dir.startsWith(HOME_DIR_KEYWORD)) {
                 dir = System.getProperty(HOME_DIR_PROP_NAME) + dir.substring(HOME_DIR_KEYWORD.length());
+            }
+            
+            if(dir.contains(TIMESTAMP_KEYWORD)) {
+                final int timestampIndex = dir.indexOf(TIMESTAMP_KEYWORD);
+                final String timestamp = new SimpleDateFormat(TIMESTAMP_FORMAT).format(new Date());
+                
+                dir =
+                        dir.substring(0, timestampIndex) + timestamp
+                                + dir.substring(timestampIndex + TIMESTAMP_KEYWORD.length());
             }
             
             f = new File(dir);

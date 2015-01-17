@@ -51,10 +51,13 @@ Specifies the location of the database.  EvilMusic uses a file system database (
 
 `$home` is a special keyword to represent the current user's home directory.  If this directory starts with `$home`, the `$home` will be replaced with the user's home directory.  For example, if the user is "eviljoe", a directory specified as `$home/db` will actually use `/home/eviljoe/db` as the database home directory.
 
+`$timestamp` is a special keyword to represent a timestamp.  The first instance of `$timestamp` found within the property value will be replaced with a timestamp.  For example, a directory specified as `/foo/$timestamp/bar` will be interpreted as `/foo/2015-01-15-23-30-15-666/bar` (assuming the current time is January 15th 2015 11:30:15.666 PM).
+
 *Default Value:* `$home/.evilmusic`<br/>
 *Example Usage:*
  * `em.database.home=$home/db`
  * `em.database.home=/foo/bar/database-home`
+ * `em.database.home=/foo/bar/$timestamp`
 
 #### em.database.rollback_on_close
 *This value should not be used for unless you are developing for EvilMusic.*  If this property is set to `true`, the entire database will be cleared out after the EvilMusic server is no longer running.
