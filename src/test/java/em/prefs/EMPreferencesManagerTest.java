@@ -151,12 +151,12 @@ public class EMPreferencesManagerTest {
     @Test
     public void testGetBoolean_True() {
         final Properties props = new Properties();
-        final Boolean a;
+        final Boolean b;
         
         props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "true");
         
-        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
-        assertTrue(a);
+        b = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertTrue(b);
     }
     
     /**
@@ -166,12 +166,12 @@ public class EMPreferencesManagerTest {
     @Test
     public void testGetBoolean_TrueWithWhitespace() {
         final Properties props = new Properties();
-        final Boolean a;
+        final Boolean b;
         
         props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "\ttrue \n ");
         
-        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
-        assertTrue(a);
+        b = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertTrue(b);
     }
     
     /**
@@ -181,12 +181,12 @@ public class EMPreferencesManagerTest {
     @Test
     public void testGetBoolean_False() {
         final Properties props = new Properties();
-        final Boolean a;
+        final Boolean b;
         
         props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "false");
         
-        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
-        assertFalse(a);
+        b = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertFalse(b);
     }
     
     /**
@@ -197,12 +197,12 @@ public class EMPreferencesManagerTest {
     @Test
     public void testGetBoolean_FalseWithWhitespace() {
         final Properties props = new Properties();
-        final Boolean a;
+        final Boolean b;
         
         props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "\tfalse \n ");
         
-        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
-        assertFalse(a);
+        b = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertFalse(b);
     }
     
     /**
@@ -212,12 +212,12 @@ public class EMPreferencesManagerTest {
     @Test
     public void testGetBoolean_Empty() {
         final Properties props = new Properties();
-        final Boolean a;
+        final Boolean b;
         
         props.put(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "");
         
-        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
-        assertNull(a);
+        b = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertNull(b);
     }
     
     /**
@@ -227,9 +227,126 @@ public class EMPreferencesManagerTest {
     @Test
     public void testGetBoolean_Null() {
         final Properties props = new Properties();
-        final Boolean a;
+        final Boolean b;
         
-        a = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
-        assertNull(a);
+        b = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertNull(b);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getBoolean(Properties, EMPreferencesKey)} function returns
+     * {@code null} when a boolean property's value is not valid.
+     */
+    @Test
+    public void testGetBoolean_Invalid() {
+        final Properties props = new Properties();
+        final Boolean b;
+        
+        props.setProperty(EMPreferencesKey.DATABASE_ROLLBACK.toString(), "asdf");
+        
+        b = EMPreferencesManager.getInstance().getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+        assertNull(b);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getInteger(Properties, EMPreferencesKey)} function returns
+     * the integer value of the given positive integer string.
+     */
+    @Test
+    public void testGetInteger_PositiveInteger() {
+        final Properties props = new Properties();
+        final Integer i;
+        
+        props.setProperty(EMPreferencesKey.SERVER_PORT.toString(), "123");
+        i = EMPreferencesManager.getInstance().getInteger(props, EMPreferencesKey.SERVER_PORT);
+        
+        assertEquals(123, i.intValue());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getInteger(Properties, EMPreferencesKey)} function returns
+     * the integer value of the given negative integer string.
+     */
+    @Test
+    public void testGetInteger_NegativeInteger() {
+        final Properties props = new Properties();
+        final Integer i;
+        
+        props.setProperty(EMPreferencesKey.SERVER_PORT.toString(), "-123");
+        i = EMPreferencesManager.getInstance().getInteger(props, EMPreferencesKey.SERVER_PORT);
+        
+        assertEquals(-123, i.intValue());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getInteger(Properties, EMPreferencesKey)} function returns
+     * the integer value of the given positive integer string that has leading and trailing whitespace.
+     */
+    @Test
+    public void testGetInteger_PositiveIntegerWithWhitespace() {
+        final Properties props = new Properties();
+        final Integer i;
+        
+        props.setProperty(EMPreferencesKey.SERVER_PORT.toString(), "\t 123\t ");
+        i = EMPreferencesManager.getInstance().getInteger(props, EMPreferencesKey.SERVER_PORT);
+        
+        assertEquals(123, i.intValue());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getInteger(Properties, EMPreferencesKey)} function returns
+     * the integer value of the given negative integer string that has leading and trailing whitespace.
+     */
+    @Test
+    public void testGetInteger_NegativeIntegerWithWhitespace() {
+        final Properties props = new Properties();
+        final Integer i;
+        
+        props.setProperty(EMPreferencesKey.SERVER_PORT.toString(), "\t -123\t ");
+        i = EMPreferencesManager.getInstance().getInteger(props, EMPreferencesKey.SERVER_PORT);
+        
+        assertEquals(-123, i.intValue());
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getInteger(Properties, EMPreferencesKey)} function returns
+     * {@code null} when given an empty string.
+     */
+    @Test
+    public void testGetInteger_Empty() {
+        final Properties props = new Properties();
+        final Integer i;
+        
+        props.setProperty(EMPreferencesKey.SERVER_PORT.toString(), "");
+        i = EMPreferencesManager.getInstance().getInteger(props, EMPreferencesKey.SERVER_PORT);
+        
+        assertNull(i);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getInteger(Properties, EMPreferencesKey)} function returns
+     * {@code null} when given a {@code null} string.
+     */
+    @Test
+    public void testGetInteger_Null() {
+        final Properties props = new Properties();
+        final Integer i = EMPreferencesManager.getInstance().getInteger(props, EMPreferencesKey.SERVER_PORT);
+        
+        assertNull(i);
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMPreferencesManager#getInteger(Properties, EMPreferencesKey)} function returns
+     * {@code null} when given a string that is not a valid integer.
+     */
+    @Test
+    public void testGetInteger_Invalid() {
+        final Properties props = new Properties();
+        final Integer i;
+        
+        props.setProperty(EMPreferencesKey.SERVER_PORT.toString(), "asdf");
+        i = EMPreferencesManager.getInstance().getInteger(props, EMPreferencesKey.SERVER_PORT);
+        
+        assertNull(i);
     }
 }

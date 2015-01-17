@@ -16,6 +16,7 @@ public class EMPreferences implements Cloneable {
     private String metaFLACCommand;
     private String databaseHome;
     private Boolean databaseRollback;
+    private Integer serverPort;
     
     /* ************ */
     /* Constructors */
@@ -61,6 +62,14 @@ public class EMPreferences implements Cloneable {
         this.databaseRollback = databaseRollback;
     }
     
+    public Integer getServerPort() {
+        return serverPort;
+    }
+    
+    public void setServerPort(Integer serverPort) {
+        this.serverPort = serverPort;
+    }
+    
     @Override
     public EMPreferences clone() {
         EMPreferences clone = null;
@@ -78,6 +87,7 @@ public class EMPreferences implements Cloneable {
             clone.metaFLACCommand = metaFLACCommand;
             clone.databaseHome = databaseHome;
             clone.databaseRollback = databaseRollback;
+            clone.serverPort = serverPort;
         }
         
         return clone;

@@ -28,4 +28,18 @@ public class ClientConfigRESTCalls {
         
         return Double.parseDouble(r.getBody().asString());
     }
+    
+    public static double putVolume(double volume) {
+        final RequestSpecification req = given();
+        final ResponseSpecification res;
+        final Response r;
+        
+        res = req.then();
+        res.expect().statusCode(200);
+        res.expect().contentType(ContentType.JSON);
+        
+        r = res.put(RESTTestConfig.getInstance().getFullURL("/config/volume/" + volume));
+        
+        return Double.parseDouble(r.getBody().asString());
+    }
 }

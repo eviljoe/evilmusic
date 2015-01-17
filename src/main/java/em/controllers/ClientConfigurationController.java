@@ -68,7 +68,7 @@ public class ClientConfigurationController {
         final Set<ClientConfiguration> configs;
         final ClientConfiguration config;
         
-        LogUtils.createRESTCallEntry(LOG, "/rest/config/volume/{volume}", RequestMethod.GET, "Setting volume: "
+        LogUtils.createRESTCallEntry(LOG, "/rest/config/volume/{volume}", RequestMethod.PUT, "Setting volume: "
                 + volume);
         configs = clientConfigDAO.findAll();
         

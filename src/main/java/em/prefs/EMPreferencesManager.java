@@ -97,17 +97,20 @@ public class EMPreferencesManager {
             final String metaflac = props.getProperty(EMPreferencesKey.METAFLAC.toString());
             final String dbHome = props.getProperty(EMPreferencesKey.DATABASE_HOME.toString());
             final Boolean dbRollback = getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
+            final Integer serverPort = getInteger(props, EMPreferencesKey.SERVER_PORT);
             
             emPrefs.setMusicDirectories(musicDirs);
             emPrefs.setMetaFLACCommand(metaflac);
             emPrefs.setDatabaseHome(dbHome);
             emPrefs.setDatabaseRollback(dbRollback);
+            emPrefs.setServerPort(serverPort);
             
             LOG.info("=== Loaded Preferences ===");
             LOG.info("Music Directories: " + Arrays.toString(musicDirs));
             LOG.info("MetaFLAC Command:  " + metaflac);
             LOG.info("Database Home:     " + dbHome);
             LOG.info("Database Rollback: " + dbRollback);
+            LOG.info("Server Port:       " + serverPort);
             LOG.info("===== End Preferences ====");
         }
         
@@ -135,7 +138,7 @@ public class EMPreferencesManager {
     }
     
     Boolean getBoolean(Properties props, EMPreferencesKey key) {
-        String str = props.getProperty(EMPreferencesKey.DATABASE_ROLLBACK.toString());
+        String str = props.getProperty(key.toString());
         Boolean b = null;
         
         if(str != null) {
@@ -149,6 +152,23 @@ public class EMPreferencesManager {
         }
         
         return b;
+    }
+    
+    Integer getInteger(Properties props, EMPreferencesKey key) {
+        String str = props.getProperty(key.toString());
+        Integer i = null;
+        
+        if(str != null) {
+            str = str.trim();
+            
+            try {
+                i = Integer.parseInt(str);
+            } catch(NumberFormatException e) {
+                LOG.log(Level.SEVERE, "Exception while parsing integer property", e);
+            }
+        }
+        
+        return i;
     }
     
     public EMPreferences getPreferences() {
@@ -180,7 +200,8 @@ public class EMPreferencesManager {
         MUSIC_DIRECTORIES("em.music_directories"),
         METAFLAC("em.metaflac_command"),
         DATABASE_HOME("em.database.home"),
-        DATABASE_ROLLBACK("em.database.rollback_on_close");
+        DATABASE_ROLLBACK("em.database.rollback_on_close"),
+        SERVER_PORT("em.server.port");
         
         private final String key;
         

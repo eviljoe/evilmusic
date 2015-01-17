@@ -49,6 +49,11 @@ public class EvilMusicApp {
     
     private static final Logger LOG = Logger.getLogger(EvilMusicApp.class.getName());
     
+    // Spring Boot Properties
+    
+    private static final String SPRING_BOOT_SERVER_PORT_PROP = "server.port";
+    private static final int DEFAULT_SPRING_BOOT_SERVER_PORT = 8080;
+    
     // Derby Properties
     
     private static final String DERBY_HOME_PROP = "derby.system.home";
@@ -58,7 +63,7 @@ public class EvilMusicApp {
     
     private static final String HIBERNATE_AUTO_DDL_PROP = "hibernate.hbm2ddl.auto";
     private static final String HIBERNATE_AUTO_DDL_UPDATE = "update";
-    private static final String HIBERNATE_AUTO_DDL_CREATE_DROP = "";
+    private static final String HIBERNATE_AUTO_DDL_CREATE_DROP = "create-drop";
     private static final String HIBERNATE_DIALECT_PROP = "hibernate.dialect";
     
     /* *********** */
@@ -70,6 +75,7 @@ public class EvilMusicApp {
         
         readCommandLineArgs(args);
         loadEMPreferences();
+        configureSpringBoot();
         configureDerby();
         
         context = SpringApplication.run(EvilMusicApp.class, args);
@@ -91,6 +97,16 @@ public class EvilMusicApp {
     /* *********************** */
     /* Configuration Functions */
     /* *********************** */
+    
+    private static void configureSpringBoot() {
+        Integer port = EMPreferencesManager.getInstance().getPreferences().getServerPort();
+        
+        if(port == null) {
+            port = DEFAULT_SPRING_BOOT_SERVER_PORT;
+        }
+        
+        System.setProperty(SPRING_BOOT_SERVER_PORT_PROP, port.toString());
+    }
     
     private static void configureDerby() {
         String dbHome = EMPreferencesManager.getInstance().getPreferences().getDatabaseHome();

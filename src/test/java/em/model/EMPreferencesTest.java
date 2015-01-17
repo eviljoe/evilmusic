@@ -25,11 +25,17 @@ public class EMPreferencesTest {
         
         orig.setMusicDirectories(new String[] {"/home/test/foo", "foo.bar", "/"});
         orig.setMetaFLACCommand("/usr/bin/metaflac");
+        orig.setDatabaseHome("/home/destroyerofworlds/.dbhome");
+        orig.setDatabaseRollback(false);
+        orig.setServerPort(31337);
         
         clone = orig.clone();
         assertNotNull(clone);
         assertTrue(orig != clone);
         assertArrayEquals(orig.getMusicDirectories(), clone.getMusicDirectories());
         assertEquals(orig.getMetaFLACCommand(), clone.getMetaFLACCommand());
+        assertEquals(orig.getDatabaseHome(), clone.getDatabaseHome());
+        assertEquals(orig.getDatabaseRollback(), clone.getDatabaseRollback());
+        assertEquals(orig.getServerPort(), clone.getServerPort());
     }
 }
