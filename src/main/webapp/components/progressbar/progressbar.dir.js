@@ -1,7 +1,7 @@
-'use strict';
-
 angular.module('EvilMusicApp')
 .directive('emProgressBar', function() {
+    'use strict';
+
     return {
         restrict : 'E',
         templateUrl : '/components/progressbar/progressbar.html',
@@ -31,6 +31,8 @@ angular.module('EvilMusicApp')
 })
 .controller('EMProgressBarController',
 ['$scope', '$rootScope', 'player', 'emUtils', function($scope, $rootScope, player, emUtils) {
+    
+    'use strict';
 
     $scope.progressMeterClicked = function(xPos, width) {
         if(emUtils.isNumber(xPos) && emUtils.isNumber(width)) {

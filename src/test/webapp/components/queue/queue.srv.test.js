@@ -1,6 +1,5 @@
-'use strict';
-
 describe('queue', function() {
+    'use strict';
 
     var $httpBackend;
     var $http;
@@ -35,7 +34,7 @@ describe('queue', function() {
 
     describe('construction', function() {
         it('loads the queue', function() {
-            expect(queue.q).toEqual(defaultQueue);
+            expect(queue.q.id).toEqual(defaultQueue.id);
         });
     });
 
@@ -43,7 +42,7 @@ describe('queue', function() {
         it('makes a REST API call to add a song to the queue', function() {
             var songID = 17;
 
-            $httpBackend.expect('PUT', '/rest/queue/' + defaultQueue.id + '/last', [songID]).respond({});
+            $httpBackend.expect('PUT', '/rest/queue/' + defaultQueue.id + '/last?songIDs=' + songID).respond(undefined);
             $httpBackend.when('GET', '/rest/queue/' + defaultQueue.id).respond(defaultQueue);
 
             queue.addLast(songID);
@@ -51,10 +50,12 @@ describe('queue', function() {
         });
 
         it('reloads the queue after a song is added', function() {
-            $httpBackend.when('PUT', '/rest/queue/' + defaultQueue.id + '/last').respond({});
+            var songID = 19;
+            
+            $httpBackend.when('PUT', '/rest/queue/' + defaultQueue.id + '/last?songIDs=' + songID).respond(undefined);
             $httpBackend.expect('GET', '/rest/queue/' + defaultQueue.id).respond(defaultQueue);
 
-            queue.addLast(17);
+            queue.addLast(songID);
             $httpBackend.flush();
         });
     });
@@ -63,7 +64,8 @@ describe('queue', function() {
         it('makes a REST API call to remove a song from the queue', function() {
             var queueIndex = 1;
 
-            $httpBackend.expect('DELETE', '/rest/queue/' + defaultQueue.id + '/queueindex/' + queueIndex).respond({});
+            $httpBackend.expect(
+                'DELETE', '/rest/queue/' + defaultQueue.id + '/queueindex/' + queueIndex).respond(undefined);
             $httpBackend.when('GET', '/rest/queue/' + defaultQueue.id).respond(defaultQueue);
 
             queue.remove(queueIndex);
@@ -73,7 +75,8 @@ describe('queue', function() {
         it('reloads the queue after a song is removed', function() {
             var queueIndex = 1;
 
-            $httpBackend.when('DELETE', '/rest/queue/' + defaultQueue.id + '/queueindex/' + queueIndex).respond({});
+            $httpBackend.when(
+                'DELETE', '/rest/queue/' + defaultQueue.id + '/queueindex/' + queueIndex).respond(undefined);
             $httpBackend.expect('GET', '/rest/queue/' + defaultQueue.id).respond(defaultQueue);
 
             queue.remove(queueIndex);
@@ -83,7 +86,7 @@ describe('queue', function() {
 
     describe('clear', function() {
         it('makes a REST API call to clear the queue', function() {
-            $httpBackend.expect('DELETE', '/rest/queue/' + defaultQueue.id + '/elements').respond({});
+            $httpBackend.expect('DELETE', '/rest/queue/' + defaultQueue.id + '/elements').respond(undefined);
             $httpBackend.when('GET', '/rest/queue/' + defaultQueue.id).respond(defaultQueue);
 
             queue.clear();
@@ -91,7 +94,7 @@ describe('queue', function() {
         });
 
         it('reloads the queue after it is cleared', function() {
-            $httpBackend.when('DELETE', '/rest/queue/' + defaultQueue.id + '/elements').respond({});
+            $httpBackend.when('DELETE', '/rest/queue/' + defaultQueue.id + '/elements').respond(undefined);
             $httpBackend.expect('GET', '/rest/queue/' + defaultQueue.id).respond(defaultQueue);
 
             queue.clear();

@@ -1,7 +1,7 @@
-'use strict';
-
 angular.module('EvilMusicApp')
 .directive('emPlayerControls', function() {
+    'use strict';
+
     return {
         restrict : 'E',
         scope : {},
@@ -11,6 +11,8 @@ angular.module('EvilMusicApp')
     };
 })
 .controller('EMPlayerControlsController', ['player', function(player) {
+    'use strict';
+
     var that = this;
     that.player = player;
 }]);

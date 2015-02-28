@@ -1,10 +1,9 @@
-'use strict';
-
 describe('library', function() {
+    'use strict';
 
     var library;
     var $httpBackend;
-    var defaultLibrary = {};
+    var defaultLibrary = { id : 7 };
 
     beforeEach(module('EvilMusicApp'));
 
@@ -26,7 +25,7 @@ describe('library', function() {
 
     describe('construction', function() {
         it('loads the library', function() {
-            expect(library.library).toEqual(defaultLibrary);
+            expect(library.library.id).toEqual(defaultLibrary.id);
         });
     });
 

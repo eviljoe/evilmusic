@@ -34,10 +34,6 @@
         "strict" : true,
         "maxcomplexity" : 10,
 
-        "globalstrict" : true,
-        "laxbreak" : true,
-        "maxerr" : 1000,
-
         "predef" : [
             "afterEach",
             "alert",

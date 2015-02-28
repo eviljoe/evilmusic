@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -102,7 +101,7 @@ public class QueueController {
         LogUtils.createRESTCallEntry(LOG, "/rest/queue/{queueID}", RequestMethod.DELETE, "Clearing queue: " + queueID);
         
         queue = queueDAO.findById(queueID);
-        queue.setElements(null);
+        queue.clearElements();
         queueDAO.save(queue);
         
         return queue;
@@ -127,7 +126,9 @@ public class QueueController {
     @RequestMapping(value = "/rest/queue/{queueID}/last", method = RequestMethod.PUT)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Queue addLast(@PathVariable("queueID") int queueID, @RequestBody List<Integer> songIDs) {
+    public Queue addLast(@PathVariable("queueID") int queueID,
+            @RequestParam(value = "songIDs", required = true) List<Integer> songIDs) {
+        
         final List<SongInfo> songs;
         Queue queue;
         

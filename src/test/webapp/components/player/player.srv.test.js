@@ -1,7 +1,6 @@
-'use strict';
-
 describe('player', function() {
-
+    'use strict';
+    
     var $httpBackend;
     var player;
     var eq;

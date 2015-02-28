@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import em.dao.QueueDAO;
 import em.dao.SongInfoDAO;
 import em.model.EMPreferences;
+import em.model.Library;
 import em.model.SongInfo;
 import em.prefs.EMPreferencesManager;
 import em.utils.LibraryUtils;
@@ -54,18 +55,21 @@ public class LibraryController {
     @Transactional
     @RequestMapping(value = "/rest/library", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SongInfo> getLibrary() {
+    public Library getLibrary() {
         final List<SongInfo> songs;
         final List<SongInfo> clones = new ArrayList<>();
+        final Library lib = new Library();
         
-        LogUtils.createRESTCallEntry(LOG, "/rest/library", RequestMethod.GET, "Requesting library");
         songs = songInfoDAO.findAll();
+        LogUtils.createRESTCallEntry(LOG, "/rest/library", RequestMethod.GET, "Requesting library");
         
         for(SongInfo song : songs) {
             clones.add(song.clone());
         }
         
-        return LibraryUtils.sanitizeSongsForClient(clones);
+        lib.setSongs(LibraryUtils.sanitizeSongsForClient(clones));
+        
+        return lib;
     }
     
     @Transactional

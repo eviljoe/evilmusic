@@ -1,18 +1,15 @@
-'use strict';
-
 angular.module('EvilMusicApp')
-.factory('library', ['$http', 'queue', function($http, queue) {
+.factory('library', ['$http', 'queue', 'Libraries', function($http, queue, Libraries) {
+
+    'use strict';
 
     var that = this;
     that.library = null;
 
     /** Loads the contents of the library using a REST call. */
     that.load = function() {
-        $http.get('/rest/library')
-        .success(function (data, status, headers, config) {
-            that.library = data;
-        })
-        .error(function (data, status, headers, config) {
+        that.library = Libraries.get();
+        that.library.$promise.catch(function(data) {
             alert('Could not get library.\n\n' + JSON.stringify(data));
         });
     };
@@ -22,13 +19,16 @@ angular.module('EvilMusicApp')
      * be reloaded.
      */
     that.clear = function() {
-        $http.delete('/rest/library')
-        .success(function (data, status, headers, config) {
-            that.load();
-            queue.load(true);
-        })
-        .error(function (data, status, headers, config) {
-            alert('Clear library failed.\n\n' + JSON.stringify(data));
+        that.library.$promise.then(function() {
+            that.library.$delete().then(
+                function() {
+                    that.load();
+                    queue.load(true);
+                },
+                function(data) {
+                    alert('Clear library failed.\n\n' + JSON.stringify(data));
+                }
+            );
         });
     };
 
@@ -38,13 +38,16 @@ angular.module('EvilMusicApp')
      * rebuild, the it and the queue will be reloaded.
      */
     that.rebuild = function() {
-        $http.post('/rest/library')
-        .success(function (data, status, headers, config) {
-            that.load();
-            queue.load(true);
-        })
-        .error(function (data, status, headers, config) {
-            alert('Library rebuilding failed.\n\n' + JSON.stringify(data));
+        that.library.$promise.then(function() {
+            that.library.$rebuild().then(
+                function() {
+                    that.load();
+                    queue.load(true);
+                },
+                function(data) {
+                    alert('Library rebuilding failed.\n\n' + JSON.stringify(data));
+                }
+            );
         });
     };
 

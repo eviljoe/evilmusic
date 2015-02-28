@@ -1,7 +1,7 @@
-'use strict';
-
 angular.module('EvilMusicApp')
 .directive('emVolumeControl', function() {
+    'use strict';
+
     return {
         'restrict' : 'A',
         'templateUrl' : '/components/volumecontrol/volumecontrol.html',

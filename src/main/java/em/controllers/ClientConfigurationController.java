@@ -24,63 +24,63 @@ import em.utils.LogUtils;
  */
 @RestController
 public class ClientConfigurationController {
-    
+
     private static final Logger LOG = Logger.getLogger(ClientConfigurationController.class.getName());
-    
+
     @Autowired
     private ClientConfigurationDAO clientConfigDAO;
-    
+
     /* ************ */
     /* Constructors */
     /* ************ */
-    
+
     public ClientConfigurationController() {
         super();
     }
-    
+
     /* ************** */
     /* REST Functions */
     /* ************** */
-    
+
     @Transactional
     @RequestMapping(value = "/rest/config/volume", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public double getVolume() {
         final Set<ClientConfiguration> configs;
         final double volume;
-        
+
         LogUtils.createRESTCallEntry(LOG, "/rest/config/volume", RequestMethod.GET, "Requesting volume");
         configs = clientConfigDAO.findAll();
-        
+
         if(EMUtils.hasValues(configs)) {
             volume = configs.iterator().next().getVolume();
         } else {
             volume = 100.0;
         }
-        
+
         return volume;
     }
-    
+
     @Transactional
     @RequestMapping(value = "/rest/config/volume/{volume}", method = RequestMethod.PUT)
     @Produces(MediaType.APPLICATION_JSON)
     public double setVolume(@PathVariable("volume") double volume) {
         final Set<ClientConfiguration> configs;
         final ClientConfiguration config;
-        
+
         LogUtils.createRESTCallEntry(LOG, "/rest/config/volume/{volume}", RequestMethod.PUT, "Setting volume: "
                 + volume);
         configs = clientConfigDAO.findAll();
-        
+
         if(EMUtils.hasValues(configs)) {
             config = configs.iterator().next();
         } else {
             config = new ClientConfiguration();
         }
-        
+
         config.setVolume(volume);
         clientConfigDAO.save(config);
-        
+
         return volume;
     }
 }

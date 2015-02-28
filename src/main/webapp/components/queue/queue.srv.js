@@ -1,9 +1,9 @@
-'use strict';
-
 angular.module('EvilMusicApp')
-.factory('queue', ['$http', 'emUtils', function($http, emUtils) {
-    var that = this;
+.factory('queue', ['$http', 'emUtils', 'Queues', function($http, emUtils, Queues) {
 
+    'use strict';
+
+    var that = this;
     that.q = null;
 
     /**
@@ -13,21 +13,14 @@ angular.module('EvilMusicApp')
      * @param {Boolean} loadNew Whether or not to load a new queue or reload the current queue.
      */
     that.load = function(loadNew) {
-        var url = '/rest/queue/';
+        var id = loadNew ? 'current' : that.q.id;
 
-        if(loadNew) {
-            url += 'current';
-        } else {
-            url += that.q.id;
-        }
-
-        $http.get(url)
-        .success(function (data, status, headers, config) {
-            that.q = data;
-        })
-        .error(function (data, status, headers, config) {
-            alert('Could not get queue.\n\n' + JSON.stringify(data));
-        });
+        that.q = Queues.get({ id : id });
+        that.q.$promise.catch(
+            function(data) {
+                alert('Could not get queue.\n\n' + JSON.stringify(data));
+            }
+        );
     };
 
     /**
@@ -38,15 +31,16 @@ angular.module('EvilMusicApp')
      * @param {Number} songID The ID of the song to be enqueued.
      */
     that.addLast = function(songID) {
-        if(that.q && that.q.id) {
-            $http.put('/rest/queue/' + that.q.id + '/last', [songID])
-            .success(function (data, status, headers, config) {
-                that.load(false);
-            })
-            .error(function (data, status, headers, config) {
-                alert('Failed to enqueue last.\n\n' + JSON.stringify(data));
-            });
-        }
+        that.q.$promise.then(function() {
+            that.q.$addLast({ id : that.q.id, songIDs : songID }).then(
+                function() {
+                    that.load(false);
+                },
+                function(data) {
+                    alert('Failed to enqueue last.\n\n' + JSON.stringify(data));
+                }
+            );
+        });
     };
 
     /**
@@ -57,15 +51,16 @@ angular.module('EvilMusicApp')
      * @param {Number} queueIndex The index within the queue that should be removed.
      */
     that.remove = function(queueIndex) {
-        if(that.q && that.q.id) {
-            $http.delete('/rest/queue/' + that.q.id + '/queueindex/' + queueIndex)
-            .success(function (data, status, headers, config) {
-                that.load(false);
-            })
-            .error(function (data, status, headers, config) {
-                alert('Failed to remove from queue (' + queueIndex + ')\n\n' + JSON.stringify(data));
-            });
-        }
+        that.q.$promise.then(function() {
+            that.q.$remove({ id : that.q.id, qIndex : queueIndex }).then(
+                function() {
+                    that.load(false);
+                },
+                function(data) {
+                    alert('Failed to remove from queue (' + queueIndex + ')\n\n' + JSON.stringify(data));
+                }
+            );
+        });
     };
 
     /**
@@ -73,15 +68,16 @@ angular.module('EvilMusicApp')
      * reloaded.
      */
     that.clear = function() {
-        if(that.q && that.q.id) {
-            $http.delete('/rest/queue/' + that.q.id + '/elements')
-            .success(function (data, status, headers, config) {
-                that.load(false);
-            })
-            .error(function (data, status, headers, config) {
-                alert('Clear queue failed.\n\n' + JSON.stringify(data));
-            });
-        }
+        that.q.$promise.then(function() {
+            that.q.$clear().then(
+                function() {
+                    that.load(false);
+                },
+                function(data) {
+                    alert('Clear queue failed.\n\n' + JSON.stringify(data));
+                }
+            );
+        });
     };
 
     /**

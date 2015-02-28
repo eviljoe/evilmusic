@@ -1,7 +1,6 @@
-'use strict';
-
 describe('emUtils', function() {
-
+    'use strict';
+    
     var emUtils;
 
     beforeEach(module('EvilMusicApp'));

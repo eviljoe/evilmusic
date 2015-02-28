@@ -137,6 +137,14 @@ public class Queue implements Identifiable, Cloneable {
         return added;
     }
     
+    @Transient
+    public void clearElements() {
+        if(EMUtils.hasValues(elements)) {
+            elements.clear();
+            updateIndices();
+        }
+    }
+    
     public QueueElement removeElement(int index) {
         final QueueElement removed = elements == null ? null : elements.remove(index);
         

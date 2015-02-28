@@ -25,44 +25,44 @@ import em.utils.LogUtils;
  */
 @RestController
 public class EqualizerController {
-    
+
     private static final Logger LOG = Logger.getLogger(EqualizerController.class.getName());
-    
+
     @Autowired
     private EqualizerDAO eqDAO;
-    
+
     /* ************ */
     /* Constructors */
     /* ************ */
-    
+
     public EqualizerController() {
         super();
     }
-    
+
     /* ************** */
     /* REST Functions */
     /* ************** */
-    
+
     @Transactional
     @RequestMapping(value = "/rest/eq/current", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public Equalizer maybeCreateEqualizer() {
         final Set<Equalizer> allEQs;
         final Equalizer eq;
-        
+
         LogUtils.createRESTCallEntry(LOG, "/rest/eq/current", RequestMethod.GET, "Requesting equalizer, maybe create");
-        
+
         allEQs = eqDAO.findAll();
-        
+
         if(EMUtils.hasValues(allEQs)) {
             eq = allEQs.iterator().next();
         } else {
             eq = eqDAO.save(EqualizerUtils.createDefaultEqualizer());
         }
-        
+
         return eq;
     }
-    
+
     @Transactional
     @RequestMapping(value = "/rest/eq/{eqID}", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)

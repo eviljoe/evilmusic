@@ -1,7 +1,6 @@
-'use strict';
-
 describe('emQueue', function() {
-
+    'use strict';
+    
     var $httpBackend;
 
     beforeEach(module('EvilMusicApp'));

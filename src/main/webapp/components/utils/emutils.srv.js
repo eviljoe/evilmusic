@@ -1,7 +1,7 @@
-'use strict';
-
 angular.module('EvilMusicApp')
 .factory('emUtils', function() {
+    'use strict';
+    
     var that = this;
 
     /**

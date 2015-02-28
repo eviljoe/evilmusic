@@ -2,6 +2,7 @@ package em.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -321,5 +322,31 @@ public class QueueTest {
         assertEquals(-1, queue.getElement(2).getPlayIndex());
         assertEquals(0, queue.getElement(3).getPlayIndex());
         assertEquals(1, queue.getElement(4).getPlayIndex());
+    }
+    
+    /**
+     * Tests to ensure that the {@link Queue#clearElements()} function can be called when the queue does not contain any
+     * elements (makes sure it doesn't throw any exceptions).
+     */
+    @Test
+    public void testClearElements_NoElements() {
+        final Queue queue = new Queue();
+        
+        queue.clearElements();
+        assertEquals(0, queue.size());
+    }
+    
+    /** Tests to ensure that the {@link Queue#clearElements()} function removes all elements from the queue. */
+    @Test
+    public void testClearElements_WithElements() {
+        final Queue queue = new Queue();
+        
+        queue.addSongLast(new SongInfo(5));
+        queue.addSongLast(new SongInfo(7));
+        queue.addSongLast(new SongInfo(11));
+        
+        assertNotEquals(0, queue.size());
+        queue.clearElements();
+        assertEquals(0, queue.size());
     }
 }

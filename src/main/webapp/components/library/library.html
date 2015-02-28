@@ -15,7 +15,7 @@
         <th align="right">Sample Count</th>
         <th align="left">Controls</th>
     </tr>
-    <tr ng-repeat="song in ctrl.library.library | orderBy : ['artist','trackNumber']">
+    <tr ng-repeat="song in ctrl.library.library.songs | orderBy : ['artist','trackNumber']">
         <td align="right">{{song.id}}</td>
         <td align="left">{{song.artist}}</td>
         <td align="left">{{song.album}}</td>

@@ -1,7 +1,6 @@
-'use strict';
-
 describe('eq', function() {
-
+    'use strict';
+    
     var $httpBackend;
     var eq;
     var defaultEQ = {};

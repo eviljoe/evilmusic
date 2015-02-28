@@ -1,7 +1,7 @@
-'use strict';
-
 angular.module('EvilMusicApp')
 .factory('player', ['$http', '$rootScope', 'emUtils', 'queue', 'eq', function($http, $rootScope, emUtils, queue, eq) {
+
+    'use strict';
 
     var that = this;
 

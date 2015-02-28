@@ -1,3 +1,1 @@
-'use strict';
-
-angular.module('EvilMusicApp', []);
+angular.module('EvilMusicApp', ['ngResource']);

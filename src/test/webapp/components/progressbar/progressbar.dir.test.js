@@ -1,7 +1,6 @@
-'use strict';
-
 describe('emProgressBar', function() {
-
+    'use strict';
+    
     var $controller;
 
     beforeEach(module('EvilMusicApp'));

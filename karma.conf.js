@@ -1,6 +1,6 @@
-'use strict';
-
 module.exports = function(config) {
+    'use strict';
+
     config.set({
         basePath : '',
         files : [
@@ -9,6 +9,7 @@ module.exports = function(config) {
             'src/main/webapp/assets/libs/flac.js',
             'src/main/webapp/assets/libs/jquery.js',
             'src/main/webapp/assets/libs/angular.js',
+            'src/main/webapp/assets/libs/angular-resource.js',
             'node_modules/angular-mocks/angular-mocks.js',
 
             // Root level HTML & JavaScript files
