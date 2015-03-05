@@ -1,1 +1,1 @@
-angular.module('EvilMusicApp', ['ngResource']);
+angular.module('EvilMusicApp', ['ngResource', 'ui.bootstrap']);

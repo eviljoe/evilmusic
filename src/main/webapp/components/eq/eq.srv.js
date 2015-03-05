@@ -1,8 +1,7 @@
-'use strict';
-
 angular.module('EvilMusicApp')
 .factory('eq', ['$http', function($http){
-
+    'use strict';
+    
     var that = this;
 
     that.webAudioNodes = {};

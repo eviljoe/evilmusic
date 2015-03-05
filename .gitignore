@@ -7,5 +7,6 @@
 /node_modules/
 /.project
 /.settings/
+/src/main/webapp/dist
 /*.sublime-project
 /*.sublime-workspace

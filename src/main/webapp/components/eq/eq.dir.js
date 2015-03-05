@@ -1,7 +1,7 @@
-'use strict';
-
 angular.module('EvilMusicApp')
 .directive('emEq', function() {
+    'use strict';
+    
     return {
         restrict : 'E',
         scope : {},
@@ -11,6 +11,8 @@ angular.module('EvilMusicApp')
     };
 })
 .controller('EMEQController', ['eq', 'emUtils', function(eq, emUtils) {
+    'use strict';
+    
     var that = this;
     that.eq = eq;
     that.emUtils = emUtils;
