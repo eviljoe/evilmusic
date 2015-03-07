@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,6 +29,7 @@ import em.utils.metadatareaders.MetaDataReader;
 public class LibraryUtils {
     
     private static final String HOME_DIR_KEYWORD = "$home";
+    private static final String CLASSPATH_KEYWORD = "$classpath";
     private static final String TIMESTAMP_KEYWORD = "$timestamp";
     private static final String HOME_DIR_PROP_NAME = "user.home";
     static final String TIMESTAMP_FORMAT = "yyyy-MM-dd-HH-mm-ss-S";
@@ -47,7 +49,7 @@ public class LibraryUtils {
     /* Utility Functions */
     /* ***************** */
     
-    public static List<SongInfo> scanDirectories(String[] dirNames) throws IOException {
+    public static List<SongInfo> scanDirectories(String[] dirNames) throws IOException, URISyntaxException {
         final ArrayList<SongInfo> musicFiles = new ArrayList<SongInfo>();
         
         if(dirNames != null) {
@@ -98,29 +100,6 @@ public class LibraryUtils {
         }
         
         return info;
-    }
-    
-    public static File convertToFile(String dir) {
-        File f = null;
-        
-        if(EMUtils.hasValues(dir)) {
-            if(dir.startsWith(HOME_DIR_KEYWORD)) {
-                dir = System.getProperty(HOME_DIR_PROP_NAME) + dir.substring(HOME_DIR_KEYWORD.length());
-            }
-            
-            if(dir.contains(TIMESTAMP_KEYWORD)) {
-                final int timestampIndex = dir.indexOf(TIMESTAMP_KEYWORD);
-                final String timestamp = new SimpleDateFormat(TIMESTAMP_FORMAT).format(new Date());
-                
-                dir =
-                        dir.substring(0, timestampIndex) + timestamp
-                                + dir.substring(timestampIndex + TIMESTAMP_KEYWORD.length());
-            }
-            
-            f = new File(dir);
-        }
-        
-        return f;
     }
     
     public static SongInfo sanitizeForClient(SongInfo info) {
@@ -192,5 +171,57 @@ public class LibraryUtils {
                 }
             }
         }
+    }
+    
+    /* *********************************** */
+    /* Song Directory Conversion Functions */
+    /* *********************************** */
+    
+    public static File convertToFile(String dir) throws URISyntaxException {
+        File f = null;
+        
+        if(EMUtils.hasValues(dir)) {
+            dir = processHomeKeyword(dir);
+            dir = processTimestampKeyword(dir);
+            f = processClasspathKeyword(dir, LibraryUtils.class.getClassLoader());
+            
+            if(f == null) {
+                f = new File(dir);
+            }
+        }
+        
+        return f;
+    }
+    
+    static String processHomeKeyword(String dir) {
+        if(dir != null && dir.startsWith(HOME_DIR_KEYWORD)) {
+            dir = System.getProperty(HOME_DIR_PROP_NAME) + dir.substring(HOME_DIR_KEYWORD.length());
+        }
+        
+        return dir;
+    }
+    
+    static String processTimestampKeyword(String dir) {
+        if(dir != null && dir.contains(TIMESTAMP_KEYWORD)) {
+            final int timestampIndex = dir.indexOf(TIMESTAMP_KEYWORD);
+            final String timestamp = new SimpleDateFormat(TIMESTAMP_FORMAT).format(new Date());
+            
+            dir =
+                    dir.substring(0, timestampIndex) + timestamp
+                            + dir.substring(timestampIndex + TIMESTAMP_KEYWORD.length());
+        }
+        
+        return dir;
+    }
+    
+    static File processClasspathKeyword(String dir, ClassLoader loader) throws URISyntaxException {
+        File f = null;
+        
+        if(dir != null && dir.startsWith(CLASSPATH_KEYWORD)) {
+            final String resourcePath = dir.substring(CLASSPATH_KEYWORD.length());
+            f = new File(loader.getResource(resourcePath).toURI());
+        }
+        
+        return f;
     }
 }

@@ -1,6 +1,7 @@
 package em.controllers;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -85,7 +86,7 @@ public class LibraryController {
     @Transactional
     @RequestMapping(value = "/rest/library", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void rebuildLibrary() throws IOException {
+    public void rebuildLibrary() throws IOException, URISyntaxException {
         final EMPreferences prefs;
         final List<SongInfo> infos;
         

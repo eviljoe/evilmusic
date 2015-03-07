@@ -1,4 +1,4 @@
-package em.controllers;
+package em.controllers.queue;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,10 +15,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import em.dao.QueueDAO;
@@ -56,6 +59,28 @@ public class QueueController {
     /* ************** */
     /* REST Functions */
     /* ************** */
+    
+    @Transactional
+    @RequestMapping(value = "/rest/queue", method = RequestMethod.GET)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Queue createQueue() {
+        LogUtils.createRESTCallEntry(LOG, "/rest/queue", RequestMethod.GET, "Creating queue");
+        return queueDAO.save(new Queue());
+    }
+    
+    @Transactional
+    @RequestMapping(value = "/rest/queue/{queueID}", method = RequestMethod.DELETE)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteQueue(@PathVariable("queueID") int queueID) throws QueueNotFoundException {
+        LogUtils.createRESTCallEntry(LOG, "/rest/queue", RequestMethod.DELETE, "Deleting queue: " + queueID);
+        
+        try {
+            queueDAO.remove(queueID);
+        } catch(EmptyResultDataAccessException e) {
+            throw new QueueNotFoundException(queueID, e);
+        }
+    }
     
     @Transactional
     @RequestMapping(value = "/rest/queue/current", method = RequestMethod.GET)

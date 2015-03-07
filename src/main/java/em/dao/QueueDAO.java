@@ -17,4 +17,6 @@ public interface QueueDAO {
     public Queue save(Queue queue);
     
     public void removeAll();
+    
+    public void remove(int id);
 }

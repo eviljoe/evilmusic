@@ -2,6 +2,7 @@ package em;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,7 +71,7 @@ public class EvilMusicApp {
     /* Main Method */
     /* *********** */
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         final ConfigurableApplicationContext context;
         
         readCommandLineArgs(args);
@@ -108,7 +109,7 @@ public class EvilMusicApp {
         System.setProperty(SPRING_BOOT_SERVER_PORT_PROP, port.toString());
     }
     
-    private static void configureDerby() {
+    private static void configureDerby() throws URISyntaxException {
         String dbHome = EMPreferencesManager.getInstance().getPreferences().getDatabaseHome();
         
         if(EMUtils.hasValues(dbHome)) {

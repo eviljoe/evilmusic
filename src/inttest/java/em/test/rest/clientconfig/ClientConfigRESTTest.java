@@ -1,4 +1,4 @@
-package em.test.rest;
+package em.test.rest.clientconfig;
 
 import static org.junit.Assert.assertEquals;
 

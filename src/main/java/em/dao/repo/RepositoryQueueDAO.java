@@ -57,6 +57,11 @@ public class RepositoryQueueDAO implements QueueDAO {
         getQueueRepository().deleteAll();
     }
     
+    @Override
+    public void remove(int id) {
+        getQueueRepository().delete(id);
+    }
+    
     /* ***************** */
     /* Getters / Setters */
     /* ***************** */
