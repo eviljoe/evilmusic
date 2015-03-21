@@ -8,8 +8,8 @@ import java.util.List;
  * @since v0.1
  * @author eviljoe
  */
-public class Library { // JOE rt?
-
+public class Library {
+    
     private List<SongInfo> songs;
     
     /* ************ */

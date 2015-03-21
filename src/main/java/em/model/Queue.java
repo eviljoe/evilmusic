@@ -176,6 +176,7 @@ public class Queue implements Identifiable, Cloneable {
     }
     
     @Override
+    @Transient
     public Queue clone() {
         Queue clone = null;
         

@@ -1,6 +1,7 @@
 package em.controllers.queue;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import em.controllers.library.SongNotFoundException;
 import em.dao.QueueDAO;
 import em.dao.SongInfoDAO;
 import em.model.Queue;
@@ -64,7 +66,7 @@ public class QueueController {
     @RequestMapping(value = "/rest/queue", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public Queue createQueue() {
-        LogUtils.createRESTCallEntry(LOG, "/rest/queue", RequestMethod.GET, "Creating queue");
+        LogUtils.restCall(LOG, "/rest/queue", RequestMethod.GET, "Creating queue");
         return queueDAO.save(new Queue());
     }
     
@@ -73,7 +75,7 @@ public class QueueController {
     @Produces(MediaType.APPLICATION_JSON)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteQueue(@PathVariable("queueID") int queueID) throws QueueNotFoundException {
-        LogUtils.createRESTCallEntry(LOG, "/rest/queue", RequestMethod.DELETE, "Deleting queue: " + queueID);
+        LogUtils.restCall(LOG, "/rest/queue/{queueID}", RequestMethod.DELETE, "Deleting queue: " + queueID);
         
         try {
             queueDAO.remove(queueID);
@@ -89,7 +91,7 @@ public class QueueController {
         final Set<Queue> allQueues;
         final Queue queue;
         
-        LogUtils.createRESTCallEntry(LOG, "/rest/queue/current", RequestMethod.GET, "Requesting queue, maybe create");
+        LogUtils.restCall(LOG, "/rest/queue/current", RequestMethod.GET, "Requesting queue, maybe create");
         
         allQueues = queueDAO.findAll();
         
@@ -109,9 +111,9 @@ public class QueueController {
     public Queue getQueue(@PathVariable("queueID") int queueID) {
         final Queue queue;
         
-        LogUtils.createRESTCallEntry(LOG, "/rest/queue/{queueID}", RequestMethod.GET, "Requesting queue: " + queueID);
+        LogUtils.restCall(LOG, "/rest/queue/{queueID}", RequestMethod.GET, "Requesting queue: " + queueID);
         
-        queue = queueDAO.findById(queueID).clone();
+        queue = findQueue(queueID).clone();
         LibraryUtils.sanitizeElementsForClient(queue.getElements());
         
         return queue;
@@ -123,9 +125,9 @@ public class QueueController {
     public Queue clearQueue(@PathVariable("queueID") int queueID) {
         final Queue queue;
         
-        LogUtils.createRESTCallEntry(LOG, "/rest/queue/{queueID}", RequestMethod.DELETE, "Clearing queue: " + queueID);
+        LogUtils.restCall(LOG, "/rest/queue/{queueID}", RequestMethod.DELETE, "Clearing queue: " + queueID);
         
-        queue = queueDAO.findById(queueID);
+        queue = findQueue(queueID);
         queue.clearElements();
         queueDAO.save(queue);
         
@@ -138,10 +140,10 @@ public class QueueController {
     public Queue removeByIndex(@PathVariable("queueID") int queueID, @PathVariable("queueIndex") int queueIndex) {
         Queue queue;
         
-        LogUtils.createRESTCallEntry(LOG, "/rest/queue/{queueID}/queueindex/{queueIndex}", RequestMethod.DELETE,
+        LogUtils.restCall(LOG, "/rest/queue/{queueID}/queueindex/{queueIndex}", RequestMethod.DELETE,
                 "Removing from queue by index: queueID=" + queueID + ", queueIndex=" + queueIndex);
         
-        queue = queueDAO.findById(queueID);
+        queue = findQueue(queueID);
         queue.removeElement(queueIndex);
         
         return queueDAO.save(queue);
@@ -152,16 +154,17 @@ public class QueueController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Queue addLast(@PathVariable("queueID") int queueID,
-            @RequestParam(value = "songIDs", required = true) List<Integer> songIDs) {
+            @RequestParam(value = "songIDs", required = true) List<Integer> songIDs) throws SongNotFoundException,
+            QueueNotFoundException {
         
         final List<SongInfo> songs;
         Queue queue;
         
-        LogUtils.createRESTCallEntry(LOG, "/rest/queue/{queueID}/last", RequestMethod.PUT, "Enqueuing last: queueID="
-                + queueID + ", songIDs=" + songIDs);
+        LogUtils.restCall(LOG, "/rest/queue/{queueID}/last", RequestMethod.PUT, "Enqueuing last: queueID=" + queueID
+                + ", songIDs=" + songIDs);
         
-        songs = songInfoDAO.findByID(songIDs);
-        queue = queueDAO.findById(queueID);
+        queue = findQueue(queueID);
+        songs = findSongs(songIDs);
         
         if(EMUtils.hasValues(songs)) {
             queue.addSongsLast(songs);
@@ -184,11 +187,11 @@ public class QueueController {
         final SongInfo fullSong;
         final String reqMethod = request.getMethod();
         
-        LogUtils.createRESTCallEntry(LOG, "/rest/queue/{queueID}/stream/queueindex/{queueIndex}", reqMethod,
+        LogUtils.restCall(LOG, "/rest/queue/{queueID}/stream/queueindex/{queueIndex}", reqMethod,
                 "Streaming song to client: queueID=" + queueID + ", queueIndex=" + queueIndex + ", updatePlayIndex="
                         + updatePlayIndex);
         
-        queue = queueDAO.findById(queueID);
+        queue = findQueue(queueID);
         queueElem = queue.getElement(queueIndex);
         fullSong = songInfoDAO.findByID(queueElem.getSong().getID());
         
@@ -198,5 +201,44 @@ public class QueueController {
         LibraryUtils.streamSongToResponse(response, fullSong, EMUtils.equalsIgnoreCase("head", reqMethod));
         
         return Response.ok().build();
+    }
+    
+    private Queue findQueue(Integer id) {
+        Queue queue = null;
+        
+        try {
+            queue = queueDAO.findById(id);
+        } catch(EmptyResultDataAccessException e) {
+            LogUtils.exception(LOG, e, "Could not find queue: %s", id);
+            throw new QueueNotFoundException(id, e);
+        }
+        
+        if(queue == null) {
+            LogUtils.error(LOG, "Could not find queue: %s", id);
+            throw new QueueNotFoundException(id);
+        }
+        
+        return queue;
+    }
+    
+    private List<SongInfo> findSongs(Collection<Integer> songIDs) {
+        final List<SongInfo> songs;
+        
+        try {
+            songs = songInfoDAO.findByID(songIDs);
+        } catch(EmptyResultDataAccessException e) {
+            LogUtils.exception(LOG, e, "Could not find songs: %s", songIDs);
+            throw new SongNotFoundException(songIDs, e);
+        }
+        
+        if(!EMUtils.hasValues(songs)) {
+            LogUtils.error(LOG, "Could not find songs: %s", songIDs);
+            throw new SongNotFoundException(songIDs);
+        } else if(songIDs != null && songIDs.size() != songs.size()) {
+            LogUtils.error(LOG, "Could not find all songs: %s", songIDs);
+            throw new SongNotFoundException(songIDs);
+        }
+        
+        return songs;
     }
 }

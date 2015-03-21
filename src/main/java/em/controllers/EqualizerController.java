@@ -50,7 +50,7 @@ public class EqualizerController {
         final Set<Equalizer> allEQs;
         final Equalizer eq;
 
-        LogUtils.createRESTCallEntry(LOG, "/rest/eq/current", RequestMethod.GET, "Requesting equalizer, maybe create");
+        LogUtils.restCall(LOG, "/rest/eq/current", RequestMethod.GET, "Requesting equalizer, maybe create");
 
         allEQs = eqDAO.findAll();
 
@@ -67,7 +67,7 @@ public class EqualizerController {
     @RequestMapping(value = "/rest/eq/{eqID}", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public Equalizer getEqualizer(@PathVariable("eqID") int eqID) {
-        LogUtils.createRESTCallEntry(LOG, "/rest/eq/{eqID}", RequestMethod.GET, "Requesting equalizer: " + eqID);
+        LogUtils.restCall(LOG, "/rest/eq/{eqID}", RequestMethod.GET, "Requesting equalizer: " + eqID);
         return eqDAO.findByID(eqID);
     }
 }

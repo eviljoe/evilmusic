@@ -13,6 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import em.model.Identifiable;
+import em.utils.iterators.ArrayIterator;
+import em.utils.iterators.IntArrayIterator;
 
 /**
  * A class containing useful utility functions.
@@ -174,6 +176,30 @@ public class EMUtils {
         
         try {
             toCSV(csv, new ArrayIterator<E>(a), delim);
+        } catch(IOException e) {
+            // This should never happen because StringBuilder does not throw IOExceptions from its append(CharSequence)
+            // function. If somehow this actually does happen, log it and hope for the best.
+            LOG.log(Level.SEVERE, "Exception while converting collection to CSV", e);
+        }
+        
+        return csv.toString();
+    }
+    
+    /**
+     * Creates CSV from the given array's elements.
+     * 
+     * @param a The array containing the elements to be converted to CSV. If {@code null} or empty, an empty string will
+     *        be returned.
+     * @param delim The delimiter between each of the array's elements in the CSV. If {@code null}, the default
+     *        delimiter {@code ", "} (comma, space) will be used. If empty, no delimiter will be used.
+     * 
+     * @return Returns the CSV of the array's elements.
+     */
+    public static String toCSV(int[] a, String delim) {
+        final StringBuilder csv = new StringBuilder();
+        
+        try {
+            toCSV(csv, new IntArrayIterator(a), delim);
         } catch(IOException e) {
             // This should never happen because StringBuilder does not throw IOExceptions from its append(CharSequence)
             // function. If somehow this actually does happen, log it and hope for the best.

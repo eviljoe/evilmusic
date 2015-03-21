@@ -589,6 +589,51 @@ public class EMUtilsTest {
     }
     
     /**
+     * Tests to ensure that the {@link EMUtils#toCSV(int[], String)} function will return an empty string when given a
+     * {@code null} array.
+     */
+    @Test
+    public void testToCSV_IntArrayString_NullArray() {
+        assertEquals("", EMUtils.toCSV((int[])null, ":"));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(int[], String)} function will return an empty string when given an
+     * empty array.
+     */
+    @Test
+    public void testToCSV_IntArrayString_EmptyArray() {
+        assertEquals("", EMUtils.toCSV(new int[0], ":"));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(int[], String)} function will use the default delimiter when given
+     * a {@code null} delimiter.
+     */
+    @Test
+    public void testToCSV_IntArrayString_NullDelimiter() {
+        assertEquals("7, 11, 13", EMUtils.toCSV(new int[] {7, 11, 13}, null));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(int[], String)} function will not use a delimiter when given an
+     * empty delimiter.
+     */
+    @Test
+    public void testToCSV_IntArrayString_EmptyDelimiter() {
+        assertEquals("71113", EMUtils.toCSV(new int[] {7, 11, 13}, ""));
+    }
+    
+    /**
+     * Tests to ensure that the {@link EMUtils#toCSV(int[], String)} function will use a custom delimiter when given a
+     * custom delimiter.
+     */
+    @Test
+    public void testToCSV_IntArrayString_CustomDelimiter() {
+        assertEquals("7::11::13", EMUtils.toCSV(new int[] {7, 11, 13}, "::"));
+    }
+    
+    /**
      * Tests to ensure that the {@link EMUtils#toCSV(Collection, String)} function will return an empty string when
      * given a {@code null} array.
      */

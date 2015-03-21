@@ -29,6 +29,10 @@ public class QueueNotFoundException extends RuntimeException {
         super(message, cause);
     }
     
+    public QueueNotFoundException(int id) {
+        this(id, null);
+    }
+    
     public QueueNotFoundException(int id, Throwable cause) {
         super(String.format("Could not find queue with ID, %d.", id), cause);
     }

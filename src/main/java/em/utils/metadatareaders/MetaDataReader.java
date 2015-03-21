@@ -24,6 +24,7 @@ public abstract class MetaDataReader {
         final ArrayList<MetaDataReader> readers = new ArrayList<MetaDataReader>();
         
         readers.add(new FLACMetaDataReader());
+        readers.add(new TestMetaDataReader());
         
         META_DATA_READERS = Collections.unmodifiableList(readers);
     }

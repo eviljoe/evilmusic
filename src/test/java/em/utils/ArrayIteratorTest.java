@@ -8,6 +8,8 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
+import em.utils.iterators.ArrayIterator;
+
 /**
  * A class containing unit tests for {@link ArrayIterator}.
  * 

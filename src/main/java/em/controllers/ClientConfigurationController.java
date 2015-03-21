@@ -49,7 +49,7 @@ public class ClientConfigurationController {
         final Set<ClientConfiguration> configs;
         final double volume;
 
-        LogUtils.createRESTCallEntry(LOG, "/rest/config/volume", RequestMethod.GET, "Requesting volume");
+        LogUtils.restCall(LOG, "/rest/config/volume", RequestMethod.GET, "Requesting volume");
         configs = clientConfigDAO.findAll();
 
         if(EMUtils.hasValues(configs)) {
@@ -68,7 +68,7 @@ public class ClientConfigurationController {
         final Set<ClientConfiguration> configs;
         final ClientConfiguration config;
 
-        LogUtils.createRESTCallEntry(LOG, "/rest/config/volume/{volume}", RequestMethod.PUT, "Setting volume: "
+        LogUtils.restCall(LOG, "/rest/config/volume/{volume}", RequestMethod.PUT, "Setting volume: "
                 + volume);
         configs = clientConfigDAO.findAll();
 
