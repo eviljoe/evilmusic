@@ -297,6 +297,151 @@ public class QueueTest {
     /* Remove Element Tests */
     /* ******************** */
     
-    // JOE todo
+    /** Tests to ensure that the a song can be removed from a queue when it is the only element in the queue. */
+    @Test
+    public void testRemoveElement_Only() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        Queue q = QueueRESTCalls.createQueue();
+        final int qID;
+        
+        queuesToCleanup.add(q);
+        qID = q.getID();
+        
+        // Add a song to the queue
+        q = QueueRESTCalls.addLast(200, qID, lib.getSongs().get(0).getID());
+        
+        // Remove the song and verify the returned queue does not contain the song
+        q = QueueRESTCalls.removeElement(qID, 0);
+        assertEquals(0, q.size());
+        
+        // Get the queue and verify the song has been removed
+        q = QueueRESTCalls.getQueue(qID);
+        assertEquals(0, q.size());
+    }
     
+    /** Tests to ensure that the first song in the queue can be removed. */
+    @Test
+    public void testRemoveElement_First() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        final int songID1 = lib.getSongs().get(0).getID();
+        final int songID2 = lib.getSongs().get(1).getID();
+        final int songID3 = lib.getSongs().get(2).getID();
+        Queue q = QueueRESTCalls.createQueue();
+        final int qID;
+        
+        queuesToCleanup.add(q);
+        qID = q.getID();
+        
+        // Add songs to the queue
+        q = QueueRESTCalls.addLast(200, qID, songID1, songID2, songID3);
+        
+        // Remove the song and verify the returned queue does not contain the song
+        q = QueueRESTCalls.removeElement(qID, 0);
+        assertEquals(2, q.size());
+        assertEquals(new Integer(songID2), q.getElement(0).getSong().getID());
+        assertEquals(new Integer(songID3), q.getElement(1).getSong().getID());
+        
+        // Get the queue and verify the song has been removed
+        q = QueueRESTCalls.getQueue(qID);
+        assertEquals(2, q.size());
+        assertEquals(new Integer(songID2), q.getElement(0).getSong().getID());
+        assertEquals(new Integer(songID3), q.getElement(1).getSong().getID());
+    }
+    
+    /** Tests to ensure that a middle song in the queue can be removed. */
+    @Test
+    public void testRemoveElement_Middle() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        final int songID1 = lib.getSongs().get(0).getID();
+        final int songID2 = lib.getSongs().get(1).getID();
+        final int songID3 = lib.getSongs().get(2).getID();
+        Queue q = QueueRESTCalls.createQueue();
+        final int qID;
+        
+        queuesToCleanup.add(q);
+        qID = q.getID();
+        
+        // Add songs to the queue
+        q = QueueRESTCalls.addLast(200, qID, songID1, songID2, songID3);
+        
+        // Remove the song and verify the returned queue does not contain the song
+        q = QueueRESTCalls.removeElement(qID, 1);
+        assertEquals(2, q.size());
+        assertEquals(new Integer(songID1), q.getElement(0).getSong().getID());
+        assertEquals(new Integer(songID3), q.getElement(1).getSong().getID());
+        
+        // Get the queue and verify the song has been removed
+        q = QueueRESTCalls.getQueue(qID);
+        assertEquals(2, q.size());
+        assertEquals(new Integer(songID1), q.getElement(0).getSong().getID());
+        assertEquals(new Integer(songID3), q.getElement(1).getSong().getID());
+    }
+    
+    /** Tests to ensure that the last song in the queue can be removed. */
+    @Test
+    public void testRemoveElement_Last() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        final int songID1 = lib.getSongs().get(0).getID();
+        final int songID2 = lib.getSongs().get(1).getID();
+        final int songID3 = lib.getSongs().get(2).getID();
+        Queue q = QueueRESTCalls.createQueue();
+        final int qID;
+        
+        queuesToCleanup.add(q);
+        qID = q.getID();
+        
+        // Add songs to the queue
+        q = QueueRESTCalls.addLast(200, qID, songID1, songID2, songID3);
+        
+        // Remove the song and verify the returned queue does not contain the song
+        q = QueueRESTCalls.removeElement(qID, 2);
+        assertEquals(2, q.size());
+        assertEquals(new Integer(songID1), q.getElement(0).getSong().getID());
+        assertEquals(new Integer(songID2), q.getElement(1).getSong().getID());
+        
+        // Get the queue and verify the song has been removed
+        q = QueueRESTCalls.getQueue(qID);
+        assertEquals(2, q.size());
+        assertEquals(new Integer(songID1), q.getElement(0).getSong().getID());
+        assertEquals(new Integer(songID2), q.getElement(1).getSong().getID());
+    }
+    
+    /** Tests to ensure that an HTTP 400 will be returned when attempting to remove an element from an empty queue. */
+    @Test
+    public void testRemoveElement_Empty() throws IOException {
+        final Queue q = QueueRESTCalls.createQueue();
+        
+        queuesToCleanup.add(q);
+        
+        // Attempt to remove a song from the queue
+        QueueRESTCalls.removeElement(400, q.getID(), 0);
+    }
+    
+    /**
+     * Tests to ensure that an HTTP 400 will be returned when attempting to an element at an invalid index from a queue.
+     */
+    @Test
+    public void testRemoveElement_InvalidIndex() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        Queue q = QueueRESTCalls.createQueue();
+        final int qID;
+        
+        queuesToCleanup.add(q);
+        qID = q.getID();
+        
+        // Add songs to the queue
+        q = QueueRESTCalls.addLast(200, qID, lib.getSongs().get(0).getID(), lib.getSongs().get(1).getID());
+        
+        // Attempt to remove a song at an invalid index from the queue
+        q = QueueRESTCalls.removeElement(400, qID, 2);
+    }
+    
+    /**
+     * Tests to ensure that an HTTP 404 will be returned when attempting to remove an element from a queue that does not
+     * exist.
+     */
+    @Test
+    public void testRemoveElement_InvalidQueue() throws IOException {
+        QueueRESTCalls.removeElement(404, Integer.MIN_VALUE + 117, 0);
+    }
 }

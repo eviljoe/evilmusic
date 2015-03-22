@@ -138,12 +138,20 @@ public class QueueController {
     @RequestMapping(value = "/rest/queue/{queueID}/queueindex/{queueIndex}", method = RequestMethod.DELETE)
     @Produces(MediaType.APPLICATION_JSON)
     public Queue removeByIndex(@PathVariable("queueID") int queueID, @PathVariable("queueIndex") int queueIndex) {
-        Queue queue;
+        final Queue queue;
+        final int size;
         
         LogUtils.restCall(LOG, "/rest/queue/{queueID}/queueindex/{queueIndex}", RequestMethod.DELETE,
                 "Removing from queue by index: queueID=" + queueID + ", queueIndex=" + queueIndex);
         
         queue = findQueue(queueID);
+        size = queue.size();
+        
+        if(queueIndex >= size) {
+            LogUtils.error(LOG, "Invalid queue index: index=%d, queue_size=%d", queueIndex, size);
+            throw new InvalidQueueIndexException(queueIndex);
+        }
+        
         queue.removeElement(queueIndex);
         
         return queueDAO.save(queue);

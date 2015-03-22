@@ -101,6 +101,24 @@ public class QueueRESTCalls {
         return expectStatusCode == 200 ? toQueue(r.getBody().asString()) : null;
     }
     
+    public static Queue removeElement(int qID, int index) throws IOException {
+        return removeElement(200, qID, index);
+    }
+    
+    public static Queue removeElement(int expectStatusCode, int qID, int index) throws IOException {
+        final RequestSpecification req = given();
+        final ResponseSpecification res;
+        final Response r;
+        
+        res = req.then();
+        res.expect().statusCode(expectStatusCode);
+        res.expect().contentType(ContentType.JSON);
+        
+        r = res.delete(RESTTestConfig.getInstance().getFullURL("/queue/{qID}/queueindex/{index}"), qID, index);
+        
+        return expectStatusCode == 200 ? toQueue(r.getBody().asString()) : null;
+    }
+    
     public static Queue toQueue(String json) throws IOException {
         return new ObjectMapper().readValue(json, new TypeReference<Queue>() {
         });
