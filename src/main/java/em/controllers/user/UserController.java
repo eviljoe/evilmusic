@@ -12,15 +12,37 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package em.repos;
+package em.controllers.user;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.logging.Logger;
 
-import em.model.SongInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
+import em.controllers.library.LibraryController;
+import em.dao.QueueDAO;
+import em.dao.SongInfoDAO;
 
 /**
  * @since v0.1
  * @author eviljoe
  */
-public interface SongInfoRepository extends CrudRepository<SongInfo, Integer> {
+@RestController
+public class UserController {
+    
+    private static final Logger LOG = Logger.getLogger(LibraryController.class.getName());
+    
+    @Autowired
+    private SongInfoDAO songInfoDAO;
+    
+    @Autowired
+    private QueueDAO queueDAO;
+    
+    /* ************ */
+    /* Constructors */
+    /* ************ */
+    
+    public UserController() {
+        super();
+    }
 }

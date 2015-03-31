@@ -1,3 +1,17 @@
+/*
+ * EvilMusic - Web-Based Music Player Copyright (C) 2015 Joe Falascino
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+
 package em.utils;
 
 import static org.junit.Assert.assertEquals;
@@ -231,14 +245,14 @@ public class IDSetTest {
         
         assertFalse(s.remove((Object)null));
         
-        assertTrue(s.remove((Object)3.0f));
-        assertFalse(s.remove((Object)3.0f));
+        assertTrue(s.remove(3.0f));
+        assertFalse(s.remove(3.0f));
         
-        assertTrue(s.remove((Object)new BigDecimal("7.0")));
-        assertFalse(s.remove((Object)new BigDecimal("7.0")));
+        assertTrue(s.remove(new BigDecimal("7.0")));
+        assertFalse(s.remove(new BigDecimal("7.0")));
         
-        assertTrue(s.remove((Object)new Long(11)));
-        assertFalse(s.remove((Object)new Long(11)));
+        assertTrue(s.remove(new Long(11)));
+        assertFalse(s.remove(new Long(11)));
     }
     
     /**
@@ -337,15 +351,15 @@ public class IDSetTest {
         assertTrue(s.contains((Object)3));
         assertTrue(s.contains((Object)7));
         assertTrue(s.contains((Object)11));
-        assertTrue(s.contains((Object)3.0f));
-        assertTrue(s.contains((Object)7.0f));
-        assertTrue(s.contains((Object)11.0f));
+        assertTrue(s.contains(3.0f));
+        assertTrue(s.contains(7.0f));
+        assertTrue(s.contains(11.0f));
         assertTrue(s.contains((Object)new Integer(3)));
         assertTrue(s.contains((Object)new Integer(7)));
         assertTrue(s.contains((Object)new Integer(11)));
-        assertTrue(s.contains((Object)new BigDecimal("3")));
-        assertTrue(s.contains((Object)new BigDecimal("7")));
-        assertTrue(s.contains((Object)new BigDecimal("11")));
+        assertTrue(s.contains(new BigDecimal("3")));
+        assertTrue(s.contains(new BigDecimal("7")));
+        assertTrue(s.contains(new BigDecimal("11")));
         
         assertFalse(s.contains((Object)null));
         assertFalse(s.contains((Object)new TestIdentifiable(-1)));
@@ -358,11 +372,11 @@ public class IDSetTest {
         assertFalse(s.contains((Object)1));
         assertFalse(s.contains((Object)Integer.MIN_VALUE));
         assertFalse(s.contains((Object)Integer.MAX_VALUE));
-        assertFalse(s.contains((Object)(-1.0f)));
-        assertFalse(s.contains((Object)0.0f));
-        assertFalse(s.contains((Object)1.0f));
-        assertFalse(s.contains((Object)Float.MIN_VALUE));
-        assertFalse(s.contains((Object)Float.MAX_VALUE));
+        assertFalse(s.contains((-1.0f)));
+        assertFalse(s.contains(0.0f));
+        assertFalse(s.contains(1.0f));
+        assertFalse(s.contains(Float.MIN_VALUE));
+        assertFalse(s.contains(Float.MAX_VALUE));
     }
     
     /**
@@ -558,6 +572,7 @@ public class IDSetTest {
             this.id = id;
         }
         
+        @Override
         public String toString() {
             return id == null ? "null" : id.toString();
         }
