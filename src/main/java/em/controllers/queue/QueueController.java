@@ -86,7 +86,6 @@ public class QueueController {
     
     @Transactional
     @RequestMapping(value = "/rest/queue/{queueID}", method = RequestMethod.DELETE)
-    @Produces(MediaType.APPLICATION_JSON)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteQueue(@PathVariable("queueID") int queueID) throws QueueNotFoundException {
         LogUtils.restCall(LOG, "/rest/queue/{queueID}", RequestMethod.DELETE, "Deleting queue: " + queueID);

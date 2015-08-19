@@ -52,7 +52,12 @@ public class Equalizer implements Identifiable, Cloneable {
     /* ************ */
     
     public Equalizer() {
+        this(null);
+    }
+    
+    public Equalizer(Integer id) {
         super();
+        setID(id);
     }
     
     /* ***************** */

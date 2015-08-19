@@ -45,7 +45,6 @@ import em.cli.EMCommandLine;
 import em.model.SongInfo;
 import em.prefs.EMPreferencesManager;
 import em.repos.ClientConfigurationRepository;
-import em.repos.EqualizerRepository;
 import em.repos.QueueRepository;
 import em.repos.RepoManager;
 import em.repos.SongInfoRepository;
@@ -142,7 +141,6 @@ public class EvilMusicApp {
         
         rmgr.setSongInfo(context.getBean(SongInfoRepository.class));
         rmgr.setQueue(context.getBean(QueueRepository.class));
-        rmgr.setEqualizer(context.getBean(EqualizerRepository.class));
         rmgr.setClientConfiguration(context.getBean(ClientConfigurationRepository.class));
     }
     

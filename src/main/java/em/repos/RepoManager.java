@@ -24,7 +24,6 @@ public class RepoManager {
     
     private volatile SongInfoRepository songInfo;
     private volatile QueueRepository queue;
-    private volatile EqualizerRepository equalizer;
     private volatile ClientConfigurationRepository clientConfig;
     
     /* ************ */
@@ -64,14 +63,6 @@ public class RepoManager {
     
     public void setQueue(QueueRepository queue) {
         this.queue = queue;
-    }
-    
-    public EqualizerRepository getEqualizer() {
-        return equalizer;
-    }
-    
-    public void setEqualizer(EqualizerRepository equalizer) {
-        this.equalizer = equalizer;
     }
     
     public ClientConfigurationRepository getClientConfiguration() {
