@@ -25,7 +25,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import em.controllers.queue.QueueController;
+import em.controllers.QueueController;
 import em.model.Library;
 import em.model.Queue;
 import em.model.SongInfo;

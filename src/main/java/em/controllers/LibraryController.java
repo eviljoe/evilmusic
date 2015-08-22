@@ -12,7 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package em.controllers.library;
+package em.controllers;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -31,8 +31,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import em.dao.QueueDAO;
-import em.dao.SongInfoDAO;
+import em.dao.queue.QueueDAO;
+import em.dao.song.SongInfoDAO;
 import em.model.EMPreferences;
 import em.model.Library;
 import em.model.SongInfo;
@@ -50,10 +50,10 @@ public class LibraryController {
     private static final Logger LOG = Logger.getLogger(LibraryController.class.getName());
     
     @Autowired
-    private SongInfoDAO songInfoDAO;
+    QueueDAO qDAO;
     
     @Autowired
-    private QueueDAO queueDAO;
+    SongInfoDAO songDAO;
     
     /* ************ */
     /* Constructors */
@@ -75,8 +75,8 @@ public class LibraryController {
         final List<SongInfo> clones = new ArrayList<>();
         final Library lib = new Library();
         
-        songs = songInfoDAO.findAll();
         LogUtils.restCall(LOG, "/rest/library", RequestMethod.GET, "Requesting library");
+        songs = songDAO.getAll();
         
         for(SongInfo song : songs) {
             clones.add(song.clone());
@@ -93,8 +93,8 @@ public class LibraryController {
     public void clear() {
         LogUtils.restCall(LOG, "/rest/library", RequestMethod.DELETE, "Clearing library");
         
-        songInfoDAO.removeAllSongs();
-        queueDAO.removeAll();
+        qDAO.removeAll();
+        songDAO.removeAll();
     }
     
     @Transactional
@@ -109,7 +109,11 @@ public class LibraryController {
         prefs = EMPreferencesManager.getInstance().getPreferences();
         infos = LibraryUtils.scanDirectories(prefs == null ? null : prefs.getMusicDirectories());
         
-        songInfoDAO.replaceAllSongs(infos);
-        queueDAO.removeAll();
+        qDAO.removeAll();
+        songDAO.removeAll();
+        
+        for(SongInfo info : infos) {
+            songDAO.add(info);
+        }
     }
 }

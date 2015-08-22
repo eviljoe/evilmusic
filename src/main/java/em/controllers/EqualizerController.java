@@ -12,21 +12,18 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package em.controllers.eq;
+package em.controllers;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +32,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import em.dao.eq.EqualizerDAO;
+import em.dao.eq.EqualizerNotFoundException;
+import em.dao.eq.InvalidEqualizerException;
 import em.model.Equalizer;
 import em.model.EqualizerNode;
 import em.utils.EqualizerUtils;
@@ -48,11 +48,9 @@ import em.utils.LogUtils;
 public class EqualizerController {
     
     private static final Logger LOG = Logger.getLogger(EqualizerController.class.getName());
-    private static final String SELECT_ALL_EQS_JPQL = String.format("SELECT e FROM %s e ", Equalizer.class.getName());
-    private static final String DELETE_ALL_EQS_JPQL = String.format("DELETE FROM %s", Equalizer.class.getName());
     
-    @PersistenceContext
-    private EntityManager em;
+    @Autowired
+    EqualizerDAO eqDAO;
     
     /* ************ */
     /* Constructors */
@@ -75,10 +73,9 @@ public class EqualizerController {
         LogUtils.restCall(LOG, "/rest/eq/current", RequestMethod.GET, "Requesting equalizer, maybe create");
         
         try {
-            eq = em.createQuery(SELECT_ALL_EQS_JPQL, Equalizer.class).getSingleResult();
-        } catch(NoResultException e) {
-            eq = EqualizerUtils.createDefaultEqualizer();
-            em.persist(eq);
+            eq = eqDAO.getFirst();
+        } catch(EqualizerNotFoundException e) {
+            eq = eqDAO.add(EqualizerUtils.createDefaultEqualizer());
         }
         
         return eq;
@@ -88,56 +85,32 @@ public class EqualizerController {
     @RequestMapping(value = "/rest/eq", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public List<Equalizer> getAllEqualizers() {
-        final List<Equalizer> eqs;
-        
         LogUtils.restCall(LOG, "/rest/eq/current", RequestMethod.GET, "Requesting all equalizers");
-        eqs = em.createQuery(SELECT_ALL_EQS_JPQL, Equalizer.class).getResultList();
-        
-        return eqs;
+        return eqDAO.getAll();
     }
     
     @Transactional
     @RequestMapping(value = "/rest/eq/{id}", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public Equalizer getEqualizer(@PathVariable("id") int id) {
-        final Equalizer eq;
-        
         LogUtils.restCall(LOG, "/rest/eq/{id}", RequestMethod.GET, "Requesting equalizer: " + id);
-        eq = em.find(Equalizer.class, id);
-        
-        if(eq == null) {
-            throw new EqualizerNotFoundException(id);
-        }
-        
-        return eq;
+        return eqDAO.get(id);
     }
     
     @Transactional
     @RequestMapping(value = "/rest/eq", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAllEqualizers() {
+    public void removeAllEqualizers() {
         LogUtils.restCall(LOG, "/rest/eq", RequestMethod.GET, "Deleting all equalizers");
-        em.createQuery(DELETE_ALL_EQS_JPQL).executeUpdate();
+        eqDAO.removeAll();
     }
     
     @Transactional
     @RequestMapping(value = "/rest/eq/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEqualizer(@PathVariable("id") int id) {
-        final StringBuilder jpql = new StringBuilder();
-        final Query q;
-        
+    public void removeEqualizer(@PathVariable("id") int id) {
         LogUtils.restCall(LOG, "/rest/eq/{id}", RequestMethod.GET, "Deleting equalizer: " + id);
-        
-        jpql.append("DELETE FROM ").append(Equalizer.class.getName()).append(" e ");
-        jpql.append("WHERE e.id = :ID ");
-        
-        q = em.createQuery(jpql.toString());
-        q.setParameter("ID", id);
-        
-        if(q.executeUpdate() == 0) {
-            throw new EqualizerNotFoundException(id);
-        }
+        eqDAO.remove(id);
     }
     
     @Transactional
@@ -149,11 +122,8 @@ public class EqualizerController {
         validateEqualizer(eq);
         
         eq.setID(id);
-        if(em.find(Equalizer.class, id) == null) {
-            throw new EqualizerNotFoundException(id);
-        }
-        
-        em.merge(eq);
+        eqDAO.get(id); // Make sure the EQ exists
+        eqDAO.save(eq);
         
         return eq;
     }

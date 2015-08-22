@@ -16,10 +16,15 @@ package em.model;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @since v0.1
@@ -34,7 +39,12 @@ public class QueueElement implements Identifiable, Cloneable {
     private int queueIndex;
     private int playIndex;
     
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_QueueElement_to_Queue"))
+    private Queue queue;
+    
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_QueueElement_to_SongInfo"))
     private SongInfo song;
     
     /* ************ */
@@ -115,5 +125,15 @@ public class QueueElement implements Identifiable, Cloneable {
         }
         
         return clone;
+    }
+    
+    @JsonIgnore
+    public Queue getQueue() {
+        return queue;
+    }
+    
+    @JsonIgnore
+    public void setQueue(Queue queue) {
+        this.queue = queue;
     }
 }

@@ -11,8 +11,7 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-package em.controllers.eq;
+package em.dao.eq;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,38 +20,31 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @since v0.1
  * @author eviljoe
  */
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Equalizer not found")
-public class EqualizerNotFoundException extends RuntimeException {
+@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Invalid equalizer")
+public class InvalidEqualizerException extends RuntimeException {
     
     /** Default serial version UID. */
     private static final long serialVersionUID = 1L;
     
-    public EqualizerNotFoundException() {
+    public InvalidEqualizerException() {
         super();
     }
     
-    public EqualizerNotFoundException(String message) {
+    public InvalidEqualizerException(String message) {
         super(message);
     }
     
-    public EqualizerNotFoundException(Throwable cause) {
+    public InvalidEqualizerException(Throwable cause) {
         super(cause);
     }
     
-    public EqualizerNotFoundException(String message, Throwable cause) {
+    public InvalidEqualizerException(String message, Throwable cause) {
         super(message, cause);
     }
     
-    public EqualizerNotFoundException(int id) {
-        this(id, null);
-    }
-    
-    public EqualizerNotFoundException(int id, Throwable cause) {
-        super(String.format("Could not find equalizer with ID, %d.", id), cause);
-    }
-    
-    public EqualizerNotFoundException(String message, Throwable cause, boolean enableSuppression,
+    public InvalidEqualizerException(String message, Throwable cause, boolean enableSuppression,
             boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+    
 }

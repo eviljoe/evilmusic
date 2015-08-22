@@ -18,9 +18,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import em.utils.EMUtils;
 import em.utils.NullComparator;
@@ -37,6 +43,10 @@ public class EqualizerNode implements Identifiable, Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_EqualierNode_to_Equalizer"))
+    private Equalizer equalizer;
     
     private int frequency;
     private double q;
@@ -67,6 +77,16 @@ public class EqualizerNode implements Identifiable, Cloneable {
     @Override
     public void setID(Integer id) {
         this.id = id;
+    }
+    
+    @JsonIgnore
+    public Equalizer getEqualizer() {
+        return equalizer;
+    }
+    
+    @JsonIgnore
+    public void setEqualizer(Equalizer equalizer) {
+        this.equalizer = equalizer;
     }
     
     public int getFrequency() {

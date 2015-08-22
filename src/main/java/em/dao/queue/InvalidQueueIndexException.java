@@ -12,7 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package em.controllers.queue;
+package em.dao.queue;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,37 +21,38 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @since v0.1
  * @author eviljoe
  */
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Queue not found")
-public class QueueNotFoundException extends RuntimeException {
+@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Invalid queue index")
+public class InvalidQueueIndexException extends RuntimeException {
     
     /** Default serial version UID. */
     private static final long serialVersionUID = 1L;
     
-    public QueueNotFoundException() {
+    public InvalidQueueIndexException() {
         super();
     }
     
-    public QueueNotFoundException(String message) {
+    public InvalidQueueIndexException(String message) {
         super(message);
     }
     
-    public QueueNotFoundException(Throwable cause) {
+    public InvalidQueueIndexException(Throwable cause) {
         super(cause);
     }
     
-    public QueueNotFoundException(String message, Throwable cause) {
+    public InvalidQueueIndexException(String message, Throwable cause) {
         super(message, cause);
     }
     
-    public QueueNotFoundException(int id) {
-        this(id, null);
+    public InvalidQueueIndexException(int index) {
+        this(index, null);
     }
     
-    public QueueNotFoundException(int id, Throwable cause) {
-        super(String.format("Could not find queue with ID, %d.", id), cause);
+    public InvalidQueueIndexException(int index, Throwable cause) {
+        super(String.format("Invalid queue element index: ", index), cause);
     }
     
-    public QueueNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public InvalidQueueIndexException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

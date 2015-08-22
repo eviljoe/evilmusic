@@ -24,7 +24,7 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import em.controllers.library.LibraryController;
+import em.controllers.LibraryController;
 import em.model.Library;
 import em.model.SongInfo;
 import em.test.rest.calls.LibraryRESTCalls;

@@ -45,7 +45,7 @@ public class Queue implements Identifiable, Cloneable {
     private Integer id;
     private int playIndex;
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "queue")
     private List<QueueElement> elements;
     
     /* ************ */
@@ -143,8 +143,11 @@ public class Queue implements Identifiable, Cloneable {
             
             added = elements.add(element);
             
-            if(added && updateIndices) {
-                updateIndices();
+            if(added) {
+                element.setQueue(this);
+                if(updateIndices) {
+                    updateIndices();
+                }
             }
         }
         

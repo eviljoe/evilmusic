@@ -11,7 +11,8 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package em.controllers.eq;
+
+package em.dao.queue;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,31 +21,37 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @since v0.1
  * @author eviljoe
  */
-@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Invalid equalizer")
-public class InvalidEqualizerException extends RuntimeException {
+@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Queue not found")
+public class QueueNotFoundException extends RuntimeException {
     
     /** Default serial version UID. */
     private static final long serialVersionUID = 1L;
     
-    public InvalidEqualizerException() {
+    public QueueNotFoundException() {
         super();
     }
     
-    public InvalidEqualizerException(String message) {
+    public QueueNotFoundException(String message) {
         super(message);
     }
     
-    public InvalidEqualizerException(Throwable cause) {
+    public QueueNotFoundException(Throwable cause) {
         super(cause);
     }
     
-    public InvalidEqualizerException(String message, Throwable cause) {
+    public QueueNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
     
-    public InvalidEqualizerException(String message, Throwable cause, boolean enableSuppression,
-            boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public QueueNotFoundException(int id) {
+        this(id, null);
     }
     
+    public QueueNotFoundException(int id, Throwable cause) {
+        super(String.format("Could not find queue with ID, %d.", id), cause);
+    }
+    
+    public QueueNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

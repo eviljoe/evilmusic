@@ -12,7 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package em.controllers.queue;
+package em.dao.song;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,37 +21,37 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @since v0.1
  * @author eviljoe
  */
-@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Invalid queue index")
-public class InvalidQueueIndexException extends RuntimeException {
+@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Too many songs deleted")
+public class TooManySongsDeletedException extends RuntimeException {
     
     /** Default serial version UID. */
     private static final long serialVersionUID = 1L;
     
-    public InvalidQueueIndexException() {
+    public TooManySongsDeletedException() {
         super();
     }
     
-    public InvalidQueueIndexException(String message) {
+    public TooManySongsDeletedException(String message) {
         super(message);
     }
     
-    public InvalidQueueIndexException(Throwable cause) {
+    public TooManySongsDeletedException(Throwable cause) {
         super(cause);
     }
     
-    public InvalidQueueIndexException(String message, Throwable cause) {
+    public TooManySongsDeletedException(String message, Throwable cause) {
         super(message, cause);
     }
     
-    public InvalidQueueIndexException(int index) {
-        this(index, null);
+    public TooManySongsDeletedException(int id, int deleteCount) {
+        this(id, deleteCount, null);
     }
     
-    public InvalidQueueIndexException(int index, Throwable cause) {
-        super(String.format("Invalid queue element index: ", index), cause);
+    public TooManySongsDeletedException(int id, int deleteCount, Throwable cause) {
+        super(String.format("Too many songs deleted (%d) when deleting song with ID, %d.", deleteCount, id), cause);
     }
     
-    public InvalidQueueIndexException(String message, Throwable cause, boolean enableSuppression,
+    public TooManySongsDeletedException(String message, Throwable cause, boolean enableSuppression,
             boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }

@@ -29,7 +29,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Test;
 
-import em.controllers.eq.EqualizerController;
+import em.controllers.EqualizerController;
 import em.model.Equalizer;
 import em.model.EqualizerNode;
 import em.test.rest.calls.EqualizerRESTCalls;

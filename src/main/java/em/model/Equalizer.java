@@ -44,7 +44,7 @@ public class Equalizer implements Identifiable, Cloneable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "equalizer")
     private Set<EqualizerNode> nodes = null;
     
     /* ************ */
@@ -80,6 +80,12 @@ public class Equalizer implements Identifiable, Cloneable {
     
     public void setNodes(Collection<EqualizerNode> nodes) {
         this.nodes = EMUtils.toSet(nodes, createNodesSet());
+        
+        if(nodes != null) {
+            for(EqualizerNode node : nodes) {
+                node.setEqualizer(this);
+            }
+        }
     }
     
     private Set<EqualizerNode> createNodesSet() {

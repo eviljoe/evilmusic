@@ -12,9 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package em.controllers.library;
-
-import java.util.Collection;
+package em.dao.queue;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -23,42 +21,38 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @since v0.1
  * @author eviljoe
  */
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Song not found")
-public class SongNotFoundException extends RuntimeException {
+@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Too many queues deleted")
+public class TooManyQueuesDeletedException extends RuntimeException {
     
     /** Default serial version UID. */
     private static final long serialVersionUID = 1L;
     
-    public SongNotFoundException() {
+    public TooManyQueuesDeletedException() {
         super();
     }
     
-    public SongNotFoundException(String message) {
+    public TooManyQueuesDeletedException(String message) {
         super(message);
     }
     
-    public SongNotFoundException(Throwable cause) {
+    public TooManyQueuesDeletedException(Throwable cause) {
         super(cause);
     }
     
-    public SongNotFoundException(String message, Throwable cause) {
+    public TooManyQueuesDeletedException(String message, Throwable cause) {
         super(message, cause);
     }
     
-    public SongNotFoundException(int id, Throwable cause) {
-        super(String.format("Could not find song with ID, %d.", id), cause);
+    public TooManyQueuesDeletedException(int id, int deleteCount) {
+        this(id, deleteCount, null);
     }
     
-    public SongNotFoundException(Collection<Integer> ids) {
-        this(ids, null);
+    public TooManyQueuesDeletedException(int id, int deleteCount, Throwable cause) {
+        super(String.format("Too many queues deleted (%d) when deleting queue with ID, %d.", deleteCount, id), cause);
     }
     
-    public SongNotFoundException(Collection<Integer> ids, Throwable cause) {
-        super(String.format("Could not find at least one song using IDs, %s.", ids == null ? "[]" : ids.toString()),
-                cause);
-    }
-    
-    public SongNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public TooManyQueuesDeletedException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

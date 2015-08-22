@@ -29,12 +29,10 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 import org.hibernate.dialect.DerbyTenSevenDialect;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -44,10 +42,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import em.cli.EMCommandLine;
 import em.model.SongInfo;
 import em.prefs.EMPreferencesManager;
-import em.repos.ClientConfigurationRepository;
-import em.repos.QueueRepository;
-import em.repos.RepoManager;
-import em.repos.SongInfoRepository;
 import em.utils.EMUtils;
 import em.utils.LibraryUtils;
 
@@ -57,7 +51,6 @@ import em.utils.LibraryUtils;
  */
 @ComponentScan
 @Configuration
-@EnableJpaRepositories
 @EnableAutoConfiguration
 public class EvilMusicApp {
     
@@ -79,21 +72,19 @@ public class EvilMusicApp {
     private static final String HIBERNATE_AUTO_DDL_UPDATE = "update";
     private static final String HIBERNATE_AUTO_DDL_CREATE_DROP = "create-drop";
     private static final String HIBERNATE_DIALECT_PROP = "hibernate.dialect";
+    private static final String HIBERNATE_SHOW_SQL = "hibernate.show_sql";
     
     /* *********** */
     /* Main Method */
     /* *********** */
     
     public static void main(String[] args) throws IOException, URISyntaxException {
-        final ConfigurableApplicationContext context;
-        
         readCommandLineArgs(args);
         loadEMPreferences();
         configureSpringBoot();
         configureDerby();
         
-        context = SpringApplication.run(EvilMusicApp.class, args);
-        configureRepoManager(context);
+        SpringApplication.run(EvilMusicApp.class, args);
     }
     
     /* ******************************** */
@@ -134,14 +125,6 @@ public class EvilMusicApp {
         
         System.setProperty(DERBY_HOME_PROP, dbHome);
         
-    }
-    
-    private static void configureRepoManager(ConfigurableApplicationContext context) {
-        final RepoManager rmgr = RepoManager.getInstance();
-        
-        rmgr.setSongInfo(context.getBean(SongInfoRepository.class));
-        rmgr.setQueue(context.getBean(QueueRepository.class));
-        rmgr.setClientConfiguration(context.getBean(ClientConfigurationRepository.class));
     }
     
     @Bean
@@ -193,6 +176,7 @@ public class EvilMusicApp {
         }
         
         properties.setProperty(HIBERNATE_DIALECT_PROP, DerbyTenSevenDialect.class.getName());
+        properties.setProperty(HIBERNATE_SHOW_SQL, Boolean.toString(true));
         
         return properties;
     }
