@@ -15,8 +15,9 @@
 package em.model;
 
 import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import em.utils.LogUtils;
 
 /**
  * @since v0.1
@@ -31,6 +32,7 @@ public class EMPreferences implements Cloneable {
     private String databaseHome;
     private Boolean databaseRollback;
     private Integer serverPort;
+    private String logFile;
     
     /* ************ */
     /* Constructors */
@@ -84,6 +86,14 @@ public class EMPreferences implements Cloneable {
         this.serverPort = serverPort;
     }
     
+    public String getLogFile() {
+        return logFile;
+    }
+    
+    public void setLogFile(String logFile) {
+        this.logFile = logFile;
+    }
+    
     @Override
     public EMPreferences clone() {
         EMPreferences clone = null;
@@ -91,7 +101,7 @@ public class EMPreferences implements Cloneable {
         try {
             clone = (EMPreferences)super.clone();
         } catch(CloneNotSupportedException e) {
-            LOG.log(Level.SEVERE, "Could not clone " + EMPreferences.class.getName(), e);
+            LogUtils.exception(LOG, e, "Could not clone %s", EMPreferences.class.getName());
             clone = null;
         }
         
@@ -102,6 +112,7 @@ public class EMPreferences implements Cloneable {
             clone.databaseHome = databaseHome;
             clone.databaseRollback = databaseRollback;
             clone.serverPort = serverPort;
+            clone.logFile = logFile;
         }
         
         return clone;

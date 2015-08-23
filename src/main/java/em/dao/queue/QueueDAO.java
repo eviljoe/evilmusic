@@ -16,14 +16,13 @@ package em.dao.queue;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import em.dao.AbstractDAO;
 import em.model.Queue;
 
 /**
@@ -31,13 +30,10 @@ import em.model.Queue;
  * @author eviljoe
  */
 @Component
-public class QueueDAO {
+public class QueueDAO extends AbstractDAO {
     
     private static final String SELECT_ALL_QS_JPQL = String.format("SELECT e FROM %s e ", Queue.class.getName());
     private static final String DELETE_ALL_QS_JPQL = String.format("DELETE FROM %s", Queue.class.getName());
-    
-    @PersistenceContext
-    EntityManager em;
     
     @Autowired
     QueueElementDAO qElemDAO;

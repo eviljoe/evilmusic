@@ -112,20 +112,25 @@ public class EMPreferencesManager {
             final String dbHome = props.getProperty(EMPreferencesKey.DATABASE_HOME.toString());
             final Boolean dbRollback = getBoolean(props, EMPreferencesKey.DATABASE_ROLLBACK);
             final Integer serverPort = getInteger(props, EMPreferencesKey.SERVER_PORT);
+            final String logFile = props.getProperty(EMPreferencesKey.LOG_FILE.toString());
+            final StringBuilder log = new StringBuilder();
             
             emPrefs.setMusicDirectories(musicDirs);
             emPrefs.setMetaFLACCommand(metaflac);
             emPrefs.setDatabaseHome(dbHome);
             emPrefs.setDatabaseRollback(dbRollback);
             emPrefs.setServerPort(serverPort);
+            emPrefs.setLogFile(logFile);
             
-            LOG.info("=== Loaded Preferences ===");
-            LOG.info("Music Directories: " + Arrays.toString(musicDirs));
-            LOG.info("MetaFLAC Command:  " + metaflac);
-            LOG.info("Database Home:     " + dbHome);
-            LOG.info("Database Rollback: " + dbRollback);
-            LOG.info("Server Port:       " + serverPort);
-            LOG.info("===== End Preferences ====");
+            log.append("=== Loaded Preferences ===\n");
+            log.append("Music Directories: ").append(Arrays.toString(musicDirs)).append('\n');
+            log.append("MetaFLAC Command:  ").append(metaflac).append('\n');
+            log.append("Database Home:     ").append(dbHome).append('\n');
+            log.append("Database Rollback: ").append(dbRollback).append('\n');
+            log.append("Server Port:       ").append(serverPort).append('\n');
+            log.append("Log File:          ").append(logFile).append('\n');
+            log.append("===== End Preferences ====").append('\n');
+            LOG.info(log.toString());
         }
         
         return emPrefs;
@@ -215,7 +220,8 @@ public class EMPreferencesManager {
         METAFLAC("em.metaflac_command"),
         DATABASE_HOME("em.database.home"),
         DATABASE_ROLLBACK("em.database.rollback_on_close"),
-        SERVER_PORT("em.server.port");
+        SERVER_PORT("em.server.port"),
+        LOG_FILE("em.log_file");
         
         private final String key;
         

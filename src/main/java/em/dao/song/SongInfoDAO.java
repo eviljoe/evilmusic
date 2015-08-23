@@ -17,12 +17,11 @@ package em.dao.song;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Component;
 
+import em.dao.AbstractDAO;
 import em.model.SongInfo;
 
 /**
@@ -30,10 +29,7 @@ import em.model.SongInfo;
  * @author eviljoe
  */
 @Component
-public class SongInfoDAO {
-    
-    @PersistenceContext
-    EntityManager em;
+public class SongInfoDAO extends AbstractDAO {
     
     private static final String SELECT_ALL_SONGS_JPQL = String.format("SELECT s FROM %s s", SongInfo.class.getName());
     private static final String DELETE_ALL_SONGS_JPQL = String.format("DELETE FROM %s", SongInfo.class.getName());

@@ -14,9 +14,11 @@
 
 package em.utils;
 
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.aspectj.lang.JoinPoint;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
@@ -48,11 +50,20 @@ public class LogUtils {
         log.info(String.format("REST <%s:%s> %s", method, url, msg));
     }
     
+    public static void daoCall(Logger log, JoinPoint jp) {
+        log.info(String.format("DAO %s %s", jp.getSignature().toShortString(), Arrays.toString(jp.getArgs())));
+    }
+    
     public static void error(Logger log, String msg, Object... params) {
         log.log(Level.SEVERE, String.format(msg, params));
+    }
+    
+    public static void exception(Logger log, Throwable e) {
+        log.log(Level.SEVERE, "", e);
     }
     
     public static void exception(Logger log, Throwable e, String msg, Object... params) {
         log.log(Level.SEVERE, String.format(msg, params), e);
     }
+    
 }

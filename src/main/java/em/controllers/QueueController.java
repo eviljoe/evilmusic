@@ -79,7 +79,6 @@ public class QueueController {
     @RequestMapping(value = "/rest/queue", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public Queue createQueue() {
-        LogUtils.restCall(LOG, "/rest/queue", RequestMethod.GET, "Creating queue");
         return qDAO.add(new Queue());
     }
     
@@ -87,7 +86,6 @@ public class QueueController {
     @RequestMapping(value = "/rest/queue/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteQueue(@PathVariable("id") int id) {
-        LogUtils.restCall(LOG, "/rest/queue/{id}", RequestMethod.DELETE, "Deleting queue: " + id);
         qDAO.remove(id);
     }
     
@@ -96,8 +94,6 @@ public class QueueController {
     @Produces(MediaType.APPLICATION_JSON)
     public Queue maybeCreateQueue() {
         Queue q;
-        
-        LogUtils.restCall(LOG, "/rest/queue/current", RequestMethod.GET, "Requesting queue, maybe create");
         
         try {
             q = qDAO.getFirst().clone();
@@ -113,13 +109,8 @@ public class QueueController {
     @RequestMapping(value = "/rest/queue/{id}", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public Queue getQueue(@PathVariable("id") int id) {
-        final Queue q;
-        
-        LogUtils.restCall(LOG, "/rest/queue/{id}", RequestMethod.GET, "Requesting queue: " + id);
-        
-        q = qDAO.get(id).clone();
+        final Queue q = qDAO.get(id).clone();
         LibraryUtils.sanitizeElementsForClient(q.getElements());
-        
         return q;
     }
     
@@ -127,13 +118,8 @@ public class QueueController {
     @RequestMapping(value = "/rest/queue/{id}/elements", method = RequestMethod.DELETE)
     @Produces(MediaType.APPLICATION_JSON)
     public Queue clearQueue(@PathVariable("id") int id) {
-        final Queue q;
-        
-        LogUtils.restCall(LOG, "/rest/queue/{id}", RequestMethod.DELETE, "Clearing queue: " + id);
-        
-        q = qDAO.get(id);
+        final Queue q = qDAO.get(id);
         q.clearElements();
-        
         return qDAO.save(q);
     }
     
@@ -141,14 +127,8 @@ public class QueueController {
     @RequestMapping(value = "/rest/queue/{id}/queueindex/{qIndex}", method = RequestMethod.DELETE)
     @Produces(MediaType.APPLICATION_JSON)
     public Queue removeByIndex(@PathVariable("id") int id, @PathVariable("qIndex") int qIndex) {
-        final Queue q;
-        final int size;
-        
-        LogUtils.restCall(LOG, "/rest/queue/{id}/queueindex/{qIndex}", RequestMethod.DELETE,
-                "Removing from queue by index: id=" + id + ", qIndex=" + qIndex);
-        
-        q = qDAO.get(id);
-        size = q.size();
+        final Queue q = qDAO.get(id);
+        final int size = q.size();
         
         if(qIndex >= size) {
             LogUtils.error(LOG, "Invalid queue index: index=%d, queue_size=%d", qIndex, size);
@@ -168,14 +148,8 @@ public class QueueController {
             @RequestParam(value = "songIDs", required = true) List<Integer> songIDs) throws SongNotFoundException,
             QueueNotFoundException {
         
-        final List<SongInfo> songs;
-        Queue q;
-        
-        LogUtils.restCall(LOG, "/rest/queue/{queueID}/last", RequestMethod.PUT, "Enqueuing last: queueID=" + queueID
-                + ", songIDs=" + songIDs);
-        
-        q = qDAO.get(queueID);
-        songs = songDAO.get(songIDs);
+        final Queue q = qDAO.get(queueID);
+        final List<SongInfo> songs = songDAO.get(songIDs);
         
         if(EMUtils.hasValues(songs)) {
             q.addSongsLast(songs);
@@ -197,17 +171,10 @@ public class QueueController {
             @PathVariable("qIndex") int qIndex, //
             @RequestParam(value = "updatePlayIndex", required = true) boolean updatePlayIndex) throws IOException {
         
-        final Queue q;
-        final QueueElement qElem;
-        final SongInfo fullSong;
+        final Queue q = qDAO.get(qID);
+        final QueueElement qElem = q.getElement(qIndex);
+        final SongInfo fullSong = songDAO.get(qElem.getSong().getID());
         final String reqMethod = request.getMethod();
-        
-        LogUtils.restCall(LOG, "/rest/queue/{qID}/stream/queueindex/{qIndex}", reqMethod, String.format(
-                "Streaming song to client: qID=%d, qIndex=%d, updatePlayIndex=%d", qID, qIndex, updatePlayIndex));
-        
-        q = qDAO.get(qID);
-        qElem = q.getElement(qIndex);
-        fullSong = songDAO.get(qElem.getSong().getID());
         
         q.setPlayIndex(qIndex);
         qDAO.save(q);

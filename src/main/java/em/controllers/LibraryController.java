@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.Produces;
@@ -38,7 +37,6 @@ import em.model.Library;
 import em.model.SongInfo;
 import em.prefs.EMPreferencesManager;
 import em.utils.LibraryUtils;
-import em.utils.LogUtils;
 
 /**
  * @since v0.1
@@ -46,8 +44,6 @@ import em.utils.LogUtils;
  */
 @RestController
 public class LibraryController {
-    
-    private static final Logger LOG = Logger.getLogger(LibraryController.class.getName());
     
     @Autowired
     QueueDAO qDAO;
@@ -71,12 +67,9 @@ public class LibraryController {
     @RequestMapping(value = "/rest/library", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public Library getLibrary() {
-        final List<SongInfo> songs;
+        final List<SongInfo> songs = songDAO.getAll();
         final List<SongInfo> clones = new ArrayList<>();
         final Library lib = new Library();
-        
-        LogUtils.restCall(LOG, "/rest/library", RequestMethod.GET, "Requesting library");
-        songs = songDAO.getAll();
         
         for(SongInfo song : songs) {
             clones.add(song.clone());
@@ -91,8 +84,6 @@ public class LibraryController {
     @RequestMapping(value = "/rest/library", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void clear() {
-        LogUtils.restCall(LOG, "/rest/library", RequestMethod.DELETE, "Clearing library");
-        
         qDAO.removeAll();
         songDAO.removeAll();
     }
@@ -101,13 +92,8 @@ public class LibraryController {
     @RequestMapping(value = "/rest/library", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void rebuildLibrary() throws IOException, URISyntaxException {
-        final EMPreferences prefs;
-        final List<SongInfo> infos;
-        
-        LogUtils.restCall(LOG, "/rest/library", RequestMethod.POST, "Rebuilding library");
-        
-        prefs = EMPreferencesManager.getInstance().getPreferences();
-        infos = LibraryUtils.scanDirectories(prefs == null ? null : prefs.getMusicDirectories());
+        final EMPreferences prefs = EMPreferencesManager.getInstance().getPreferences();
+        final List<SongInfo> infos = LibraryUtils.scanDirectories(prefs == null ? null : prefs.getMusicDirectories());
         
         qDAO.removeAll();
         songDAO.removeAll();

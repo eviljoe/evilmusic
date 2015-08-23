@@ -13,12 +13,11 @@
  */
 package em.dao.eq;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.stereotype.Component;
 
+import em.dao.AbstractDAO;
 import em.model.EqualizerNode;
 
 /**
@@ -26,13 +25,10 @@ import em.model.EqualizerNode;
  * @author eviljoe
  */
 @Component
-public class EqualizerNodeDAO {
+public class EqualizerNodeDAO extends AbstractDAO {
     
     private static final String DELETE_ALL_EQ_NODES_JPQL = String.format("DELETE FROM %s e ",
             EqualizerNode.class.getName());
-    
-    @PersistenceContext
-    EntityManager em;
     
     public void removeAll() {
         em.createQuery(DELETE_ALL_EQ_NODES_JPQL).executeUpdate();

@@ -11,37 +11,17 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+package em.dao;
 
-package em.controllers;
-
-import java.util.logging.Logger;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
-import em.dao.queue.QueueDAO;
-import em.dao.song.SongInfoDAO;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * @since v0.1
  * @author eviljoe
  */
-@RestController
-public class UserController {
+public abstract class AbstractDAO {
     
-    private static final Logger LOG = Logger.getLogger(LibraryController.class.getName());
-    
-    @Autowired
-    private SongInfoDAO songInfoDAO;
-    
-    @Autowired
-    private QueueDAO queueDAO;
-    
-    /* ************ */
-    /* Constructors */
-    /* ************ */
-    
-    public UserController() {
-        super();
-    }
+    @PersistenceContext
+    protected EntityManager em;
 }

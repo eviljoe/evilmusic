@@ -11,39 +11,38 @@
  * You should have received a copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package em.dao.client;
+package em.dao;
 
-import javax.persistence.NoResultException;
+import java.util.logging.Logger;
 
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import em.dao.AbstractDAO;
-import em.model.ClientConfiguration;
+import em.utils.LogUtils;
 
 /**
  * @since v0.1
  * @author eviljoe
  */
+@Aspect
 @Component
-public class ClientConfigurationDAO extends AbstractDAO {
+public class DAOLoggingAspect {
     
-    private static final String SELECT_ALL_CONFIGS_JPQL = String.format("SELECT c FROM %s c ",
-            ClientConfiguration.class.getName());
+    private static final Logger LOG = Logger.getLogger(DAOLoggingAspect.class.getName());
     
-    public ClientConfiguration getFirst() {
-        final ClientConfiguration config;
-        
-        try {
-            config = em.createQuery(SELECT_ALL_CONFIGS_JPQL, ClientConfiguration.class).getSingleResult();
-        } catch(NoResultException e) {
-            throw new ClientConfigurationNotFoundException(e);
-        }
-        
-        return config;
+    @Pointcut("execution(public * *(..))")
+    public void anyPublicMethod() {
     }
     
-    public ClientConfiguration save(ClientConfiguration config) {
-        em.persist(config);
-        return config;
+    @Pointcut("target(em.dao.AbstractDAO)")
+    public void anyDAOMethod() {
+    }
+    
+    @Before("anyDAOMethod() && anyPublicMethod()")
+    public void logBeforePublicDAOMethod(JoinPoint jp) {
+        LogUtils.daoCall(LOG, jp);
     }
 }

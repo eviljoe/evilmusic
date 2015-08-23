@@ -49,11 +49,11 @@ Specifies the location of the `metaflac` command.  This command is used to read 
 #### em.database.home
 Specifies the location of the database.  EvilMusic uses a file system database ([Derby](http://db.apache.org/derby/)) to store information about the user's music library.
 
-`$home` is a special keyword to represent the current user's home directory.  If this directory starts with `$home`, the `$home` will be replaced with the user's home directory.  For example, if the user is "eviljoe", a directory specified as `$home/db` will actually use `/home/eviljoe/db` as the database home directory.
+`$home` is a special keyword to represent the current user's home directory.  If this property starts with `$home`, the `$home` will be replaced with the user's home directory.  For example, if the user is "eviljoe", a directory specified as `$home/db` will actually use `/home/eviljoe/db` as the database home directory.
 
 `$timestamp` is a special keyword to represent a timestamp.  The first instance of `$timestamp` found within the property value will be replaced with a timestamp.  For example, a directory specified as `/foo/$timestamp/bar` will be interpreted as `/foo/2015-01-15-23-30-15-666/bar` (assuming the current time is January 15th 2015 11:30:15.666 PM).
 
-*Default Value:* `$home/.evilmusic`<br/>
+*Default Value:* `$home/.evilmusic/db`<br/>
 *Example Usage:*
  * `em.database.home=$home/db`
  * `em.database.home=/foo/bar/database-home`
@@ -65,3 +65,16 @@ Specifies the location of the database.  EvilMusic uses a file system database (
 *Default Value:* `false`<br/>
 *Example Usage:*
  * `em.database.rollback_on_close=false`
+
+#### em.log_file
+Specifies the location of the log file.  EvilMusic will log all output to this file.
+
+`$home` is a special keyword to represent the current user's home directory.  If this property starts with `$home`, the `$home` will be replaced with the user's home directory.  For example, if the user is "eviljoe", a directory specified as `$home/evilmusic.log` will actually use `/home/eviljoe/evilmusic.log` as the log file.
+
+`$timestamp` is a special keyword to represent a timestamp.  The first instance of `$timestamp` found within the property value will be replaced with a timestamp.  For example, a file specified as `/foo/$timestamp/bar.log` will be interpreted as `/foo/2015-01-15-23-30-15-666/bar.log` (assuming the current time is January 15th 2015 11:30:15.666 PM).
+
+*Default Value:* `$home/.evilmusic/evilmusic.log`<br/>
+*Example Usage:*
+* `em.log_file=$home/evilmusic.log`
+* `em.log_file=/foo/bar/out.log`
+* `em.log_file=/foo/bar/$timestamp/log.txt`

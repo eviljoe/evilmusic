@@ -48,7 +48,7 @@ public class InvalidQueueIndexException extends RuntimeException {
     }
     
     public InvalidQueueIndexException(int index, Throwable cause) {
-        super(String.format("Invalid queue element index: ", index), cause);
+        super(String.format("Invalid queue element index: %d", index), cause);
     }
     
     public InvalidQueueIndexException(String message, Throwable cause, boolean enableSuppression,

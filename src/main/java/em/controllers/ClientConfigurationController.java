@@ -14,8 +14,6 @@
 
 package em.controllers;
 
-import java.util.logging.Logger;
-
 import javax.transaction.Transactional;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -29,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import em.dao.client.ClientConfigurationDAO;
 import em.dao.client.ClientConfigurationNotFoundException;
 import em.model.ClientConfiguration;
-import em.utils.LogUtils;
 
 /**
  * @since v0.1
@@ -38,7 +35,6 @@ import em.utils.LogUtils;
 @RestController
 public class ClientConfigurationController {
     
-    private static final Logger LOG = Logger.getLogger(ClientConfigurationController.class.getName());
     private static final double DEFAULT_VOLUME = 100.0;
     
     @Autowired
@@ -60,7 +56,6 @@ public class ClientConfigurationController {
     @RequestMapping(value = "/rest/config/volume", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public double getVolume() {
-        LogUtils.restCall(LOG, "/rest/config/volume", RequestMethod.GET, "Requesting volume");
         return getConfig().getVolume();
     }
     
@@ -68,11 +63,8 @@ public class ClientConfigurationController {
     @RequestMapping(value = "/rest/config/volume/{volume}", method = RequestMethod.PUT)
     @Produces(MediaType.APPLICATION_JSON)
     public double setVolume(@PathVariable("volume") double volume) {
-        ClientConfiguration config;
+        final ClientConfiguration config = getConfig();
         
-        LogUtils.restCall(LOG, "/rest/config/volume/{volume}", RequestMethod.PUT, "Setting volume: " + volume);
-        
-        config = getConfig();
         config.setVolume(volume);
         clientConfigDAO.save(config);
         

@@ -16,7 +16,6 @@ package em.controllers;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -38,7 +37,6 @@ import em.dao.eq.InvalidEqualizerException;
 import em.model.Equalizer;
 import em.model.EqualizerNode;
 import em.utils.EqualizerUtils;
-import em.utils.LogUtils;
 
 /**
  * @since v0.1
@@ -46,8 +44,6 @@ import em.utils.LogUtils;
  */
 @RestController
 public class EqualizerController {
-    
-    private static final Logger LOG = Logger.getLogger(EqualizerController.class.getName());
     
     @Autowired
     EqualizerDAO eqDAO;
@@ -70,8 +66,6 @@ public class EqualizerController {
     public Equalizer maybeCreateEqualizer() {
         Equalizer eq;
         
-        LogUtils.restCall(LOG, "/rest/eq/current", RequestMethod.GET, "Requesting equalizer, maybe create");
-        
         try {
             eq = eqDAO.getFirst();
         } catch(EqualizerNotFoundException e) {
@@ -85,7 +79,6 @@ public class EqualizerController {
     @RequestMapping(value = "/rest/eq", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public List<Equalizer> getAllEqualizers() {
-        LogUtils.restCall(LOG, "/rest/eq/current", RequestMethod.GET, "Requesting all equalizers");
         return eqDAO.getAll();
     }
     
@@ -93,7 +86,6 @@ public class EqualizerController {
     @RequestMapping(value = "/rest/eq/{id}", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public Equalizer getEqualizer(@PathVariable("id") int id) {
-        LogUtils.restCall(LOG, "/rest/eq/{id}", RequestMethod.GET, "Requesting equalizer: " + id);
         return eqDAO.get(id);
     }
     
@@ -101,7 +93,6 @@ public class EqualizerController {
     @RequestMapping(value = "/rest/eq", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeAllEqualizers() {
-        LogUtils.restCall(LOG, "/rest/eq", RequestMethod.GET, "Deleting all equalizers");
         eqDAO.removeAll();
     }
     
@@ -109,7 +100,6 @@ public class EqualizerController {
     @RequestMapping(value = "/rest/eq/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeEqualizer(@PathVariable("id") int id) {
-        LogUtils.restCall(LOG, "/rest/eq/{id}", RequestMethod.GET, "Deleting equalizer: " + id);
         eqDAO.remove(id);
     }
     
@@ -118,7 +108,6 @@ public class EqualizerController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Equalizer updateEqualizer(@PathVariable("id") int id, @RequestBody Equalizer eq) {
-        LogUtils.restCall(LOG, "/rest/eq/{id}", RequestMethod.PUT, "Updating equalizer: " + eq);
         validateEqualizer(eq);
         
         eq.setID(id);
