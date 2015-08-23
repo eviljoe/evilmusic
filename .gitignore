@@ -1,6 +1,7 @@
 /bin/
 /build/
 /.classpath
+/db/
 /*derby.log
 /*derbyDB
 /evilmusic.log

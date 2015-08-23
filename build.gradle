@@ -152,6 +152,16 @@ task configIntTest {
     doFirst { configFile = 'config/int-test.properties' }
 }
 
+/* Creates a task that will start Spring Boot after configuring using the integration test properties file. */
+task bootRunIntTest {
+	dependsOn 'configIntTest', 'bootRun'
+}
+
+/* Creates a task that will start Spring Boot after configuring using the development properties file. */
+task bootRunDev {
+	dependsOn 'configDev', 'bootRun'
+}
+
 bootRun {
     mustRunAfter 'configDev'
     mustRunAfter 'configIntTest'

@@ -122,7 +122,7 @@ public class EMPreferencesManager {
             emPrefs.setServerPort(serverPort);
             emPrefs.setLogFile(logFile);
             
-            log.append("=== Loaded Preferences ===\n");
+            log.append("\n=== Loaded Preferences ===\n");
             log.append("Music Directories: ").append(Arrays.toString(musicDirs)).append('\n');
             log.append("MetaFLAC Command:  ").append(metaflac).append('\n');
             log.append("Database Home:     ").append(dbHome).append('\n');

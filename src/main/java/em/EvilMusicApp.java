@@ -120,7 +120,7 @@ public class EvilMusicApp {
     /* Spring Boot Configuration Functions */
     /* *********************************** */
     
-    private static void configureSpringBoot(EMPreferences prefs) {
+    private static void configureSpringBoot(EMPreferences prefs) throws URISyntaxException {
         Integer port = prefs.getServerPort();
         String logFile = prefs.getLogFile();
         
@@ -128,7 +128,10 @@ public class EvilMusicApp {
             port = DEFAULT_SPRING_BOOT_SERVER_PORT;
         }
         
-        if(logFile == null) {
+        if(EMUtils.hasValues(logFile)) {
+            final File f = LibraryUtils.convertToFile(logFile);
+            logFile = f == null ? DEFAULT_SPRING_BOOT_LOG_FILE : f.getPath();
+        } else {
             logFile = DEFAULT_SPRING_BOOT_LOG_FILE;
         }
         
