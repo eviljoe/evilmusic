@@ -25,9 +25,10 @@ module.exports = function(config) {
             // Third party libraries
             'src/main/webapp/assets/libs/aurora.js',
             'src/main/webapp/assets/libs/flac.js',
-            'src/main/webapp/assets/libs/jquery.js',
-            'src/main/webapp/assets/libs/angular.js',
-            'src/main/webapp/assets/libs/angular-resource.js',
+            'node_modules/jquery/dist/jquery.js', // Needs to be before angular
+            'node_modules/angular/angular.js',
+            'node_modules/angular-resource/angular-resource.js', // Needs to be after angular
+            'node_modules/angular-bootstrap/dist/ui-bootstrap.js', // Needs to be after angular
             'node_modules/angular-mocks/angular-mocks.js',
 
             // Root level HTML & JavaScript files

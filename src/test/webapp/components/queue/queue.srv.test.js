@@ -31,7 +31,7 @@ describe('queue', function() {
 
     beforeEach(inject(function(_$httpBackend_) {
         $httpBackend = _$httpBackend_;
-        $httpBackend.expect('GET', '/rest/queue/current').respond(defaultQueue);
+        $httpBackend.expect('GET', '/rest/queue/default').respond(defaultQueue);
     }));
 
     beforeEach(inject(function(_$http_, _queue_) {

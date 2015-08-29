@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * EvilMusic - Web-Based Music Player
  * Copyright (C) 2015 Joe Falascino
@@ -76,7 +78,7 @@ gulp.task('concat-third-party-css', ['clean'], function() {
     .pipe(gulp.dest(cssDestDir));
 });
 
-gulp.task('concat-third-party-css-source-maps', ['clean'], function() {
+gulp.task('copy-third-party-css-source-maps', ['clean'], function() {
     return gulp.src([
         'node_modules/bootstrap/dist/css/bootstrap.css.map',
         'node_modules/bootstrap/dist/css/bootstrap-theme.css.map',
@@ -97,26 +99,22 @@ gulp.task('copy-fonts', ['clean'], function() {
     .pipe(gulp.dest(fontsDestDir));
 });
 
+gulp.task('build', [
+    'clean',
+    'concat-em-js',
+    'concat-third-party-js',
+    'concat-em-css',
+    'concat-third-party-css',
+    'copy-third-party-css-source-maps',
+    'create-template-cache',
+    'copy-fonts'
+]);
+
 gulp.task('watch', ['build'], function() {
     gulp.watch(webSrcDir + '/assets/**/*', ['build']);
     gulp.watch(webSrcDir + '/components/**/*', ['build']);
     gulp.watch(webSrcDir + '/index.html', ['build']);
     gulp.watch(webSrcDir + '/index.js', ['build']);
 });
-
-gulp.task(
-    'build',
-    [
-        'clean',
-        'concat-em-js',
-        'concat-third-party-js',
-        'concat-em-css',
-        'concat-third-party-css',
-        'concat-third-party-css-source-maps',
-        'create-template-cache',
-        'copy-fonts'
-    ],
-    function() {}
-);
 
 gulp.task('default', ['build'], function() {});

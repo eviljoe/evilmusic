@@ -17,7 +17,8 @@
  */
 
 angular.module('EvilMusicApp')
-.factory('player', ['$http', '$rootScope', 'emUtils', 'queue', 'eq', function($http, $rootScope, emUtils, queue, eq) {
+.factory('player', ['$http', '$rootScope', 'emUtils', 'queues', 'equalizers',
+function($http, $rootScope, emUtils, queues, equalizers) {
 
     'use strict';
 
@@ -34,25 +35,25 @@ angular.module('EvilMusicApp')
             that.avPlayer.stop();
         }
 
-        if(queue.q && queue.q.id) {
-            var song = queue.getSong(queueIndex);
+        if(queues.q && queues.q.id) {
+            var song = queues.getSong(queueIndex);
 
             if(song) {
                 that.avPlayer = AV.Player.fromURL(
-                    '/rest/queue/' + queue.q.id + '/stream/queueindex/' + queueIndex + '?updatePlayIndex=true');
+                    '/rest/queue/' + queues.q.id + '/stream/queueindex/' + queueIndex + '?updatePlayIndex=true');
 
                 that.updateAVPlayerDefaults(that.avPlayer, song);
 
                 that.currentSong = song;
                 that.avPlayer.play();
-                queue.load();
+                queues.load();
             }
         }
     };
 
     that.updateAVPlayerDefaults = function(avPlayer, song) {
         if(avPlayer && song) {
-            avPlayer.nodeCreationCallback = eq.createEQNodes;
+            avPlayer.nodeCreationCallback = equalizers.createEQNodes;
             avPlayer.volume = that.volume;
 
             avPlayer.on('progress', function(progress) {

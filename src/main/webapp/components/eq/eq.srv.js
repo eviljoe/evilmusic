@@ -17,7 +17,7 @@
  */
 
 angular.module('EvilMusicApp')
-.factory('eq', ['$http', function($http){
+.factory('equalizers', ['Equalizer', function(Equalizer){
     'use strict';
     
     var that = this;
@@ -32,29 +32,14 @@ angular.module('EvilMusicApp')
      * @param {Boolean} loadNew Whether or not to load a new equalizer or reload the current equalizer.
      */
     that.load = function(loadNew) {
-        var url = '/rest/eq/';
+        var id = loadNew ? 'default' : that.eq.id;
 
-        if(loadNew) {
-            url += 'current';
-        } else {
-            url += that.eq.id;
-        }
-
-        $http.get(url)
-        .success(function (data, status, headers, config) {
-            if(data && data.nodes) {
-                data.nodes.sort(function(a, b) {
-                    return a.frequency - b.frequency;
-                });
-            }
-
-            that.eq = data;
-        })
-        .error(function (data, status, headers, config) {
+        that.eq = Equalizer.get({ id : id });
+        that.eq.$promise.catch(function(data) {
             alert('Could not get equalizer.\n\n' + JSON.stringify(data));
         });
     };
-
+    
     /**
      * Creates Web Audio API filter nodes for each equalizer slider.
      *

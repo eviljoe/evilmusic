@@ -28,10 +28,20 @@ angular.module('EvilMusicApp')
         templateUrl : '/components/eq/eq.html'
     };
 })
-.controller('EMEQController', ['eq', 'emUtils', function(eq, emUtils) {
+.controller('EMEQController', ['equalizers', 'emUtils', function(equalizers, emUtils) {
     'use strict';
     
     var that = this;
-    that.eq = eq;
     that.emUtils = emUtils;
+    
+    that.nodeChanged = nodeChanged;
+    that.getEQ = getEQ;
+    
+    function getEQ() {
+        return equalizers.eq;
+    }
+    
+    function nodeChanged(node) {
+        equalizers.updateNodeGain(node);
+    }
 }]);

@@ -17,7 +17,7 @@
  */
 
 angular.module('EvilMusicApp')
-.factory('queue', ['$http', 'emUtils', 'Queues', function($http, emUtils, Queues) {
+.factory('queues', ['$http', 'emUtils', 'Queue', function($http, emUtils, Queue) {
 
     'use strict';
 
@@ -31,14 +31,12 @@ angular.module('EvilMusicApp')
      * @param {Boolean} loadNew Whether or not to load a new queue or reload the current queue.
      */
     that.load = function(loadNew) {
-        var id = loadNew ? 'current' : that.q.id;
+        var id = loadNew ? 'default' : that.q.id;
 
-        that.q = Queues.get({ id : id });
-        that.q.$promise.catch(
-            function(data) {
-                alert('Could not get queue.\n\n' + JSON.stringify(data));
-            }
-        );
+        that.q = Queue.get({ id : id });
+        that.q.$promise.catch(function(data) {
+            alert('Could not get queue.\n\n' + JSON.stringify(data));
+        });
     };
 
     /**

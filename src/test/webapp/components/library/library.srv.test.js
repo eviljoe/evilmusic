@@ -24,7 +24,7 @@ describe('library', function() {
     beforeEach(inject(function(_$httpBackend_) {
         $httpBackend = _$httpBackend_;
         $httpBackend.expect('GET', '/rest/library').respond(defaultLibrary);
-        $httpBackend.when('GET', '/rest/queue/current').respond(defaultLibrary);
+        $httpBackend.when('GET', '/rest/queue/default').respond(defaultLibrary);
     }));
 
     beforeEach(inject(function(_library_) {

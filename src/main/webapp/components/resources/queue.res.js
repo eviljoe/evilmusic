@@ -17,7 +17,7 @@
  */
 
 angular.module('EvilMusicApp')
-.factory('Queues', ['$resource', function($resource) {
+.factory('Queue', ['$resource', function($resource) {
     'use strict';
     
     function emptyRequest(data) {

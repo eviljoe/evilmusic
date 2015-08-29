@@ -44,7 +44,7 @@ public class EqualizerRESTCalls {
         res.expect().statusCode(200);
         res.expect().contentType(ContentType.JSON);
         
-        r = res.get(RESTTestConfig.getInstance().getFullURL("/eq/current"));
+        r = res.get(RESTTestConfig.getInstance().getFullURL("/eq/default"));
         
         return toEQ(r.getBody().asString());
     }

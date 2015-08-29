@@ -28,11 +28,16 @@ angular.module('EvilMusicApp')
         templateUrl : '/components/library/library.html'
     };
 })
-.controller('EMLibraryController', ['library', 'queue', 'emUtils', function(library, queue, emUtils) {
+.controller('EMLibraryController', ['library', 'queues', 'emUtils', function(library, queues, emUtils) {
     'use strict';
 
     var that = this;
     that.library = library;
-    that.queue = queue;
     that.emUtils = emUtils;
+    
+    that.addLast = addLast;
+    
+    function addLast(songID) {
+        queues.addLast(songID);
+    }
 }]);

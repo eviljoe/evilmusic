@@ -24,7 +24,7 @@ describe('eq', function() {
 
     beforeEach(inject(function(_$httpBackend_) {
         $httpBackend = _$httpBackend_;
-        $httpBackend.expect('GET', '/rest/eq/current').respond(defaultEQ);
+        $httpBackend.expect('GET', '/rest/eq/default').respond(defaultEQ);
 
         mockContext = {
             createBiquadFilter : function() {}

@@ -17,40 +17,7 @@
  */
 
 angular.module('EvilMusicApp')
-.directive('emQueue', function() {
+.factory('Equalizer', ['$resource', function($resource) {
     'use strict';
-
-    return {
-        scope : {},
-        restrict : 'E',
-        templateUrl : '/components/queue/queue.html',
-        controller : 'EMQueueController',
-        controllerAs : 'ctrl'
-    };
-})
-.controller('EMQueueController', ['queues', 'player', function(queues, player) {
-    'use strict';
-    
-    var that = this;
-    
-    that.getQueue = getQueue;
-    that.clear = clear;
-    that.play = play;
-    that.remove = remove;
-    
-    function getQueue() {
-        return queues.q;
-    }
-    
-    function clear() {
-        queues.clear();
-    }
-    
-    function play(index) {
-        player.play(index);
-    }
-    
-    function remove(index) {
-        queues.remove(index);
-    }
+    return $resource('/rest/eq/:id', {id : '@id'}, {});
 }]);

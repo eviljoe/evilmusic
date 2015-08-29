@@ -61,9 +61,9 @@ public class EqualizerController {
     /* ************** */
     
     @Transactional
-    @RequestMapping(value = "/rest/eq/current", method = RequestMethod.GET)
+    @RequestMapping(value = "/rest/eq/default", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
-    public Equalizer maybeCreateEqualizer() {
+    public Equalizer getDefaultEqualizer() {
         Equalizer eq;
         
         try {

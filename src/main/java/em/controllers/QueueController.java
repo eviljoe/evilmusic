@@ -90,9 +90,9 @@ public class QueueController {
     }
     
     @Transactional
-    @RequestMapping(value = "/rest/queue/current", method = RequestMethod.GET)
+    @RequestMapping(value = "/rest/queue/default", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
-    public Queue maybeCreateQueue() {
+    public Queue getDefaultQueue() {
         Queue q;
         
         try {
@@ -161,7 +161,7 @@ public class QueueController {
     
     @Transactional
     @RequestMapping( //
-            value = "/rest/queue/{queueID}/stream/queueindex/{queueIndex}", //
+            value = "/rest/queue/{qID}/stream/queueindex/{qIndex}", //
             method = {RequestMethod.GET, RequestMethod.HEAD})
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getSongStream( //
@@ -171,6 +171,8 @@ public class QueueController {
             @PathVariable("qIndex") int qIndex, //
             @RequestParam(value = "updatePlayIndex", required = true) boolean updatePlayIndex) throws IOException {
         
+        LOG.severe(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> here"); // JOE o
+        
         final Queue q = qDAO.get(qID);
         final QueueElement qElem = q.getElement(qIndex);
         final SongInfo fullSong = songDAO.get(qElem.getSong().getID());
@@ -178,6 +180,8 @@ public class QueueController {
         
         q.setPlayIndex(qIndex);
         qDAO.save(q);
+        
+        LOG.severe(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> here 2"); // JOE o
         
         LibraryUtils.streamSongToResponse(response, fullSong, EMUtils.equalsIgnoreCase("head", reqMethod));
         

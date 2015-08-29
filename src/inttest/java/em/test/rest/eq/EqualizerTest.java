@@ -57,7 +57,7 @@ public class EqualizerTest {
     
     /** Ensures that an EQ will be created if one does not exist. */
     @Test
-    public void testGetCurrent_NoExisting() throws IOException {
+    public void testGetDefault_NoExisting() throws IOException {
         Equalizer eq = EqualizerRESTCalls.getCurrentEQ();
         
         assertThat(eq, is(not(nullValue())));
@@ -66,7 +66,7 @@ public class EqualizerTest {
     
     /** Ensures that an existing EQ will be returned if one already exists. */
     @Test
-    public void testGetCurrent_OneExists() throws IOException {
+    public void testGetDefault_OneExists() throws IOException {
         final Equalizer eq;
         
         EqualizerRESTCalls.getCurrentEQ();

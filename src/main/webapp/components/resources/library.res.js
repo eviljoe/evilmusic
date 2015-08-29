@@ -17,7 +17,7 @@
  */
 
 angular.module('EvilMusicApp')
-.factory('Libraries', ['$resource', function($resource) {
+.factory('Library', ['$resource', function($resource) {
     'use strict';
     
     return $resource(

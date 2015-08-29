@@ -34,8 +34,8 @@ describe('player', function() {
 
     beforeEach(inject(function(_$httpBackend_) {
         $httpBackend = _$httpBackend_;
-        $httpBackend.when('GET', '/rest/queue/current').respond(defaultQueue);
-        $httpBackend.when('GET', '/rest/eq/current').respond(defaultEQ);
+        $httpBackend.when('GET', '/rest/queue/default').respond(defaultQueue);
+        $httpBackend.when('GET', '/rest/eq/default').respond(defaultEQ);
         $httpBackend.expect('GET', '/rest/config/volume').respond(defaultVolume);
     }));
 

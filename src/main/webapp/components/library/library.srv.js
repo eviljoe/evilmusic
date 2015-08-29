@@ -17,7 +17,7 @@
  */
 
 angular.module('EvilMusicApp')
-.factory('library', ['$http', 'queue', 'Libraries', function($http, queue, Libraries) {
+.factory('library', ['$http', 'queues', 'Library', function($http, queues, Library) {
 
     'use strict';
 
@@ -26,7 +26,7 @@ angular.module('EvilMusicApp')
 
     /** Loads the contents of the library using a REST call. */
     that.load = function() {
-        that.library = Libraries.get();
+        that.library = Library.get();
         that.library.$promise.catch(function(data) {
             alert('Could not get library.\n\n' + JSON.stringify(data));
         });
@@ -41,7 +41,7 @@ angular.module('EvilMusicApp')
             that.library.$delete().then(
                 function() {
                     that.load();
-                    queue.load(true);
+                    queues.load(true);
                 },
                 function(data) {
                     alert('Clear library failed.\n\n' + JSON.stringify(data));
@@ -60,7 +60,7 @@ angular.module('EvilMusicApp')
             that.library.$rebuild().then(
                 function() {
                     that.load();
-                    queue.load(true);
+                    queues.load(true);
                 },
                 function(data) {
                     alert('Library rebuilding failed.\n\n' + JSON.stringify(data));
