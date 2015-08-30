@@ -20,11 +20,11 @@ function directive() {
     'use strict';
 
     return {
-        restrict : 'E',
-        scope : {},
-        controller : 'EMLibraryController',
-        controllerAs : 'ctrl',
-        templateUrl : '/components/library/library.html'
+        restrict: 'E',
+        scope: {},
+        controller: 'EMLibraryController',
+        controllerAs: 'ctrl',
+        templateUrl: '/components/library/library.html'
     };
 }
 

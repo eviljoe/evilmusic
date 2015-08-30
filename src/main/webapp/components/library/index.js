@@ -20,7 +20,7 @@ import ctrl from './library.ctrl';
 import dir from './library.dir';
 import srv from './library.srv';
 
-export default function(module) {
+function applyToModule(module) {
     'use strict';
     
     module
@@ -28,3 +28,5 @@ export default function(module) {
         .controller(ctrl.id, ctrl.Controller)
         .factory(srv.id, srv.Factory);
 }
+
+export default applyToModule;

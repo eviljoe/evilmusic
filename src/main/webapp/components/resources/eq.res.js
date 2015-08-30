@@ -19,7 +19,8 @@
 let injections = ['$resource'];
 function Factory($resource) {
     'use strict';
-    return $resource('/rest/eq/:id', {id : '@id'}, {});
+    
+    return $resource('/rest/eq/:id', {id: '@id'}, {});
 }
 
 Factory.$inject = injections;

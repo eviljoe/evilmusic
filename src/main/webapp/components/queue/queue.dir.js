@@ -16,16 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 function directive() {
     'use strict';
 
     return {
-        scope : {},
-        restrict : 'E',
-        templateUrl : '/components/queue/queue.html',
-        controller : 'EMQueueController',
-        controllerAs : 'ctrl'
+        scope: {},
+        restrict: 'E',
+        templateUrl: '/components/queue/queue.html',
+        controller: 'EMQueueController',
+        controllerAs: 'ctrl'
     };
 }
 

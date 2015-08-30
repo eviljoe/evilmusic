@@ -18,11 +18,11 @@
 
 function directive() {
     return {
-        restrict : 'E',
-        scope : {},
-        controller : 'EMEQController',
-        controllerAs : 'ctrl',
-        templateUrl : '/components/eq/eq.html'
+        restrict: 'E',
+        scope: {},
+        controller: 'EMEQController',
+        controllerAs: 'ctrl',
+        templateUrl: '/components/eq/eq.html'
     };
 }
 

@@ -20,12 +20,12 @@ function directive() {
     'use strict';
 
     return {
-        restrict : 'E',
-        templateUrl : '/components/progress-bar/progress-bar.html',
-        scope : {
-            onseek : '='
+        restrict: 'E',
+        templateUrl: '/components/progress-bar/progress-bar.html',
+        scope: {
+            onseek: '='
         },
-        link : function (scope, element, attrs) {
+        link: function (scope, element, attrs) {
             scope.barElem = element;
             scope.gutterElem = angular.element(element[0].querySelector('.em-progress-gutter'));
             scope.meterElem = angular.element(element[0].querySelector('.em-progress-meter'));
@@ -42,8 +42,8 @@ function directive() {
 
             scope.updateMeterWidth();
         },
-        controller : 'EMProgressBarController',
-        controllerAs : 'ctrl'
+        controller: 'EMProgressBarController',
+        controllerAs: 'ctrl'
     };
 }
 

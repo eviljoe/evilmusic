@@ -20,14 +20,14 @@ function directive() {
     'use strict';
 
     return {
-        restrict : 'A',
-        templateUrl : '/components/volume-control/volume-control.html',
-        scope : {
-            volume : '=',
-            onvolumechange : '='
+        restrict: 'A',
+        templateUrl: '/components/volume-control/volume-control.html',
+        scope: {
+            volume: '=',
+            onvolumechange: '='
         },
-        controller : 'EMVolumneControlController',
-        controllerAs : 'ctrl'
+        controller: 'EMVolumneControlController',
+        controllerAs: 'ctrl'
     };
 }
 

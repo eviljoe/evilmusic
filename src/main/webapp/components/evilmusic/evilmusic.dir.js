@@ -20,11 +20,11 @@ function directive() {
     'use strict';
     
     return {
-        restrict : 'E',
-        scope : {},
-        controller : 'EMController',
-        controllerAs : 'ctrl',
-        templateUrl : '/components/evilmusic/evilmusic.html'
+        restrict: 'E',
+        scope: {},
+        controller: 'EMController',
+        controllerAs: 'ctrl',
+        templateUrl: '/components/evilmusic/evilmusic.html'
     };
 }
 

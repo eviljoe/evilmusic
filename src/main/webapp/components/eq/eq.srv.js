@@ -39,12 +39,12 @@ function Factory(Equalizer) {
      * Loads the nodes/sliders of the equalizer using a REST call.  A new equalizer can be loaded, or the same equalizer
      * can be re-loaded.
      *
-     * @param {Boolean} loadNew Whether or not to load a new equalizer or reload the current equalizer.
+     * @param {boolean} loadNew Whether or not to load a new equalizer or reload the current equalizer.
      */
     function load(loadNew) {
         let id = loadNew ? 'default' : that.eq.id;
 
-        that.eq = Equalizer.get({ id : id });
+        that.eq = Equalizer.get({id: id});
         that.eq.$promise.catch(function(data) {
             alert('Could not get equalizer.\n\n' + JSON.stringify(data));
         });

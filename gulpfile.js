@@ -1,5 +1,3 @@
-'use strict';
-
 /*
  * EvilMusic - Web-Based Music Player
  * Copyright (C) 2015 Joe Falascino
@@ -18,11 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// jshint -W132
+
 var concat = require('gulp-concat');
 var babelify = require('babelify');
 var browserify = require('browserify');
 var del = require('del');
 var gulp = require('gulp');
+var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
 var jshintStylish = require('jshint-stylish');
 var source = require('vinyl-source-stream');
@@ -34,19 +35,27 @@ var destDir = 'src/main/webapp/dist';
 var cssDestDir = 'src/main/webapp/dist/css';
 var fontsDestDir = 'src/main/webapp/dist/fonts';
  
+var jsFilesToLint = [
+    webSrcDir + '/**/*.js',
+    '.package.json',
+    '!' + webSrcDir + '/assets/**',
+    '!' + webSrcDir + '/dist/**'
+];
+ 
 // JOE TODO task convert src/main/webapp/assets/less to CSS (and get rid of src/main/webapp/assets/css/evilmusic.css)
 
-gulp.task('lint-js', function() {
-    return gulp.src([
-        webSrcDir + '/**/*.js',
-        '!' + webSrcDir + '/assets/**',
-        '!' + webSrcDir + '/dist/**'
-    ])
+gulp.task('lint-js-jshint', function() {
+    return gulp.src(jsFilesToLint)
     .pipe(jshint())
     .pipe(jshint.reporter(jshintStylish));
 });
 
-gulp.task('lint', ['lint-js']);
+gulp.task('lint-js-jscs', function() {
+    return gulp.src(jsFilesToLint)
+    .pipe(jscs());
+});
+
+gulp.task('lint', ['lint-js-jshint', 'lint-js-jscs']);
 
 gulp.task('clean', function() {
     del([destDir], function (err, deletedFiles) {});
@@ -70,7 +79,7 @@ gulp.task('concat-third-party-js', ['clean'], function() {
         'node_modules/angular-resource/angular-resource.js', // Needs to be after angular
         'node_modules/angular-bootstrap/dist/ui-bootstrap.js', // Needs to be after angular
         webSrcDir + '/assets/libs/aurora.js',
-        webSrcDir + '/assets/libs/flac.js', // Needs to be after aurora.js
+        webSrcDir + '/assets/libs/flac.js' // Needs to be after aurora.js
     ])
     .pipe(sourcemaps.init())
     .pipe(concat('evilmusic-third-party.js'))
@@ -98,14 +107,14 @@ gulp.task('concat-third-party-css', ['clean'], function() {
 gulp.task('copy-third-party-css-source-maps', ['clean'], function() {
     return gulp.src([
         'node_modules/bootstrap/dist/css/bootstrap.css.map',
-        'node_modules/bootstrap/dist/css/bootstrap-theme.css.map',
+        'node_modules/bootstrap/dist/css/bootstrap-theme.css.map'
     ])
     .pipe(gulp.dest(cssDestDir));
 });
 
 gulp.task('create-template-cache', ['clean'], function() {
     return gulp.src(webSrcDir + '/components/**/*.html')
-        .pipe(templateCache('evilmusic-templates.js', { module : 'EvilMusicApp' }))
+        .pipe(templateCache('evilmusic-templates.js', {module: 'EvilMusicApp'}))
         .pipe(gulp.dest(destDir));
 });
 

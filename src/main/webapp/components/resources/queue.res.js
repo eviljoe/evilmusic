@@ -17,6 +17,7 @@
  */
 
 let injections = ['$resource'];
+
 function Factory($resource) {
     'use strict';
     
@@ -26,23 +27,23 @@ function Factory($resource) {
     
     return $resource(
         '/rest/queue/:id',
-        { id : '@id' },
+        {id: '@id'},
         {
-            addLast : {
-                method : 'PUT',
-                url : '/rest/queue/:id/last',
-                transformRequest : emptyRequest
+            addLast: {
+                method: 'PUT',
+                url: '/rest/queue/:id/last',
+                transformRequest: emptyRequest
             },
-            remove : {
-                method : 'DELETE',
-                url : '/rest/queue/:id/queueindex/:qIndex',
-                params : { id : '@id', qIndex : '@qIndex'},
-                transformRequest : emptyRequest
+            remove: {
+                method: 'DELETE',
+                url: '/rest/queue/:id/queueindex/:qIndex',
+                params: {id: '@id', qIndex: '@qIndex'},
+                transformRequest: emptyRequest
             },
-            clear : {
-                method : 'DELETE',
-                url : '/rest/queue/:id/elements',
-                transformRequest : emptyRequest
+            clear: {
+                method: 'DELETE',
+                url: '/rest/queue/:id/elements',
+                transformRequest: emptyRequest
             }
         }
     );

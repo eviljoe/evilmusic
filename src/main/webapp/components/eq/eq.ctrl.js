@@ -17,8 +17,8 @@
  */
 
 let injections = ['equalizers', 'emUtils'];
-function Controller(equalizers, emUtils) {
 
+function Controller(equalizers, emUtils) {
     this.emUtils = emUtils;
     
     this.nodeChanged = nodeChanged;

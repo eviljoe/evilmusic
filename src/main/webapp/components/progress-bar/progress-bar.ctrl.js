@@ -17,8 +17,8 @@
  */
 
 let injections = ['$scope', '$rootScope', 'player', 'emUtils'];
+
 function Controller($scope, $rootScope, player, emUtils) {
-    
     'use strict';
 
     $scope.progressMeterClicked = function(xPos, width) {
@@ -30,15 +30,14 @@ function Controller($scope, $rootScope, player, emUtils) {
     $scope.updateMeterWidth = function() {
         let p = player.playerProgress;
 
-        if(!emUtils.isNumber(p)) {
-            p = 0;
-        } else {
+        if(emUtils.isNumber(p)) {
             p = Math.max(0, p);
             p = Math.min(100, p);
+        } else {
+            p = 0;
         }
 
         $scope.meterElem.width(p + '%');
-
     };
 
     $rootScope.$on(player.playerProgressChangedEventName, $scope.updateMeterWidth);

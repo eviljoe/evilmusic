@@ -24,7 +24,7 @@ function Factory($resource) {
         '/rest/library',
         null,
         {
-            rebuild : { method : 'POST' }
+            rebuild: {method: 'POST'}
         }
     );
 }

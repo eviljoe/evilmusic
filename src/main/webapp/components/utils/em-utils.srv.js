@@ -17,7 +17,6 @@
  */
 
 function Factory() {
-    
     let that = this;
     this.isNumber = isNumber;
     this.hertzToString = hertzToString;
@@ -33,7 +32,7 @@ function Factory() {
      *
      * @param {Any} val The value to be checked to see if it is a number.
      *
-     * @return {Boolean} Returns true if the value is a number.  Returns false otherwise.
+     * @return {boolean} Returns true if the value is a number.  Returns false otherwise.
      *
      * @see isNaN(...)
      */
@@ -50,9 +49,9 @@ function Factory() {
      *  < 1,000 | <magnitude> Hz         | 128 Hz
      * >= 1,000 | <magnitude / 1000> kHz | 1.8 kHz
      *
-     * @param {Number} hertz The Hertz magnitude.  If NaN, null will be returned.
+     * @param {number} hertz The Hertz magnitude.  If NaN, null will be returned.
      *
-     * @return {String} Returns the string representation of the Hertz magnitude.  If the magnitude is null, undefined,
+     * @return {string} Returns the string representation of the Hertz magnitude.  If the magnitude is null, undefined,
      *         or NaN, null will be returned.\
      *
      * @see isNumber(...)
@@ -87,9 +86,9 @@ function Factory() {
      * In the above format, <seconds> will always be at least two digits.  If it is representing a value less than ten,
      * a leading zero will be added.  For example, "07" will be used to represent seven.
      *
-     * @param {Number} seconds The seconds magnitude.  If NaN, null will be returned.
+     * @param {number} millis The seconds magnitude.  If NaN, null will be returned.
      *
-     * @return {String} Returns the string representation of the seconds magnitude.  If the magnitude is null,
+     * @return {string} Returns the string representation of the seconds magnitude.  If the magnitude is null,
      *         undefined, or NaN, null will be returned.
      *
      * @see isNumber(...)
@@ -97,11 +96,11 @@ function Factory() {
     function millisecondsToString(millis) {
         let str = null;
 
-         if(that.isNumber(millis)) {
+        if(that.isNumber(millis)) {
             str = millis < 0 ? '-' : '';
-
+            
             millis = Math.abs(millis);
-
+            
             if(millis === 0) {
                 str = '0:00';
             } else if(millis <= 1000) {
@@ -111,7 +110,7 @@ function Factory() {
                 str += Math.ceil(millis / 1000);
             } else {
                 let minutes = Math.floor(millis / 60000);
-
+                
                 millis = millis % 60000;
                 str += minutes;
                 str += millis < 10000 ? ':0' : ':';

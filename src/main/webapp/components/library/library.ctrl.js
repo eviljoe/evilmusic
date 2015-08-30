@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 let injections = ['library', 'queues', 'emUtils'];
+
 function Controller(library, queues, emUtils) {
     'use strict';
 

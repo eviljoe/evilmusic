@@ -17,8 +17,8 @@
  */
 
 let injections = ['$http', 'emUtils', 'Queue'];
-function Factory($http, emUtils, Queue) {
 
+function Factory($http, emUtils, Queue) {
     'use strict';
 
     let that = this;
@@ -38,12 +38,12 @@ function Factory($http, emUtils, Queue) {
      * Loads the contents of the queue using a REST call.  A new queue can be loaded, or the same queue can be
      * re-loaded.
      *
-     * @param {Boolean} loadNew Whether or not to load a new queue or reload the current queue.
+     * @param {boolean} loadNew Whether or not to load a new queue or reload the current queue.
      */
     function load(loadNew) {
         let id = loadNew ? 'default' : that.q.id;
 
-        that.q = Queue.get({ id : id });
+        that.q = Queue.get({id: id});
         that.q.$promise.catch(function(data) {
             alert('Could not get queue.\n\n' + JSON.stringify(data));
         });
@@ -54,11 +54,11 @@ function Factory($http, emUtils, Queue) {
      * the queue will be reloaded.  If a queue has not already been loaded, the song will not be enqueued because there
      * is no way to know which queue should be altered.
      *
-     * @param {Number} songID The ID of the song to be enqueued.
+     * @param {number} songID The ID of the song to be enqueued.
      */
     function addLast(songID) {
         that.q.$promise.then(function() {
-            that.q.$addLast({ id : that.q.id, songIDs : songID }).then(
+            that.q.$addLast({id: that.q.id, songIDs: songID}).then(
                 function() {
                     that.load(false);
                 },
@@ -74,11 +74,11 @@ function Factory($http, emUtils, Queue) {
      * the queue will be reloaded.  If a queue has not already been loaded, the song will not be removed because there
      * is no way to know which queue should be altered.
      *
-     * @param {Number} queueIndex The index within the queue that should be removed.
+     * @param {number} queueIndex The index within the queue that should be removed.
      */
     function remove(queueIndex) {
         that.q.$promise.then(function() {
-            that.q.$remove({ id : that.q.id, qIndex : queueIndex }).then(
+            that.q.$remove({id: that.q.id, qIndex: queueIndex}).then(
                 function() {
                     that.load(false);
                 },
@@ -109,7 +109,7 @@ function Factory($http, emUtils, Queue) {
     /**
      * Returns a song from the queue.
      *
-     * @param  {Number} queueIndex The queue index of the song to be found.  If null, undefined, or NaN, null will be
+     * @param  {number} queueIndex The queue index of the song to be found.  If null, undefined, or NaN, null will be
      *         returned.
      *
      * @return {Song} If a song can be found at the given queue index, it will be returned.  If a song cannot be found,

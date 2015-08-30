@@ -20,8 +20,8 @@ module.exports = function(config) {
     'use strict';
 
     config.set({
-        basePath : '',
-        files : [
+        basePath: '',
+        files: [
             // Third party libraries
             'src/main/webapp/assets/libs/aurora.js',
             'src/main/webapp/assets/libs/flac.js',
@@ -39,11 +39,11 @@ module.exports = function(config) {
             'src/main/webapp/components/**/*',
 
             // Unit Tests
-            'src/test/webapp/**/*',
+            'src/test/webapp/**/*'
         ],
-        frameworks : ['jasmine'],
-        browsers : ['PhantomJS'],
-        autoWatch : true,
-        usePolling : true
+        frameworks: ['jasmine'],
+        browsers: ['PhantomJS'],
+        autoWatch: true,
+        usePolling: true
     });
 };
