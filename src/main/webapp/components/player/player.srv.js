@@ -16,13 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.factory('player', ['$http', '$rootScope', 'emUtils', 'queues', 'equalizers',
-function($http, $rootScope, emUtils, queues, equalizers) {
-
+let injections = ['$http', '$rootScope', 'emUtils', 'queues', 'equalizers'];
+function Factory($http, $rootScope, emUtils, queues, equalizers) {
     'use strict';
 
-    var that = this;
+    let that = this;
 
     that.playerProgressChangedEventName = 'emPlayerProgressChanged';
     that.avPlayer = null;
@@ -30,13 +28,26 @@ function($http, $rootScope, emUtils, queues, equalizers) {
     that.playerProgress = null;
     that.volume = 100;
 
-    that.play = function(queueIndex) {
+    that.init = init;
+    that.play = play;
+    that.updateAVPlayerDefaults = updateAVPlayerDefaults;
+    that.togglePlayback = togglePlayback;
+    that.seekToMillis = seekToMillis;
+    that.seekToPercent = seekToPercent;
+    that.setVolume = setVolume;
+    that.loadVolume = loadVolume;
+
+    function init() {
+        that.loadVolume();
+    }
+    
+    function play(queueIndex) {
         if(that.avPlayer) {
             that.avPlayer.stop();
         }
 
         if(queues.q && queues.q.id) {
-            var song = queues.getSong(queueIndex);
+            let song = queues.getSong(queueIndex);
 
             if(song) {
                 that.avPlayer = AV.Player.fromURL(
@@ -49,9 +60,9 @@ function($http, $rootScope, emUtils, queues, equalizers) {
                 queues.load();
             }
         }
-    };
+    }
 
-    that.updateAVPlayerDefaults = function(avPlayer, song) {
+    function updateAVPlayerDefaults(avPlayer, song) {
         if(avPlayer && song) {
             avPlayer.nodeCreationCallback = equalizers.createEQNodes;
             avPlayer.volume = that.volume;
@@ -66,10 +77,10 @@ function($http, $rootScope, emUtils, queues, equalizers) {
                 that.currentSong = null;
             });
         }
-    };
+    }
 
-    that.togglePlayback = function() {
-        var toggled = false;
+    function togglePlayback () {
+        let toggled = false;
 
         if(that.avPlayer) {
             that.avPlayer.togglePlayback();
@@ -77,20 +88,20 @@ function($http, $rootScope, emUtils, queues, equalizers) {
         }
 
         return toggled;
-    };
+    }
 
-    that.seekToMillis = function(millis) {
-        var newMillis = null;
+    function seekToMillis(millis) {
+        let newMillis = null;
 
         if(emUtils.isNumber(millis) && that.avPlayer) {
             newMillis = that.avPlayer.seek(Math.max(0, millis));
         }
 
         return newMillis;
-    };
+    }
 
-    that.seekToPercent = function(percent) {
-        var newMillis = null;
+    function seekToPercent(percent) {
+        let newMillis = null;
 
         if(emUtils.isNumber(percent) && that.avPlayer) {
             percent = Math.max(0, percent);
@@ -100,9 +111,9 @@ function($http, $rootScope, emUtils, queues, equalizers) {
         }
 
         return newMillis;
-    };
+    }
 
-    that.setVolume = function(volume) {
+    function setVolume(volume) {
         if(emUtils.isNumber(volume)) {
             volume = Math.max(0, volume);
             volume = Math.min(100, volume);
@@ -118,9 +129,9 @@ function($http, $rootScope, emUtils, queues, equalizers) {
                 alert('Could not update volume.\n\n' + JSON.stringify(data));
             });
         }
-    };
-
-    that.loadVolume = function() {
+    }
+    
+    function loadVolume() {
         $http.get('/rest/config/volume')
         .success(function (data, status, headers, config) {
             that.volume = data;
@@ -128,9 +139,15 @@ function($http, $rootScope, emUtils, queues, equalizers) {
         .error(function (data, status, headers, config) {
             alert('Could not load volume.\n\n' + JSON.stringify(data));
         });
-    };
+    }
 
-    that.loadVolume();
+    that.init();
 
     return that;
-}]);
+}
+
+Factory.$inject = injections;
+export default {
+    id: 'player',
+    Factory: Factory
+};

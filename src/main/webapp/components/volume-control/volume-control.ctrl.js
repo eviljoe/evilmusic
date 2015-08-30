@@ -16,19 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function directive() {
+let injections = ['$scope'];
+function Controller($scope) {
     'use strict';
-
-    return {
-        restrict : 'E',
-        scope : {},
-        controller : 'EMLibraryController',
-        controllerAs : 'ctrl',
-        templateUrl : '/components/library/library.html'
+    
+    $scope.volumeChanged = function() {
+        if($scope.onvolumechange) {
+            $scope.onvolumechange($scope.volume);
+        }
     };
 }
 
+Controller.$inject = injections;
 export default {
-    id: 'emLibrary',
-    directive: directive
+    id: 'EMVolumneControlController',
+    Controller: Controller
 };

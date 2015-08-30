@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.directive('emQueue', function() {
+
+function directive() {
     'use strict';
 
     return {
@@ -27,30 +27,9 @@ angular.module('EvilMusicApp')
         controller : 'EMQueueController',
         controllerAs : 'ctrl'
     };
-})
-.controller('EMQueueController', ['queues', 'player', function(queues, player) {
-    'use strict';
-    
-    var that = this;
-    
-    that.getQueue = getQueue;
-    that.clear = clear;
-    that.play = play;
-    that.remove = remove;
-    
-    function getQueue() {
-        return queues.q;
-    }
-    
-    function clear() {
-        queues.clear();
-    }
-    
-    function play(index) {
-        player.play(index);
-    }
-    
-    function remove(index) {
-        queues.remove(index);
-    }
-}]);
+}
+
+export default {
+    id: 'emQueue',
+    directive: directive
+};

@@ -12,4 +12,26 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp', ['ngResource', 'ui.bootstrap']);
+import eq from './components/eq';
+import evilmusic from './components/evilmusic';
+import library from './components/library';
+import player from './components/player';
+import progressBar from './components/progress-bar';
+import queue from './components/queue';
+import resources from './components/resources';
+import utils from './components/utils';
+import volumeControl from './components/volume-control';
+
+let emModule = angular.module('EvilMusicApp', ['ngResource', 'ui.bootstrap']);
+
+eq(emModule);
+evilmusic(emModule);
+library(emModule);
+player(emModule);
+progressBar(emModule);
+queue(emModule);
+resources(emModule);
+utils(emModule);
+volumeControl(emModule);
+
+export default emModule;

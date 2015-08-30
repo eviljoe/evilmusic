@@ -16,13 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.factory('queues', ['$http', 'emUtils', 'Queue', function($http, emUtils, Queue) {
+let injections = ['$http', 'emUtils', 'Queue'];
+function Factory($http, emUtils, Queue) {
 
     'use strict';
 
-    var that = this;
+    let that = this;
     that.q = null;
+    
+    that.init = init;
+    that.load = load;
+    that.addLast = addLast;
+    that.remove = remove;
+    that.clear = clear;
+    
+    function init() {
+        that.load(true);
+    }
 
     /**
      * Loads the contents of the queue using a REST call.  A new queue can be loaded, or the same queue can be
@@ -30,14 +40,14 @@ angular.module('EvilMusicApp')
      *
      * @param {Boolean} loadNew Whether or not to load a new queue or reload the current queue.
      */
-    that.load = function(loadNew) {
-        var id = loadNew ? 'default' : that.q.id;
+    function load(loadNew) {
+        let id = loadNew ? 'default' : that.q.id;
 
         that.q = Queue.get({ id : id });
         that.q.$promise.catch(function(data) {
             alert('Could not get queue.\n\n' + JSON.stringify(data));
         });
-    };
+    }
 
     /**
      * Makes a REST call to add the song with the given ID to the end of the queue.  After the song has been enqueued,
@@ -46,7 +56,7 @@ angular.module('EvilMusicApp')
      *
      * @param {Number} songID The ID of the song to be enqueued.
      */
-    that.addLast = function(songID) {
+    function addLast(songID) {
         that.q.$promise.then(function() {
             that.q.$addLast({ id : that.q.id, songIDs : songID }).then(
                 function() {
@@ -57,7 +67,7 @@ angular.module('EvilMusicApp')
                 }
             );
         });
-    };
+    }
 
     /**
      * Makes a REST call to remove the song at the given queue index from the queue.  After the queue has been updated,
@@ -66,7 +76,7 @@ angular.module('EvilMusicApp')
      *
      * @param {Number} queueIndex The index within the queue that should be removed.
      */
-    that.remove = function(queueIndex) {
+    function remove(queueIndex) {
         that.q.$promise.then(function() {
             that.q.$remove({ id : that.q.id, qIndex : queueIndex }).then(
                 function() {
@@ -77,13 +87,13 @@ angular.module('EvilMusicApp')
                 }
             );
         });
-    };
+    }
 
     /**
      * Makes a REST call to empty out the queue.  After the queue has been emptied on the server, the queue will be
      * reloaded.
      */
-    that.clear = function() {
+    function clear() {
         that.q.$promise.then(function() {
             that.q.$clear().then(
                 function() {
@@ -94,7 +104,7 @@ angular.module('EvilMusicApp')
                 }
             );
         });
-    };
+    }
 
     /**
      * Returns a song from the queue.
@@ -106,11 +116,11 @@ angular.module('EvilMusicApp')
      *         null will be returned.
      */
     that.getSong = function(queueIndex) {
-        var song = null;
+        let song = null;
 
         if(emUtils.isNumber(queueIndex) && that.q && that.q.elements) {
-            for(var x = 0; x < that.q.elements.length; x++) {
-                var elem = that.q.elements[x];
+            for(let x = 0; x < that.q.elements.length; x++) {
+                let elem = that.q.elements[x];
 
                 if(elem && elem.queueIndex === queueIndex) {
                     song = elem.song;
@@ -121,7 +131,13 @@ angular.module('EvilMusicApp')
         return song;
     };
 
-    that.load(true);
+    that.init();
 
     return that;
-}]);
+}
+
+Factory.$inject = injections;
+export default {
+    id: 'queues',
+    Factory: Factory
+};

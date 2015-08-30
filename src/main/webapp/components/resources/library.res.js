@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.factory('Library', ['$resource', function($resource) {
+let injections = ['$resource'];
+function Factory($resource) {
     'use strict';
     
     return $resource(
@@ -27,4 +27,10 @@ angular.module('EvilMusicApp')
             rebuild : { method : 'POST' }
         }
     );
-}]);
+}
+
+Factory.$inject = injections;
+export default {
+    id: 'Library',
+    Factory: Factory
+};

@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.factory('Queue', ['$resource', function($resource) {
+let injections = ['$resource'];
+function Factory($resource) {
     'use strict';
     
     function emptyRequest(data) {
@@ -46,4 +46,10 @@ angular.module('EvilMusicApp')
             }
         }
     );
-}]);
+}
+
+Factory.$inject = injections;
+export default {
+    id: 'Queue',
+    Factory: Factory
+};

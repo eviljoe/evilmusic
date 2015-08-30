@@ -16,39 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.directive('emProgressBar', function() {
-    'use strict';
-
-    return {
-        restrict : 'E',
-        templateUrl : '/components/progressbar/progressbar.html',
-        scope : {
-            onseek : '='
-        },
-        link : function (scope, element, attrs) {
-            scope.barElem = element;
-            scope.gutterElem = angular.element(element[0].querySelector('.em-progress-gutter'));
-            scope.meterElem = angular.element(element[0].querySelector('.em-progress-meter'));
-
-            scope.gutterElem.on('click', function(event) {
-                event.stopPropagation();
-                scope.progressMeterClicked(event.offsetX, scope.gutterElem.width());
-            });
-
-            scope.meterElem.on('click', function(event) {
-                event.stopPropagation();
-                scope.progressMeterClicked(event.offsetX, scope.gutterElem.width());
-            });
-
-            scope.updateMeterWidth();
-        },
-        controller : 'EMProgressBarController',
-        controllerAs : 'ctrl'
-    };
-})
-.controller('EMProgressBarController',
-['$scope', '$rootScope', 'player', 'emUtils', function($scope, $rootScope, player, emUtils) {
+let injections = ['$scope', '$rootScope', 'player', 'emUtils'];
+function Controller($scope, $rootScope, player, emUtils) {
     
     'use strict';
 
@@ -59,7 +28,7 @@ angular.module('EvilMusicApp')
     };
 
     $scope.updateMeterWidth = function() {
-        var p = player.playerProgress;
+        let p = player.playerProgress;
 
         if(!emUtils.isNumber(p)) {
             p = 0;
@@ -73,4 +42,10 @@ angular.module('EvilMusicApp')
     };
 
     $rootScope.$on(player.playerProgressChangedEventName, $scope.updateMeterWidth);
-}]);
+}
+
+Controller.$inject = injections;
+export default {
+    id: 'EMProgressBarController',
+    Controller: Controller
+};

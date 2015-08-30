@@ -16,23 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.directive('emVolumeControl', function() {
+function directive() {
     'use strict';
 
     return {
-        'restrict' : 'A',
-        'templateUrl' : '/components/volumecontrol/volumecontrol.html',
-        'scope' : {
-            'volume' : '=',
-            'onvolumechange' : '='
+        restrict : 'A',
+        templateUrl : '/components/volume-control/volume-control.html',
+        scope : {
+            volume : '=',
+            onvolumechange : '='
         },
-        'controller' : ['$scope', function($scope) {
-            $scope.volumeChanged = function() {
-                if($scope.onvolumechange) {
-                    $scope.onvolumechange($scope.volume);
-                }
-            };
-        }]
+        controller : 'EMVolumneControlController',
+        controllerAs : 'ctrl'
     };
-});
+}
+
+export default {
+    id: 'emVolumeControl',
+    directive: directive
+};

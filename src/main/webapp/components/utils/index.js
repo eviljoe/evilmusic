@@ -16,19 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function directive() {
+import emUtils from './em-utils.srv';
+
+export default function(module) {
     'use strict';
-
-    return {
-        restrict : 'E',
-        scope : {},
-        controller : 'EMLibraryController',
-        controllerAs : 'ctrl',
-        templateUrl : '/components/library/library.html'
-    };
+    
+    module.factory(emUtils.id, emUtils.Factory);
 }
-
-export default {
-    id: 'emLibrary',
-    directive: directive
-};

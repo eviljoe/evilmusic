@@ -16,12 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.factory('emUtils', function() {
-    'use strict';
+function Factory() {
     
-    var that = this;
-
+    let that = this;
+    this.isNumber = isNumber;
+    this.hertzToString = hertzToString;
+    this.millisecondsToString = millisecondsToString;
+    
     /**
      * Determines if the given value is a number.  The value is considered to be a number if it meets the following
      * criteria:
@@ -36,9 +37,9 @@ angular.module('EvilMusicApp')
      *
      * @see isNaN(...)
      */
-    that.isNumber = function(val) {
+    function isNumber(val) {
         return val !== null && val !== undefined && val !== '' && !isNaN(val);
-    };
+    }
 
     /**
      * Converts the given Hertz magnitude to a string with units.  The following table describes the string that will be
@@ -56,8 +57,8 @@ angular.module('EvilMusicApp')
      *
      * @see isNumber(...)
      */
-    that.hertzToString = function(hertz) {
-        var str = null;
+    function hertzToString(hertz) {
+        let str = null;
 
         if(that.isNumber(hertz)) {
             str = hertz < 0 ? '-' : '';
@@ -72,7 +73,7 @@ angular.module('EvilMusicApp')
         }
 
         return str;
-    };
+    }
 
     /**
      * Converts the given seconds magnitude to a string with units.  The following table describes the string that will
@@ -93,8 +94,8 @@ angular.module('EvilMusicApp')
      *
      * @see isNumber(...)
      */
-    that.millisecondsToString = function(millis) {
-        var str = null;
+    function millisecondsToString(millis) {
+        let str = null;
 
          if(that.isNumber(millis)) {
             str = millis < 0 ? '-' : '';
@@ -109,7 +110,7 @@ angular.module('EvilMusicApp')
                 str += millis < 10000 ? '0:0' : '0:';
                 str += Math.ceil(millis / 1000);
             } else {
-                var minutes = Math.floor(millis / 60000);
+                let minutes = Math.floor(millis / 60000);
 
                 millis = millis % 60000;
                 str += minutes;
@@ -119,7 +120,12 @@ angular.module('EvilMusicApp')
         }
 
         return str;
-    };
-
+    }
+    
     return that;
-});
+}
+
+export default {
+    id: 'emUtils',
+    Factory: Factory
+};

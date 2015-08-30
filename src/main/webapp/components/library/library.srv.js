@@ -16,27 +16,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.factory('library', ['$http', 'queues', 'Library', function($http, queues, Library) {
-
+let injections = ['$http', 'queues', 'Library'];
+function Factory($http, queues, Library) {
     'use strict';
 
-    var that = this;
+    let that = this;
     that.library = null;
+    
+    that.init = init;
+    that.load = load;
+    that.clear = clear;
+    that.rebuild = rebuild;
+    
+    function init() {
+        that.load();
+    }
 
     /** Loads the contents of the library using a REST call. */
-    that.load = function() {
+    function load() {
         that.library = Library.get();
         that.library.$promise.catch(function(data) {
             alert('Could not get library.\n\n' + JSON.stringify(data));
         });
-    };
+    }
 
     /**
      * Makes a REST call to delete all of the library's contents.  After the library is cleared, it and the queue will
      * be reloaded.
      */
-    that.clear = function() {
+    function clear() {
         that.library.$promise.then(function() {
             that.library.$delete().then(
                 function() {
@@ -48,14 +56,14 @@ angular.module('EvilMusicApp')
                 }
             );
         });
-    };
+    }
 
     /**
      * Makes a REST call to rebuild the library.  This will delete all songs from the library.  Next, the server's music
      * directories (from the preferences file) will be read to repopulate the library.  After the library has been
      * rebuild, the it and the queue will be reloaded.
      */
-    that.rebuild = function() {
+    function rebuild() {
         that.library.$promise.then(function() {
             that.library.$rebuild().then(
                 function() {
@@ -67,9 +75,15 @@ angular.module('EvilMusicApp')
                 }
             );
         });
-    };
+    }
 
-    that.load();
+    that.init();
 
     return that;
-}]);
+}
+
+Factory.$inject = injections;
+export default {
+    id: 'library',
+    Factory: Factory
+};

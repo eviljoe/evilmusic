@@ -16,8 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.factory('Equalizer', ['$resource', function($resource) {
+let injections = ['$resource'];
+function Factory($resource) {
     'use strict';
     return $resource('/rest/eq/:id', {id : '@id'}, {});
-}]);
+}
+
+Factory.$inject = injections;
+export default {
+    id: 'Equalizer',
+    Factory: Factory
+};

@@ -16,19 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function directive() {
+let injections = ['player'];
+function Controller(player) {
     'use strict';
 
-    return {
-        restrict : 'E',
-        scope : {},
-        controller : 'EMLibraryController',
-        controllerAs : 'ctrl',
-        templateUrl : '/components/library/library.html'
-    };
+    let that = this;
+    that.player = player;
 }
 
+Controller.$inject = injections;
 export default {
-    id: 'emLibrary',
-    directive: directive
+    id: 'EMPlayerControlsController',
+    Controller: Controller
 };

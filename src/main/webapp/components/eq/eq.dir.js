@@ -16,10 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.directive('emEq', function() {
-    'use strict';
-    
+function directive() {
     return {
         restrict : 'E',
         scope : {},
@@ -27,21 +24,9 @@ angular.module('EvilMusicApp')
         controllerAs : 'ctrl',
         templateUrl : '/components/eq/eq.html'
     };
-})
-.controller('EMEQController', ['equalizers', 'emUtils', function(equalizers, emUtils) {
-    'use strict';
-    
-    var that = this;
-    that.emUtils = emUtils;
-    
-    that.nodeChanged = nodeChanged;
-    that.getEQ = getEQ;
-    
-    function getEQ() {
-        return equalizers.eq;
-    }
-    
-    function nodeChanged(node) {
-        equalizers.updateNodeGain(node);
-    }
-}]);
+}
+
+export default {
+    id: 'emEq',
+    directive: directive
+};

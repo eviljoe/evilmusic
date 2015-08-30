@@ -16,19 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function directive() {
+import ctrl from './queue.ctrl';
+import dir from './queue.dir';
+import srv from './queue.srv';
+
+export default function(module) {
     'use strict';
-
-    return {
-        restrict : 'E',
-        scope : {},
-        controller : 'EMLibraryController',
-        controllerAs : 'ctrl',
-        templateUrl : '/components/library/library.html'
-    };
+    
+    module
+        .directive(dir.id, dir.directive)
+        .controller(ctrl.id, ctrl.Controller)
+        .factory(srv.id, srv.Factory);
 }
-
-export default {
-    id: 'emLibrary',
-    directive: directive
-};

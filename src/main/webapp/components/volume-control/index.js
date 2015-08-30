@@ -16,19 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function directive() {
+import ctrl from './volume-control.ctrl';
+import dir from './volume-control.dir';
+
+export default function(module) {
     'use strict';
-
-    return {
-        restrict : 'E',
-        scope : {},
-        controller : 'EMLibraryController',
-        controllerAs : 'ctrl',
-        templateUrl : '/components/library/library.html'
-    };
+    
+    module
+        .directive(dir.id, dir.directive)
+        .controller(ctrl.id, ctrl.Controller);
 }
-
-export default {
-    id: 'emLibrary',
-    directive: directive
-};

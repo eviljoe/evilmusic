@@ -16,14 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.factory('equalizers', ['Equalizer', function(Equalizer){
+let injections = ['Equalizer'];
+function Factory(Equalizer) {
     'use strict';
     
-    var that = this;
+    let that = this;
 
     that.webAudioNodes = {};
     that.eq = null;
+    
+    that.init = init;
+    that.load = load;
+    that.createEQNodes = createEQNodes;
+    that.createEQNode = createEQNode;
+    that.updateNodeGain = updateNodeGain;
+
+    function init() {
+        that.load(true);
+    }
 
     /**
      * Loads the nodes/sliders of the equalizer using a REST call.  A new equalizer can be loaded, or the same equalizer
@@ -31,14 +41,14 @@ angular.module('EvilMusicApp')
      *
      * @param {Boolean} loadNew Whether or not to load a new equalizer or reload the current equalizer.
      */
-    that.load = function(loadNew) {
-        var id = loadNew ? 'default' : that.eq.id;
+    function load(loadNew) {
+        let id = loadNew ? 'default' : that.eq.id;
 
         that.eq = Equalizer.get({ id : id });
         that.eq.$promise.catch(function(data) {
             alert('Could not get equalizer.\n\n' + JSON.stringify(data));
         });
-    };
+    }
     
     /**
      * Creates Web Audio API filter nodes for each equalizer slider.
@@ -47,13 +57,13 @@ angular.module('EvilMusicApp')
      *
      * @return {BiquadFilterNode[]} Returns an array of filter nodes.  That should be connected to the audio graph.
      */
-    that.createEQNodes = function(context) {
-        var map = {};
-        var webAudioNodes = [];
+    function createEQNodes(context) {
+        let map = {};
+        let webAudioNodes = [];
 
-        for(var x = 0; x < that.eq.nodes.length; x++) {
-            var emNode = that.eq.nodes[x];
-            var webAudioNode = that.createEQNode(context, emNode);
+        for(let x = 0; x < that.eq.nodes.length; x++) {
+            let emNode = that.eq.nodes[x];
+            let webAudioNode = that.createEQNode(context, emNode);
 
             map[emNode.id] = webAudioNode;
             webAudioNodes.push(webAudioNode);
@@ -62,7 +72,7 @@ angular.module('EvilMusicApp')
         that.webAudioNodes = map;
 
         return webAudioNodes;
-    };
+    }
 
     /**
      * Creates a Web Audio API filter node using the given context and settings node.
@@ -72,8 +82,8 @@ angular.module('EvilMusicApp')
      *
      * @return {BiquadFilterNode} The created filter node.
      */
-    that.createEQNode = function(context, emNode) {
-        var node = null;
+    function createEQNode(context, emNode) {
+        let node = null;
 
         if(context && emNode) {
             node = context.createBiquadFilter();
@@ -84,18 +94,18 @@ angular.module('EvilMusicApp')
         }
 
         return node;
-    };
+    }
 
     /**
      * Updates the gain for each Web Audio API filter node contained within the given EqualizerNode.
      *
      * @param {EqualizerNode} emNode The node that can contain 0 or more Web Audio API filter nodes.
      */
-    that.updateNodeGain = function(emNode) {
-        var updated = false;
+    function updateNodeGain(emNode) {
+        let updated = false;
 
         if(emNode) {
-            var webAudioNode = that.webAudioNodes[emNode.id];
+            let webAudioNode = that.webAudioNodes[emNode.id];
 
             if(typeof emNode.gain !== 'number') {
                 emNode.gain = parseInt(emNode.gain);
@@ -108,9 +118,15 @@ angular.module('EvilMusicApp')
         }
 
         return updated;
-    };
+    }
 
-    that.load(true);
+    that.init();
 
     return that;
-}]);
+}
+
+Factory.$inject = injections;
+export default {
+    id: 'equalizers',
+    Factory: Factory
+};

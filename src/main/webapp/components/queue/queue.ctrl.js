@@ -16,19 +16,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function directive() {
+let injections = ['queues', 'player'];
+function Controller(queues, player) {
     'use strict';
-
-    return {
-        restrict : 'E',
-        scope : {},
-        controller : 'EMLibraryController',
-        controllerAs : 'ctrl',
-        templateUrl : '/components/library/library.html'
-    };
+    
+    let that = this;
+    
+    that.getQueue = getQueue;
+    that.clear = clear;
+    that.play = play;
+    that.remove = remove;
+    
+    function getQueue() {
+        return queues.q;
+    }
+    
+    function clear() {
+        queues.clear();
+    }
+    
+    function play(index) {
+        player.play(index);
+    }
+    
+    function remove(index) {
+        queues.remove(index);
+    }
 }
 
+Controller.$inject = injections;
 export default {
-    id: 'emLibrary',
-    directive: directive
+    id: 'EMQueueController',
+    Controller: Controller
 };

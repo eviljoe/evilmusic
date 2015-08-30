@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('EvilMusicApp')
-.directive('evilMusic', function(){
+function directive() {
     'use strict';
     
     return {
@@ -27,10 +26,9 @@ angular.module('EvilMusicApp')
         controllerAs : 'ctrl',
         templateUrl : '/components/evilmusic/evilmusic.html'
     };
-})
-.controller('EMController', ['player', function(player) {
-    'use strict';
-    
-    var that = this;
-    that.player = player;
-}]);
+}
+
+export default {
+    id: 'evilMusic',
+    directive: directive
+};

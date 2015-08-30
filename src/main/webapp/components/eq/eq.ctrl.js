@@ -16,19 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function directive() {
-    'use strict';
+let injections = ['equalizers', 'emUtils'];
+function Controller(equalizers, emUtils) {
 
-    return {
-        restrict : 'E',
-        scope : {},
-        controller : 'EMLibraryController',
-        controllerAs : 'ctrl',
-        templateUrl : '/components/library/library.html'
-    };
+    this.emUtils = emUtils;
+    
+    this.nodeChanged = nodeChanged;
+    this.getEQ = getEQ;
+    
+    function getEQ() {
+        return equalizers.eq;
+    }
+    
+    function nodeChanged(node) {
+        equalizers.updateNodeGain(node);
+    }
 }
 
+Controller.$inject = injections;
 export default {
-    id: 'emLibrary',
-    directive: directive
+    id: 'EMEQController',
+    Controller: Controller
 };

@@ -18,10 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var gulp = require('gulp');
 var concat = require('gulp-concat');
-var sourcemaps = require('gulp-sourcemaps');
+var babelify = require('babelify');
+var browserify = require('browserify');
 var del = require('del');
+var gulp = require('gulp');
+var jshint = require('gulp-jshint');
+var jshintStylish = require('jshint-stylish');
+var source = require('vinyl-source-stream');
+var sourcemaps = require('gulp-sourcemaps');
 var templateCache = require('gulp-angular-templatecache');
 
 var webSrcDir = 'src/main/webapp';
@@ -31,18 +36,30 @@ var fontsDestDir = 'src/main/webapp/dist/fonts';
  
 // JOE TODO task convert src/main/webapp/assets/less to CSS (and get rid of src/main/webapp/assets/css/evilmusic.css)
 
+gulp.task('lint-js', function() {
+    return gulp.src([
+        webSrcDir + '/**/*.js',
+        '!' + webSrcDir + '/assets/**',
+        '!' + webSrcDir + '/dist/**'
+    ])
+    .pipe(jshint())
+    .pipe(jshint.reporter(jshintStylish));
+});
+
+gulp.task('lint', ['lint-js']);
+
 gulp.task('clean', function() {
     del([destDir], function (err, deletedFiles) {});
 });
 
 gulp.task('concat-em-js', ['clean'], function() {
-    return gulp.src([
-            webSrcDir + '/index.js',
-            webSrcDir + '/components/**/*.js'
-    ])
-    .pipe(sourcemaps.init())
-    .pipe(concat('evilmusic.js'))
-    .pipe(sourcemaps.write('.'))
+    browserify({
+        entries: webSrcDir + '/index.js',
+        debug: true
+    })
+    .transform(babelify)
+    .bundle()
+    .pipe(source('evilmusic.js'))
     .pipe(gulp.dest(destDir));
 });
 
