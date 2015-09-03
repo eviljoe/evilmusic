@@ -17,14 +17,16 @@
  */
 
 import dir from './eq.dir';
-import ctrl from './eq.ctrl';
-import srv from './eq.srv';
+import EQController from './EQController';
+import Equalizers from './Equalizers';
+import hertzFilterFactory from './hertzFilterFactory';
 
 export default function(module) {
     'use strict';
     
     module
         .directive(dir.id, dir.directive)
-        .controller(ctrl.id, ctrl.Controller)
-        .factory(srv.id, srv.Factory);
+        .controller(EQController.name, EQController)
+        .service(Equalizers.name.toLowerCase(), Equalizers)
+        .filter(hertzFilterFactory.id, hertzFilterFactory.filterFactory);
 }

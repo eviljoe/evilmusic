@@ -30,10 +30,10 @@ var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var templateCache = require('gulp-angular-templatecache');
 
-var webSrcDir = 'src/main/webapp';
-var destDir = 'src/main/webapp/dist';
-var cssDestDir = 'src/main/webapp/dist/css';
-var fontsDestDir = 'src/main/webapp/dist/fonts';
+var webSrcDir = './src/main/webapp';
+var destDir = './src/main/webapp/dist';
+var cssDestDir = './src/main/webapp/dist/css';
+var fontsDestDir = './src/main/webapp/dist/fonts';
  
 var jsFilesToLint = [
     webSrcDir + '/**/*.js',
@@ -63,6 +63,7 @@ gulp.task('clean', function() {
 
 gulp.task('concat-em-js', ['clean'], function() {
     browserify({
+        paths: [webSrcDir],
         entries: webSrcDir + '/index.js',
         debug: true
     })

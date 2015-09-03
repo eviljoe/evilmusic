@@ -64,7 +64,7 @@ function Factory($http, $rootScope, emUtils, queues, equalizers) {
 
     function updateAVPlayerDefaults(avPlayer, song) {
         if(avPlayer && song) {
-            avPlayer.nodeCreationCallback = equalizers.createEQNodes;
+            avPlayer.nodeCreationCallback = equalizers.constructor.createEQNodes;
             avPlayer.volume = that.volume;
 
             avPlayer.on('progress', function(progress) {

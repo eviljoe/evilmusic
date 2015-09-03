@@ -16,25 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['equalizers', 'emUtils'];
-
-function Controller(equalizers, emUtils) {
-    this.emUtils = emUtils;
-    
-    this.nodeChanged = nodeChanged;
-    this.getEQ = getEQ;
-    
-    function getEQ() {
-        return equalizers.eq;
+export default class EQController {
+    static get $inject() {
+        return ['equalizers'];
     }
     
-    function nodeChanged(node) {
-        equalizers.updateNodeGain(node);
+    constructor(equalizers) {
+        this.equalizers = equalizers;
+    }
+    
+    getEQ() {
+        return this.equalizers.eq;
+    }
+    
+    nodeChanged(node) {
+        this.equalizers.updateNodeGain(node);
     }
 }
-
-Controller.$inject = injections;
-export default {
-    id: 'EMEQController',
-    Controller: Controller
-};

@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <form class="form-inline">
     <table class="container">
         <tbody>
-            <td class="eq-slider-container" ng-repeat="node in ctrl.getEQ().nodes">
+            <td class="eq-slider-container" ng-repeat="node in ctrl.getEQ().nodes | orderBy: 'frequency'">
                 <div class="text-center">
-                    {{ctrl.emUtils.hertzToString(node.frequency)}}
+                    {{node.frequency | hertz}}
                 </div>
                 <div class="text-center">
                     <input class="eq-slider" type="range" min="-40" max="10" step="0.1" orient="vertical"

@@ -68,7 +68,6 @@
     "requirePaddingNewLinesAfterUseStrict": true,
     "requirePaddingNewLinesBeforeExport": true,
     "requirePaddingNewlinesBeforeKeywords": [
-        "class",
         "do",
         "for",
         "if",

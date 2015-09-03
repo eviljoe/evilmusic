@@ -16,36 +16,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['Equalizer'];
-function Factory(Equalizer) {
-    'use strict';
+export default class Equalizers {
     
-    let that = this;
-
-    that.webAudioNodes = {};
-    that.eq = null;
-    
-    that.init = init;
-    that.load = load;
-    that.createEQNodes = createEQNodes;
-    that.createEQNode = createEQNode;
-    that.updateNodeGain = updateNodeGain;
-
-    function init() {
-        that.load(true);
+    static get $inject() {
+        return ['Equalizer'];
     }
-
+    
+    constructor(Equalizer) {
+        Equalizers.instance = this;
+        
+        this.Equalizer = Equalizer;
+        this.webAudioNodes = {};
+        this.eq = null;
+        
+        this.load(true);
+    }
+    
+    static getInstance() {
+        return Equalizers.instance;
+    }
+    
     /**
      * Loads the nodes/sliders of the equalizer using a REST call.  A new equalizer can be loaded, or the same equalizer
      * can be re-loaded.
      *
      * @param {boolean} loadNew Whether or not to load a new equalizer or reload the current equalizer.
      */
-    function load(loadNew) {
-        let id = loadNew ? 'default' : that.eq.id;
+    load(loadNew) {
+        let id = loadNew ? 'default' : this.eq.id;
 
-        that.eq = Equalizer.get({id: id});
-        that.eq.$promise.catch(function(data) {
+        this.eq = this.Equalizer.get({id: id});
+        this.eq.$promise.catch(function(data) {
             alert('Could not get equalizer.\n\n' + JSON.stringify(data));
         });
     }
@@ -57,19 +58,20 @@ function Factory(Equalizer) {
      *
      * @return {BiquadFilterNode[]} Returns an array of filter nodes.  That should be connected to the audio graph.
      */
-    function createEQNodes(context) {
+    static createEQNodes(context) {
         let map = {};
         let webAudioNodes = [];
+        let instance = Equalizers.getInstance();
 
-        for(let x = 0; x < that.eq.nodes.length; x++) {
-            let emNode = that.eq.nodes[x];
-            let webAudioNode = that.createEQNode(context, emNode);
+        for(let x = 0; x < instance.eq.nodes.length; x++) {
+            let emNode = instance.eq.nodes[x];
+            let webAudioNode = Equalizers.createEQNode(context, emNode);
 
             map[emNode.id] = webAudioNode;
             webAudioNodes.push(webAudioNode);
         }
 
-        that.webAudioNodes = map;
+        instance.webAudioNodes = map;
 
         return webAudioNodes;
     }
@@ -82,7 +84,7 @@ function Factory(Equalizer) {
      *
      * @return {BiquadFilterNode} The created filter node.
      */
-    function createEQNode(context, emNode) {
+    static createEQNode(context, emNode) {
         let node = null;
 
         if(context && emNode) {
@@ -101,11 +103,11 @@ function Factory(Equalizer) {
      *
      * @param {EqualizerNode} emNode The node that can contain 0 or more Web Audio API filter nodes.
      */
-    function updateNodeGain(emNode) {
+    updateNodeGain(emNode) {
         let updated = false;
 
         if(emNode) {
-            let webAudioNode = that.webAudioNodes[emNode.id];
+            let webAudioNode = this.webAudioNodes[emNode.id];
 
             if(typeof emNode.gain !== 'number') {
                 emNode.gain = parseInt(emNode.gain);
@@ -119,14 +121,4 @@ function Factory(Equalizer) {
 
         return updated;
     }
-
-    that.init();
-
-    return that;
 }
-
-Factory.$inject = injections;
-export default {
-    id: 'equalizers',
-    Factory: Factory
-};
