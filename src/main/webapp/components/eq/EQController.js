@@ -17,12 +17,16 @@
  */
 
 export default class EQController {
+    constructor(equalizers) {
+        this.equalizers = equalizers;
+    }
+    
     static get $inject() {
         return ['equalizers'];
     }
     
-    constructor(equalizers) {
-        this.equalizers = equalizers;
+    static get injectID() {
+        return 'EQController';
     }
     
     getEQ() {

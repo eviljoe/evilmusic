@@ -16,15 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['emUtils'];
-function hertzFilterFactory(emUtils) {
-    return function(hertz) {
-        return emUtils.hertzToString(hertz);
-    };
+export default class LibraryController {
+    constructor(library, queues, emUtils) {
+        this.library = library;
+        this.queues = queues;
+        this.emUtils = emUtils;
+    }
+    
+    static get $inject() {
+        return ['library', 'queues', 'emUtils'];
+    }
+    
+    static get injectID() {
+        return 'LibraryController';
+    }
+    
+    addLast(songID) {
+        this.queues.addLast(songID);
+    }
 }
-
-hertzFilterFactory.$inject = injections;
-export default {
-    id: 'hertz',
-    filterFactory: hertzFilterFactory
-};

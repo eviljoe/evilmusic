@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import emUtils from './em-utils.srv';
+import EMUtils from './EMUtils';
 
-export default function(module) {
+export default function(emApp) {
     'use strict';
     
-    module.factory(emUtils.id, emUtils.Factory);
+    return emApp.service(EMUtils);
 }

@@ -16,19 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['$scope'];
-function Controller($scope) {
-    'use strict';
-    
-    $scope.volumeChanged = function() {
-        if($scope.onvolumechange) {
-            $scope.onvolumechange($scope.volume);
-        }
-    };
+export default class EMController {
+    static get injectID() {
+        return 'EMController';
+    }
 }
-
-Controller.$inject = injections;
-export default {
-    id: 'EMVolumneControlController',
-    Controller: Controller
-};

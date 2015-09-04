@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ctrl from './queue.ctrl';
 import dir from './queue.dir';
-import srv from './queue.srv';
+import QueueController from './QueueController';
+import Queues from './Queues';
 
-export default function(module) {
+export default function(emApp) {
     'use strict';
     
-    module
-        .directive(dir.id, dir.directive)
-        .controller(ctrl.id, ctrl.Controller)
-        .factory(srv.id, srv.Factory);
+    return emApp
+        .directive(dir)
+        .controller(QueueController)
+        .service(Queues);
 }

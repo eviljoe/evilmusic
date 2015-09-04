@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <label class="control-label">0</label>
     </div>
     <div class="form-group">
-        <input type="range" min="0" max="100" ng-model="volume" ng-change="volumeChanged()"/>
+        <input type="range" min="0" max="100" ng-model="ctrl.player.volume" ng-change="ctrl.volumeChanged()"/>
     </div>
     <div class="form-group">
         <label class="control-label">100</label>

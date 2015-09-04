@@ -16,19 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import LibraryController from './LibraryController';
+
 function directive() {
     'use strict';
 
     return {
         restrict: 'E',
         scope: {},
-        controller: 'EMLibraryController',
+        controller: LibraryController.injectID,
         controllerAs: 'ctrl',
         templateUrl: '/components/library/library.html'
     };
 }
 
-export default {
-    id: 'emLibrary',
-    directive: directive
-};
+directive.injectID = 'emLibrary';
+
+export default directive;

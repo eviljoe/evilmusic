@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import ProgressBarController from './ProgressBarController';
+
 function directive() {
     'use strict';
 
     return {
         restrict: 'E',
         templateUrl: '/components/progress-bar/progress-bar.html',
-        scope: {
-            onseek: '='
-        },
+        scope: {},
         link: function (scope, element, attrs) {
             scope.barElem = element;
             scope.gutterElem = angular.element(element[0].querySelector('.em-progress-gutter'));
@@ -42,12 +42,11 @@ function directive() {
 
             scope.updateMeterWidth();
         },
-        controller: 'EMProgressBarController',
+        controller: ProgressBarController.injectID,
         controllerAs: 'ctrl'
     };
 }
 
-export default {
-    id: 'emProgressBar',
-    directive: directive
-};
+directive.injectID = 'emProgressBar';
+
+export default directive;

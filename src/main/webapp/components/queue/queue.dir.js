@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import QueueController from './QueueController';
+
 function directive() {
     'use strict';
 
@@ -23,12 +25,11 @@ function directive() {
         scope: {},
         restrict: 'E',
         templateUrl: '/components/queue/queue.html',
-        controller: 'EMQueueController',
+        controller: QueueController.injectID,
         controllerAs: 'ctrl'
     };
 }
 
-export default {
-    id: 'emQueue',
-    directive: directive
-};
+directive.injectID = 'emQueue';
+
+export default directive;

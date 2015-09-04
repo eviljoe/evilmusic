@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['$resource'];
-function Factory($resource) {
+const INJECTIONS = ['$resource'];
+function resource($resource) {
     'use strict';
     
     return $resource(
@@ -29,8 +29,7 @@ function Factory($resource) {
     );
 }
 
-Factory.$inject = injections;
-export default {
-    id: 'Library',
-    Factory: Factory
-};
+resource.$inject = INJECTIONS;
+resource.injectID = 'Library';
+
+export default resource;

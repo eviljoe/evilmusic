@@ -16,24 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['library', 'queues', 'emUtils'];
-
-function Controller(library, queues, emUtils) {
-    'use strict';
-
-    let that = this;
-    that.library = library;
-    that.emUtils = emUtils;
+export default class Controller {
+    constructor(player) {
+        this.player = player;
+    }
     
-    that.addLast = addLast;
+    static get $inject() {
+        return ['player'];
+    }
     
-    function addLast(songID) {
-        queues.addLast(songID);
+    static get injectID() {
+        return 'PlayerControlsController';
     }
 }
-
-Controller.$inject = injections;
-export default {
-    id: 'EMLibraryController',
-    Controller: Controller
-};

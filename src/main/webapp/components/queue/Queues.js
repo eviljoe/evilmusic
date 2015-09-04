@@ -16,35 +16,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['$http', 'emUtils', 'Queue'];
-
-function Factory($http, emUtils, Queue) {
-    'use strict';
-
-    let that = this;
-    that.q = null;
-    
-    that.init = init;
-    that.load = load;
-    that.addLast = addLast;
-    that.remove = remove;
-    that.clear = clear;
-    
-    function init() {
-        that.load(true);
+export default class Queues {
+    constructor(emUtils, Queue) {
+        this.q = null;
+        this.emUtils = emUtils;
+        this.Queue = Queue;
+        
+        this.load(true);
     }
-
+    
+    static get $inject() {
+        return ['emUtils', 'Queue'];
+    }
+    
+    static get injectID() {
+        return 'queues';
+    }
+    
     /**
      * Loads the contents of the queue using a REST call.  A new queue can be loaded, or the same queue can be
      * re-loaded.
      *
      * @param {boolean} loadNew Whether or not to load a new queue or reload the current queue.
      */
-    function load(loadNew) {
-        let id = loadNew ? 'default' : that.q.id;
+    load(loadNew) {
+        let id = loadNew ? 'default' : this.q.id;
 
-        that.q = Queue.get({id: id});
-        that.q.$promise.catch(function(data) {
+        this.q = this.Queue.get({id: id});
+        this.q.$promise.catch((data) => {
             alert('Could not get queue.\n\n' + JSON.stringify(data));
         });
     }
@@ -56,16 +55,14 @@ function Factory($http, emUtils, Queue) {
      *
      * @param {number} songID The ID of the song to be enqueued.
      */
-    function addLast(songID) {
-        that.q.$promise.then(function() {
-            that.q.$addLast({id: that.q.id, songIDs: songID}).then(
-                function() {
-                    that.load(false);
-                },
-                function(data) {
-                    alert('Failed to enqueue last.\n\n' + JSON.stringify(data));
-                }
-            );
+    addLast(songID) {
+        this.q.$promise.then(() => {
+            this.q.$addLast({id: this.q.id, songIDs: songID}).then(() => {
+                this.load(false);
+            },
+            (data) => {
+                alert('Failed to enqueue last.\n\n' + JSON.stringify(data));
+            });
         });
     }
 
@@ -76,16 +73,14 @@ function Factory($http, emUtils, Queue) {
      *
      * @param {number} queueIndex The index within the queue that should be removed.
      */
-    function remove(queueIndex) {
-        that.q.$promise.then(function() {
-            that.q.$remove({id: that.q.id, qIndex: queueIndex}).then(
-                function() {
-                    that.load(false);
-                },
-                function(data) {
-                    alert('Failed to remove from queue (' + queueIndex + ')\n\n' + JSON.stringify(data));
-                }
-            );
+    remove(queueIndex) {
+        this.q.$promise.then(() => {
+            this.q.$remove({id: this.q.id, qIndex: this.queueIndex}).then(() => {
+                this.load(false);
+            },
+            (data) => {
+                alert('Failed to remove from queue (' + this.queueIndex + ')\n\n' + JSON.stringify(data));
+            });
         });
     }
 
@@ -93,16 +88,14 @@ function Factory($http, emUtils, Queue) {
      * Makes a REST call to empty out the queue.  After the queue has been emptied on the server, the queue will be
      * reloaded.
      */
-    function clear() {
-        that.q.$promise.then(function() {
-            that.q.$clear().then(
-                function() {
-                    that.load(false);
-                },
-                function(data) {
-                    alert('Clear queue failed.\n\n' + JSON.stringify(data));
-                }
-            );
+    clear() {
+        this.q.$promise.then(() => {
+            this.q.$clear().then(() => {
+                this.load(false);
+            },
+            (data) => {
+                alert('Clear queue failed.\n\n' + JSON.stringify(data));
+            });
         });
     }
 
@@ -115,12 +108,12 @@ function Factory($http, emUtils, Queue) {
      * @return {Song} If a song can be found at the given queue index, it will be returned.  If a song cannot be found,
      *         null will be returned.
      */
-    that.getSong = function(queueIndex) {
+    getSong(queueIndex) {
         let song = null;
 
-        if(emUtils.isNumber(queueIndex) && that.q && that.q.elements) {
-            for(let x = 0; x < that.q.elements.length; x++) {
-                let elem = that.q.elements[x];
+        if(this.emUtils.isNumber(queueIndex) && this.q && this.q.elements) {
+            for(let x = 0; x < this.q.elements.length; x++) {
+                let elem = this.q.elements[x];
 
                 if(elem && elem.queueIndex === queueIndex) {
                     song = elem.song;
@@ -129,15 +122,5 @@ function Factory($http, emUtils, Queue) {
         }
 
         return song;
-    };
-
-    that.init();
-
-    return that;
+    }
 }
-
-Factory.$inject = injections;
-export default {
-    id: 'queues',
-    Factory: Factory
-};

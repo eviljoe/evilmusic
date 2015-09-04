@@ -16,22 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import VolumeControlController from './VolumeControlController';
+
 function directive() {
     'use strict';
 
     return {
         restrict: 'A',
         templateUrl: '/components/volume-control/volume-control.html',
-        scope: {
-            volume: '=',
-            onvolumechange: '='
-        },
-        controller: 'EMVolumneControlController',
+        scope: {},
+        controller: VolumeControlController.injectID,
         controllerAs: 'ctrl'
     };
 }
 
-export default {
-    id: 'emVolumeControl',
-    directive: directive
-};
+directive.injectID = 'emVolumeControl';
+
+export default directive;

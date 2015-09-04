@@ -16,15 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['$resource'];
-function Factory($resource) {
+const INJECTIONS = ['$resource'];
+function resource($resource) {
     'use strict';
     
     return $resource('/rest/eq/:id', {id: '@id'}, {});
 }
 
-Factory.$inject = injections;
-export default {
-    id: 'Equalizer',
-    Factory: Factory
-};
+resource.$inject = INJECTIONS;
+resource.injectID = 'Equalizer';
+
+export default resource;

@@ -16,36 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['queues', 'player'];
-function Controller(queues, player) {
-    'use strict';
-    
-    let that = this;
-    
-    that.getQueue = getQueue;
-    that.clear = clear;
-    that.play = play;
-    that.remove = remove;
-    
-    function getQueue() {
-        return queues.q;
+export default class VolumeControlController {
+    constructor(player) {
+        this.player = player;
     }
     
-    function clear() {
-        queues.clear();
+    static get $inject() {
+        return ['player'];
     }
     
-    function play(index) {
-        player.play(index);
+    static get injectID() {
+        return 'VolumneControlController';
     }
     
-    function remove(index) {
-        queues.remove(index);
+    volumeChanged() {
+        // JOE TODO this feels super weird.  I know setVolume(...) does a server put, but it feels like I am just
+        // setting the volume to what it already is.
+        this.player.setVolume(this.player.volume);
     }
 }
-
-Controller.$inject = injections;
-export default {
-    id: 'EMQueueController',
-    Controller: Controller
-};

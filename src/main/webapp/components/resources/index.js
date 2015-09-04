@@ -20,11 +20,11 @@ import eq from './eq.res';
 import library from './library.res';
 import queue from './queue.res';
 
-export default function(module) {
+export default function(emApp) {
     'use strict';
     
-    module
-        .factory(eq.id, eq.Factory)
-        .factory(library.id, library.Factory)
-        .factory(queue.id, queue.Factory);
+    return emApp
+        .resource(eq)
+        .resource(library)
+        .resource(queue);
 }

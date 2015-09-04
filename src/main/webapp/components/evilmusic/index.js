@@ -17,12 +17,12 @@
  */
 
 import dir from './evilmusic.dir';
-import ctrl from './evilmusic.ctrl';
+import EMController from './EMController';
 
-export default function(module) {
+export default function(emApp) {
     'use strict';
     
-    module
-        .directive(dir.id, dir.directive)
-        .controller(ctrl.id, ctrl.Controller);
+    return emApp
+        .directive(dir)
+        .controller(EMController);
 }

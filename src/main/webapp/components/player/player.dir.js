@@ -16,19 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import PlayerController from './PlayerController';
+
 function directive() {
     'use strict';
 
     return {
         restrict: 'E',
         scope: {},
-        controller: 'EMPlayerControlsController',
+        controller: PlayerController.injectID,
         controllerAs: 'ctrl',
         templateUrl: '/components/player/player.html'
     };
 }
 
-export default {
-    id: 'emPlayerControls',
-    directive: directive
-};
+directive.injectID = 'emPlayerControls';
+
+export default directive;

@@ -16,19 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import EMController from './EMController';
+
 function directive() {
     'use strict';
     
     return {
         restrict: 'E',
         scope: {},
-        controller: 'EMController',
+        controller: EMController.injectID,
         controllerAs: 'ctrl',
         templateUrl: '/components/evilmusic/evilmusic.html'
     };
 }
 
-export default {
-    id: 'evilMusic',
-    directive: directive
-};
+directive.injectID = 'evilMusic';
+
+export default directive;

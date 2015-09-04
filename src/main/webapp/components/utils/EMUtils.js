@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function Factory() {
-    let that = this;
-    this.isNumber = isNumber;
-    this.hertzToString = hertzToString;
-    this.millisecondsToString = millisecondsToString;
+export default class EMUtils {
+    static get injectID() {
+        return 'emUtils';
+    }
     
     /**
      * Determines if the given value is a number.  The value is considered to be a number if it meets the following
@@ -36,7 +35,7 @@ function Factory() {
      *
      * @see isNaN(...)
      */
-    function isNumber(val) {
+    isNumber(val) {
         return val !== null && val !== undefined && val !== '' && !isNaN(val);
     }
 
@@ -56,10 +55,10 @@ function Factory() {
      *
      * @see isNumber(...)
      */
-    function hertzToString(hertz) {
+    hertzToString(hertz) {
         let str = null;
 
-        if(that.isNumber(hertz)) {
+        if(this.isNumber(hertz)) {
             str = hertz < 0 ? '-' : '';
 
             hertz = Math.abs(hertz);
@@ -93,10 +92,10 @@ function Factory() {
      *
      * @see isNumber(...)
      */
-    function millisecondsToString(millis) {
+    millisecondsToString(millis) {
         let str = null;
 
-        if(that.isNumber(millis)) {
+        if(this.isNumber(millis)) {
             str = millis < 0 ? '-' : '';
             
             millis = Math.abs(millis);
@@ -120,11 +119,4 @@ function Factory() {
 
         return str;
     }
-    
-    return that;
 }
-
-export default {
-    id: 'emUtils',
-    Factory: Factory
-};

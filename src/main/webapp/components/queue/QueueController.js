@@ -16,16 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['player'];
-function Controller(player) {
-    'use strict';
-
-    let that = this;
-    that.player = player;
+export default class Controller {
+    constructor(queues, player) {
+        this.queues = queues;
+        this.player = player;
+    }
+    
+    static get $inject() {
+        return ['queues', 'player'];
+    }
+    
+    static get injectID() {
+        return 'QueueController';
+    }
+    
+    getQueue() {
+        return this.queues.q;
+    }
+    
+    clear() {
+        this.queues.clear();
+    }
+    
+    play(index) {
+        this.player.play(index);
+    }
+    
+    remove(index) {
+        this.queues.remove(index);
+    }
 }
-
-Controller.$inject = injections;
-export default {
-    id: 'EMPlayerControlsController',
-    Controller: Controller
-};

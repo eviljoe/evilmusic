@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let injections = ['player'];
+const injections = ['emUtils'];
 
-function Controller(player) {
-    let that = this;
-    that.player = player;
+function filter(emUtils) {
+    return function(hertz) {
+        return emUtils.hertzToString(hertz);
+    };
 }
 
-Controller.$inject = injections;
-export default {
-    id: 'EMController',
-    Controller: Controller
-};
+filter.$inject = injections;
+filter.injectID = 'hertz';
+
+export default filter;

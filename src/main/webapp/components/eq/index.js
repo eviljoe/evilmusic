@@ -19,14 +19,14 @@
 import dir from './eq.dir';
 import EQController from './EQController';
 import Equalizers from './Equalizers';
-import hertzFilterFactory from './hertzFilterFactory';
+import hertzFltr from './hertz.fltr';
 
-export default function(module) {
+export default function(emApp) {
     'use strict';
     
-    module
-        .directive(dir.id, dir.directive)
-        .controller(EQController.name, EQController)
-        .service(Equalizers.name.toLowerCase(), Equalizers)
-        .filter(hertzFilterFactory.id, hertzFilterFactory.filterFactory);
+    return emApp
+        .directive(dir)
+        .controller(EQController)
+        .service(Equalizers)
+        .filter(hertzFltr);
 }

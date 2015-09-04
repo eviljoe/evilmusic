@@ -16,17 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ctrl from './library.ctrl';
+import LibraryController from './LibraryController';
 import dir from './library.dir';
-import srv from './library.srv';
+import Libraries from './Libraries';
 
-function applyToModule(module) {
+export default function(emApp) {
     'use strict';
     
-    module
-        .directive(dir.id, dir.directive)
-        .controller(ctrl.id, ctrl.Controller)
-        .factory(srv.id, srv.Factory);
+    return emApp
+        .directive(dir)
+        .controller(LibraryController)
+        .service(Libraries);
 }
-
-export default applyToModule;

@@ -22,16 +22,97 @@ import resources from './components/resources';
 import utils from './components/utils';
 import volumeControl from './components/volume-control';
 
-let emModule = angular.module('EvilMusicApp', ['ngResource', 'ui.bootstrap']);
+const NG_RESOURCE_MODULE_INJECT_ID = 'ngResource';
+const UI_BOOTSTRAP_MODULE_INJECT_ID = 'ui.bootstrap';
 
-eq(emModule);
-evilmusic(emModule);
-library(emModule);
-player(emModule);
-progressBar(emModule);
-queue(emModule);
-resources(emModule);
-utils(emModule);
-volumeControl(emModule);
+class EvilMusicApp {
+    constructor() {
+        this.init();
+    }
+    
+    static get injectID() {
+        return 'EvilMusicApp';
+    }
+    
+    init() {
+        eq(this);
+        evilmusic(this);
+        library(this);
+        player(this);
+        progressBar(this);
+        queue(this);
+        resources(this);
+        utils(this);
+        volumeControl(this);
+    }
 
-export default emModule;
+    createAngularModule() {
+        return angular.module(EvilMusicApp.injectID, [
+            NG_RESOURCE_MODULE_INJECT_ID,
+            UI_BOOTSTRAP_MODULE_INJECT_ID
+        ]);
+    }
+
+    getAngularModule() {
+        if(!this.angularModule) {
+            this.angularModule = this.createAngularModule();
+        }
+        
+        return this.angularModule;
+    }
+    
+    getInjectID(type, obj) {
+        let injectID;
+        
+        if(obj.injectID) {
+            let injectIDType = typeof obj.injectID;
+            
+            if(injectIDType === 'function') {
+                injectID = obj.injectID();
+            } else if(injectIDType === 'string') {
+                injectID = obj.injectID;
+            } else {
+                throw new Error(type + ' injectID field is of an unsupported type: ' + injectIDType);
+            }
+        } else {
+            throw new Error(type + ' has no injectID field');
+        }
+        
+        return injectID;
+    }
+    
+    registerAngularItem(type, functName, item) {
+        let injectID;
+        
+        console.log('registering ' + type + '...');
+        injectID = this.getInjectID(type, item);
+        console.log('  > ' + injectID);
+        
+        this.getAngularModule()[functName](injectID, item);
+        console.log('  > done!');
+        
+        return this;
+    }
+
+    controller(clazz) {
+        return this.registerAngularItem('controller', 'controller', clazz);
+    }
+    
+    directive(factory) {
+        return this.registerAngularItem('directive', 'directive', factory);
+    }
+    
+    filter(factory) {
+        return this.registerAngularItem('filter', 'filter', factory);
+    }
+    
+    resource(factory) {
+        return this.registerAngularItem('resource', 'factory', factory);
+    }
+    
+    service(clazz) {
+        return this.registerAngularItem('service', 'service', clazz);
+    }
+}
+
+export default new EvilMusicApp();

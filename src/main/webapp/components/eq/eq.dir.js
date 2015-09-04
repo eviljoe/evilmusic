@@ -28,7 +28,6 @@ function directive() {
     };
 }
 
-export default {
-    id: 'emEq',
-    directive: directive
-};
+directive.injectID = 'emEq';
+
+export default directive;

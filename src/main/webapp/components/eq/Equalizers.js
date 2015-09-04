@@ -17,11 +17,6 @@
  */
 
 export default class Equalizers {
-    
-    static get $inject() {
-        return ['Equalizer'];
-    }
-    
     constructor(Equalizer) {
         Equalizers.instance = this;
         
@@ -30,6 +25,14 @@ export default class Equalizers {
         this.eq = null;
         
         this.load(true);
+    }
+    
+    static get $inject() {
+        return ['Equalizer'];
+    }
+    
+    static get injectID() {
+        return 'equalizers';
     }
     
     static getInstance() {
