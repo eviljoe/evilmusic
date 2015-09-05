@@ -16,20 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const INJECTIONS = ['$resource'];
-function resource($resource) {
-    'use strict';
+import FilterFactory from 'components/utils/FilterFactory';
+
+export default class HertzFilterFactory extends FilterFactory {
+    constructor() {
+        super();
+        this.filter.injectID = 'hertz';
+        this.filter.$inject = ['emUtils'];
+    }
     
-    return $resource(
-        '/rest/library',
-        null,
-        {
-            rebuild: {method: 'POST'}
-        }
-    );
+    filter(emUtils) {
+        return function(hertz) {
+            return emUtils.hertzToString(hertz);
+        };
+    }
 }
-
-resource.$inject = INJECTIONS;
-resource.injectID = 'Library';
-
-export default resource;

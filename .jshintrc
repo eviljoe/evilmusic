@@ -28,6 +28,8 @@
         "describe",
         "document",
         "expect",
+        "fdescribe",
+        "fit",
         "inject",
         "it",
         "jasmine",

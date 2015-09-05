@@ -16,20 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import EMController from './EMController';
+import DirectiveFactory from 'components/utils/DirectiveFactory';
+import QueueController from './QueueController';
 
-function directive() {
-    'use strict';
+export default class QueueDirectiveFactory extends DirectiveFactory {
+    constructor() {
+        super();
+        this.directive.injectID = 'emQueue';
+    }
     
-    return {
-        restrict: 'E',
-        scope: {},
-        controller: EMController.injectID,
-        controllerAs: 'ctrl',
-        templateUrl: '/components/evilmusic/evilmusic.html'
-    };
+    directive() {
+        return {
+            scope: {},
+            restrict: 'E',
+            templateUrl: '/components/queue/queue.html',
+            controller: QueueController.injectID,
+            controllerAs: 'ctrl'
+        };
+    }
 }
-
-directive.injectID = 'evilMusic';
-
-export default directive;

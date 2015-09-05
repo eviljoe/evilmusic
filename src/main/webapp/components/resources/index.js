@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import eq from './eq.res';
-import library from './library.res';
-import queue from './queue.res';
+import EqualizerResourceFactory from './EqualizerResourceFactory';
+import LibraryResourceFactory from './LibraryResourceFactory';
+import QueueResourceFactory from './QueueResourceFactory';
 
 export default function(emApp) {
     'use strict';
     
     return emApp
-        .resource(eq)
-        .resource(library)
-        .resource(queue);
+        .resource(EqualizerResourceFactory)
+        .resource(LibraryResourceFactory)
+        .resource(QueueResourceFactory);
 }

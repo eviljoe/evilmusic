@@ -81,37 +81,85 @@ class EvilMusicApp {
         return injectID;
     }
     
-    registerAngularItem(type, functName, item) {
+    /**
+     * Registers an Angular item.
+     *
+     * @param  {string} type The name of the type of Angular item that is being registered (e.g. controller, directive)
+     * @param  {Object} angularable The actual item that will be passed to Angular.
+     * @param  {string} functionName The name of the Angular function that should be used to register the Angular item.
+     *                            (Default: "type" param)
+     *
+     * @return {EvilMusicApp} Returns the EvilMusicApp
+     */
+    registerAngularItem(type, angularable, functionName) {
         let injectID;
+        let functName = functionName || type;
         
         console.log('registering ' + type + '...');
-        injectID = this.getInjectID(type, item);
+        injectID = this.getInjectID(type, angularable);
         console.log('  > ' + injectID);
         
-        this.getAngularModule()[functName](injectID, item);
+        this.getAngularModule()[functName](injectID, angularable);
         console.log('  > done!');
         
         return this;
     }
 
-    controller(clazz) {
-        return this.registerAngularItem('controller', 'controller', clazz);
+    /**
+     * Creates a new Angular controller using the given controller class.
+     *
+     * @param {Object} Controller The controller class (not instance!) to be used to create the Angular controller.
+     *
+     * @return {EvilMusicApp} Returns the EvilMusicApp
+     */
+    controller(Controller) {
+        return this.registerAngularItem('controller', Controller);
     }
     
-    directive(factory) {
-        return this.registerAngularItem('directive', 'directive', factory);
+    /**
+     * Creates a new Angular directive using the given factory class.
+     *
+     * @param {DirectiveFactory} DirectiveFactory The factory class (not instance!) to be used to create the Angular
+     *                                            directive.
+     *
+     * @return {EvilMusicApp} Returns the EvilMusicApp
+     */
+    directive(DirectiveFactory) {
+        return this.registerAngularItem('directive', new DirectiveFactory().directive);
     }
     
-    filter(factory) {
-        return this.registerAngularItem('filter', 'filter', factory);
+    /**
+     * Creates a new Angular filter using the given factory class.
+     *
+     * @param {FilterFactory} FilterFactory The factory class (not instance!) to be used to create the Angular filter.
+     *
+     * @return {EvilMusicApp} Returns the EvilMusicApp
+     */
+    filter(FilterFactory) {
+        return this.registerAngularItem('filter', new FilterFactory().filter);
     }
     
-    resource(factory) {
-        return this.registerAngularItem('resource', 'factory', factory);
+    /**
+     * Creates a new Angular resource using the given factory class.
+     *
+     * @param {ResourceFactory} ResourceFactory The factory class (not instance!) to be used to create the Angular
+     *                                          resource.
+     *
+     * @return {EvilMusicApp} Returns the EvilMusicApp
+     */
+    resource(ResourceFactory) {
+        return this.registerAngularItem('resource', new ResourceFactory().resource, 'factory');
     }
     
-    service(clazz) {
-        return this.registerAngularItem('service', 'service', clazz);
+    /**
+     * Creates a new Angular service using the given service class.
+     *
+     * @param {Object} Service The service class (not instance!) to be used to create the Angular service.
+     *
+     * @return {EvilMusicApp} Returns the EvilMusicApp
+     */
+    service(Service) {
+        return this.registerAngularItem('service', Service);
     }
 }
 

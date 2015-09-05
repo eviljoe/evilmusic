@@ -16,20 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import PlayerController from './PlayerController';
-
-function directive() {
-    'use strict';
-
-    return {
-        restrict: 'E',
-        scope: {},
-        controller: PlayerController.injectID,
-        controllerAs: 'ctrl',
-        templateUrl: '/components/player/player.html'
-    };
+export default class Interface {
+    constructor(interfaceFunctionNames) {
+        if(Array.isArray(interfaceFunctionNames)) {
+            this._checkForFunctions(interfaceFunctionNames);
+        } else if(typeof interfaceFunctionNames === 'string') {
+            this._checkForFunction(interfaceFunctionNames);
+        }
+    }
+    
+    _checkForFunction(name) {
+        if(typeof this[name] !== 'function') {
+            throw new Error(this.constructor.name + ' must define a "' + name + '()" function');
+        }
+    }
+    
+    _checkForFunctions(names) {
+        for(let x = 0; x < names.length; x++) {
+            this._checkForFunction(names[x]);
+        }
+    }
 }
-
-directive.injectID = 'emPlayerControls';
-
-export default directive;

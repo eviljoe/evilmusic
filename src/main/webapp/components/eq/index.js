@@ -16,17 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import dir from './eq.dir';
 import EQController from './EQController';
+import EQDirectiveFactory from './EQDirectiveFactory';
 import Equalizers from './Equalizers';
-import hertzFltr from './hertz.fltr';
+import HertzFilterFactory from './HertzFilterFactory';
 
 export default function(emApp) {
     'use strict';
     
     return emApp
-        .directive(dir)
+        .directive(EQDirectiveFactory)
         .controller(EQController)
         .service(Equalizers)
-        .filter(hertzFltr);
+        .filter(HertzFilterFactory);
 }

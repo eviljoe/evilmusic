@@ -16,20 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import LibraryController from './LibraryController';
+import AbstractClass from './AbstractClass';
 
-function directive() {
-    'use strict';
-
-    return {
-        restrict: 'E',
-        scope: {},
-        controller: LibraryController.injectID,
-        controllerAs: 'ctrl',
-        templateUrl: '/components/library/library.html'
-    };
+export default class FilterFactory extends AbstractClass {
+    constructor() {
+        super('filter');
+    }
 }
-
-directive.injectID = 'emLibrary';
-
-export default directive;

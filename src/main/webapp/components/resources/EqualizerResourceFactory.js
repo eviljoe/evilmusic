@@ -16,14 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const INJECTIONS = ['$resource'];
-function resource($resource) {
-    'use strict';
+import ResourceFactory from 'components/utils/ResourceFactory';
+
+export default class EqualizerResourceFactory extends ResourceFactory {
+    constructor() {
+        super();
+        this.resource.injectID = 'Equalizer';
+        this.resource.$inject = ['$resource'];
+    }
     
-    return $resource('/rest/eq/:id', {id: '@id'}, {});
+    resource($resource) {
+        return $resource('/rest/eq/:id', {id: '@id'}, {});
+    }
 }
 
-resource.$inject = INJECTIONS;
-resource.injectID = 'Equalizer';
-
-export default resource;
+// const INJECTIONS = ['$resource'];
+// function resource($resource) {
+//     'use strict';
+//
+//     return $resource('/rest/eq/:id', {id: '@id'}, {});
+// }
+//
+// resource.$inject = INJECTIONS;
+// resource.injectID = 'Equalizer';
+//
+// export default resource;

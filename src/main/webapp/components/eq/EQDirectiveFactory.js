@@ -16,15 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const injections = ['emUtils'];
+import EQController from './EQController';
+import DirectiveFactory from 'components/utils/DirectiveFactory';
 
-function filter(emUtils) {
-    return function(hertz) {
-        return emUtils.hertzToString(hertz);
-    };
+export default class EQDirectiveFactory extends DirectiveFactory {
+    constructor() {
+        super();
+        this.directive.injectID = 'emEq';
+    }
+    
+    directive() {
+        return {
+            restrict: 'E',
+            scope: {},
+            controller: EQController.injectID,
+            controllerAs: 'ctrl',
+            templateUrl: '/components/eq/eq.html'
+        };
+    }
 }
-
-filter.$inject = injections;
-filter.injectID = 'hertz';
-
-export default filter;

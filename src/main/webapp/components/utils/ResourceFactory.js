@@ -16,20 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import VolumeControlController from './VolumeControlController';
+import AbstractClass from './AbstractClass';
 
-function directive() {
-    'use strict';
-
-    return {
-        restrict: 'A',
-        templateUrl: '/components/volume-control/volume-control.html',
-        scope: {},
-        controller: VolumeControlController.injectID,
-        controllerAs: 'ctrl'
-    };
+export default class ResourceFactory extends AbstractClass {
+    constructor() {
+        super('resource');
+    }
 }
-
-directive.injectID = 'emVolumeControl';
-
-export default directive;

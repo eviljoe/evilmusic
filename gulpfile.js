@@ -115,8 +115,8 @@ gulp.task('copy-third-party-css-source-maps', ['clean'], function() {
 
 gulp.task('create-template-cache', ['clean'], function() {
     return gulp.src(webSrcDir + '/components/**/*.html')
-        .pipe(templateCache('evilmusic-templates.js', {module: 'EvilMusicApp'}))
-        .pipe(gulp.dest(destDir));
+    .pipe(templateCache('evilmusic-templates.js', {module: 'EvilMusicApp'}))
+    .pipe(gulp.dest(destDir));
 });
 
 gulp.task('copy-fonts', ['clean'], function() {

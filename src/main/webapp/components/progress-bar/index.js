@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import dir from './progress-bar.dir';
 import ProgressBarController from './ProgressBarController';
+import ProgressBarDirectiveFactory from './ProgressBarDirectiveFactory';
 
 export default function(emApp) {
     'use strict';
     
     return emApp
-        .directive(dir)
+        .directive(ProgressBarDirectiveFactory)
         .controller(ProgressBarController);
 }

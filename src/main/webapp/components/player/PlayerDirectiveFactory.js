@@ -16,15 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import DirectiveFactory from 'components/utils/DirectiveFactory';
 import PlayerController from './PlayerController';
-import PlayerDirectiveFactory from './PlayerDirectiveFactory';
-import Players from './Players';
 
-export default function(emApp) {
-    'use strict';
+export default class PlayerDirectiveFactory extends DirectiveFactory {
+    constructor() {
+        super();
+        this.directive.injectID = 'emPlayerControls';
+    }
     
-    return emApp
-        .directive(PlayerDirectiveFactory)
-        .controller(PlayerController)
-        .service(Players);
+    directive() {
+        return {
+            restrict: 'E',
+            scope: {},
+            controller: PlayerController.injectID,
+            controllerAs: 'ctrl',
+            templateUrl: '/components/player/player.html'
+        };
+    }
 }

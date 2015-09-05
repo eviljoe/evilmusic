@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import dir from './volume-control.dir';
+import VolumeControlDirectiveFactory from './VolumeControlDirectiveFactory';
 import VolumeControlController from './VolumeControlController';
 
 export default function(emApp) {
     'use strict';
     
     return emApp
-        .directive(dir)
+        .directive(VolumeControlDirectiveFactory)
         .controller(VolumeControlController);
 }

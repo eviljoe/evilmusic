@@ -16,18 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import EQController from './EQController';
+import DirectiveFactory from 'components/utils/DirectiveFactory';
+import LibraryController from './LibraryController';
 
-function directive() {
-    return {
-        restrict: 'E',
-        scope: {},
-        controller: EQController.name,
-        controllerAs: 'ctrl',
-        templateUrl: '/components/eq/eq.html'
-    };
+export default class LibraryDirectiveFactory extends DirectiveFactory {
+    constructor() {
+        super();
+        this.directive.injectID = 'emLibrary';
+    }
+    
+    directive() {
+        return {
+            restrict: 'E',
+            scope: {},
+            controller: LibraryController.injectID,
+            controllerAs: 'ctrl',
+            templateUrl: '/components/library/library.html'
+        };
+    }
 }
-
-directive.injectID = 'emEq';
-
-export default directive;

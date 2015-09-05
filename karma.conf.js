@@ -16,15 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// jshint -W132
+
 module.exports = function(config) {
     'use strict';
+
+    var webSrcDir = 'src/main/webapp';
+    var webTestDir = 'src/test/webapp';
 
     config.set({
         basePath: '',
         files: [
             // Third party libraries
-            'src/main/webapp/assets/libs/aurora.js',
-            'src/main/webapp/assets/libs/flac.js',
+            webSrcDir + '/assets/libs/aurora.js',
+            webSrcDir + '/assets/libs/flac.js',
             'node_modules/jquery/dist/jquery.js', // Needs to be before angular
             'node_modules/angular/angular.js',
             'node_modules/angular-resource/angular-resource.js', // Needs to be after angular
@@ -32,17 +37,27 @@ module.exports = function(config) {
             'node_modules/angular-mocks/angular-mocks.js',
 
             // Root level HTML & JavaScript files
-            'src/main/webapp/index.js',
-            'src/main/webapp/index.html',
+            webSrcDir + '/index.js',
+            webSrcDir + '/index.html',
 
-            // EvilMusic AngularJS files
-            'src/main/webapp/components/**/*',
+            // EvilMusic JavaScript files
+            webSrcDir + '/components/**/*',
 
             // Unit Tests
-            'src/test/webapp/**/*'
+            webTestDir + '/**/*'
         ],
-        frameworks: ['jasmine'],
         browsers: ['PhantomJS'],
+        frameworks: ['jasmine', 'browserify'],
+        preprocessors: {
+            'src/main/webapp/components/**/*.js': ['browserify'],
+            'src/main/webapp/index.js': ['browserify'],
+            'src/test/webapp/**/*.js': ['browserify']
+        },
+        browserify: {
+            debug: true,
+            paths: [webSrcDir],
+            transform: ['babelify']
+        },
         autoWatch: true,
         usePolling: true
     });

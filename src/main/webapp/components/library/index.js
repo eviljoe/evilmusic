@@ -17,14 +17,14 @@
  */
 
 import LibraryController from './LibraryController';
-import dir from './library.dir';
+import LibraryDirectiveFactory from './LibraryDirectiveFactory';
 import Libraries from './Libraries';
 
 export default function(emApp) {
     'use strict';
     
     return emApp
-        .directive(dir)
+        .directive(LibraryDirectiveFactory)
         .controller(LibraryController)
         .service(Libraries);
 }

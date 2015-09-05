@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import dir from './evilmusic.dir';
 import EMController from './EMController';
+import EMDirectiveFactory from './EMDirectiveFactory';
 
 export default function(emApp) {
     'use strict';
     
     return emApp
-        .directive(dir)
+        .directive(EMDirectiveFactory)
         .controller(EMController);
 }
