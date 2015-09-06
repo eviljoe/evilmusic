@@ -16,16 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import DirectiveFactory from 'components/utils/DirectiveFactory';
-import ProgressBarDirective from './ProgressBarDirective';
+import LibraryDirectiveFactory from 'components/library/LibraryDirectiveFactory';
 
-export default class ProgressBarDirectiveFactory extends DirectiveFactory {
-    constructor() {
-        super();
-        this.directive.injectID = 'emProgressBar';
-    }
+describe(LibraryDirectiveFactory.name, () => {
+    let factory = null;
     
-    directive() {
-        return new ProgressBarDirective();
-    }
-}
+    beforeEach(() => {
+        factory = new LibraryDirectiveFactory();
+    });
+    
+    describe('directive', () => {
+        it('defines an injection ID', () => {
+            expect(factory.directive.injectID).toEqual(jasmine.any(String));
+        });
+        
+        it('returns a directive configuration object', function() {
+            expect(factory.directive()).toEqual(jasmine.any(Object));
+        });
+    });
+});
