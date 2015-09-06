@@ -2,11 +2,12 @@
 //  * EvilMusic - Web-Based Music Player Copyright (C) 2015 Joe Falascino
 //  *
 //  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
-//  * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
-//  * version.
+//  * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+//  * later version.
 //  *
 //  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-//  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+//  * details.
 //  *
 //  * You should have received a copy of the GNU General Public License along with this program. If not, see
 //  * <http://www.gnu.org/licenses/>.
@@ -56,7 +57,8 @@
 //         it('makes a REST API call to add a song to the queue', function() {
 //             var songID = 17;
 //
-//             $httpBackend.expect('PUT', '/rest/queue/' + defaultQueue.id + '/last?songIDs=' + songID).respond(undefined);
+//             $httpBackend.expect(
+//                  'PUT', '/rest/queue/' + defaultQueue.id + '/last?songIDs=' + songID).respond(undefined);
 //             $httpBackend.when('GET', '/rest/queue/' + defaultQueue.id).respond(defaultQueue);
 //
 //             queue.addLast(songID);
@@ -66,7 +68,8 @@
 //         it('reloads the queue after a song is added', function() {
 //             var songID = 19;
 //
-//             $httpBackend.when('PUT', '/rest/queue/' + defaultQueue.id + '/last?songIDs=' + songID).respond(undefined);
+//             $httpBackend.when(
+//                  'PUT', '/rest/queue/' + defaultQueue.id + '/last?songIDs=' + songID).respond(undefined);
 //             $httpBackend.expect('GET', '/rest/queue/' + defaultQueue.id).respond(defaultQueue);
 //
 //             queue.addLast(songID);

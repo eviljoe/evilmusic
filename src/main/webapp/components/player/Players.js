@@ -64,7 +64,7 @@ export default class Players {
 
     updateAVPlayerDefaults(avPlayer, song) {
         if(avPlayer && song) {
-            avPlayer.nodeCreationCallback = this.equalizers.constructor.createEQNodes;
+            avPlayer.nodeCreationCallback = this.equalizers.createEQNodes;
             avPlayer.volume = this.volume;
 
             avPlayer.on('progress', (progress) => {

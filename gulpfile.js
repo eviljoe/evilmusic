@@ -26,32 +26,45 @@ var gulp = require('gulp');
 var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
 var jshintStylish = require('jshint-stylish');
+var karma = require('gulp-karma');
 var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var templateCache = require('gulp-angular-templatecache');
 
 var webSrcDir = './src/main/webapp';
+var webTestSrcDir = './src/test/webapp';
 var destDir = './src/main/webapp/dist';
 var cssDestDir = './src/main/webapp/dist/css';
 var fontsDestDir = './src/main/webapp/dist/fonts';
- 
-var jsFilesToLint = [
+
+var jsFilesToTest = [
     webSrcDir + '/**/*.js',
+    webSrcDir + '/**/*.js',
+    webTestSrcDir + '/**/*.js',
     '.package.json',
     '!' + webSrcDir + '/assets/**',
     '!' + webSrcDir + '/dist/**'
+];
+
+var thirdPartyJSFiles = [
+    'node_modules/jquery/dist/jquery.js', // Needs to be before angular
+    'node_modules/angular/angular.js',
+    'node_modules/angular-resource/angular-resource.js', // Needs to be after angular
+    'node_modules/angular-bootstrap/dist/ui-bootstrap.js', // Needs to be after angular
+    webSrcDir + '/assets/libs/aurora.js',
+    webSrcDir + '/assets/libs/flac.js' // Needs to be after aurora.js
 ];
  
 // JOE TODO task convert src/main/webapp/assets/less to CSS (and get rid of src/main/webapp/assets/css/evilmusic.css)
 
 gulp.task('lint-js-jshint', function() {
-    return gulp.src(jsFilesToLint)
+    return gulp.src(jsFilesToTest)
     .pipe(jshint())
     .pipe(jshint.reporter(jshintStylish));
 });
 
 gulp.task('lint-js-jscs', function() {
-    return gulp.src(jsFilesToLint)
+    return gulp.src(jsFilesToTest)
     .pipe(jscs());
 });
 
@@ -74,14 +87,7 @@ gulp.task('concat-em-js', ['clean'], function() {
 });
 
 gulp.task('concat-third-party-js', ['clean'], function() {
-    return gulp.src([
-        'node_modules/jquery/dist/jquery.js', // Needs to be before angular
-        'node_modules/angular/angular.js',
-        'node_modules/angular-resource/angular-resource.js', // Needs to be after angular
-        'node_modules/angular-bootstrap/dist/ui-bootstrap.js', // Needs to be after angular
-        webSrcDir + '/assets/libs/aurora.js',
-        webSrcDir + '/assets/libs/flac.js' // Needs to be after aurora.js
-    ])
+    return gulp.src(thirdPartyJSFiles)
     .pipe(sourcemaps.init())
     .pipe(concat('evilmusic-third-party.js'))
     .pipe(sourcemaps.write('.'))
@@ -142,6 +148,17 @@ gulp.task('watch', ['build'], function() {
     gulp.watch(webSrcDir + '/components/**/*', ['build']);
     gulp.watch(webSrcDir + '/index.html', ['build']);
     gulp.watch(webSrcDir + '/index.js', ['build']);
+});
+
+gulp.task('test', function() {
+    return gulp.src([])
+    .pipe(karma({
+        configFile: 'karma.conf.js',
+        action: 'run'
+    }))
+    .on('error', function(err) {
+        throw err;
+    });
 });
 
 gulp.task('default', ['build'], function() {});

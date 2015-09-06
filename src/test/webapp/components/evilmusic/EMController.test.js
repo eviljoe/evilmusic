@@ -16,20 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FilterFactory from 'components/utils/FilterFactory';
+import EMController from 'components/evilmusic/EMController';
 
-export default class HertzFilterFactory extends FilterFactory {
-    constructor() {
-        super();
-        this.filter.injectID = 'hertz';
-        this.filter.$inject = ['emUtils'];
-    }
+describe(EMController.name, () => {
+    let ctrl = null;
     
-    filter(emUtils) {
-        return (hertz) => HertzFilterFactory.hertzToString(emUtils, hertz);
-    }
+    beforeEach(() => {
+        ctrl = new EMController();
+    });
     
-    static hertzToString(emUtils, hertz) {
-        return emUtils.hertzToString(hertz);
-    }
-}
+    describe('injectID', () => {
+        it('defines an injection ID', () => {
+            expect(EMController.injectID).toEqual(jasmine.any(String));
+        });
+    });
+});

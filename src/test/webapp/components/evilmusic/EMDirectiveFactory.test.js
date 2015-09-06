@@ -16,20 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FilterFactory from 'components/utils/FilterFactory';
+import EMDirectiveFactory from 'components/evilmusic/EMDirectiveFactory';
 
-export default class HertzFilterFactory extends FilterFactory {
-    constructor() {
-        super();
-        this.filter.injectID = 'hertz';
-        this.filter.$inject = ['emUtils'];
-    }
+describe(EMDirectiveFactory.name, () => {
+    let factory = null;
     
-    filter(emUtils) {
-        return (hertz) => HertzFilterFactory.hertzToString(emUtils, hertz);
-    }
+    beforeEach(() => {
+        factory = new EMDirectiveFactory();
+    });
     
-    static hertzToString(emUtils, hertz) {
-        return emUtils.hertzToString(hertz);
-    }
-}
+    describe('directive', () => {
+        it('defines an injection ID', () => {
+            expect(factory.directive.injectID).toEqual(jasmine.any(String));
+        });
+        
+        it('returns a directive configuration object', function() {
+            expect(factory.directive()).toEqual(jasmine.any(Object));
+        });
+    });
+});

@@ -24,7 +24,7 @@ export default class Equalizers {
         this.webAudioNodes = {};
         this.eq = null;
         
-        this.load(true);
+        this.init();
     }
     
     static get $inject() {
@@ -37,6 +37,10 @@ export default class Equalizers {
     
     static getInstance() {
         return Equalizers.instance;
+    }
+    
+    init() {
+        this.load(true);
     }
     
     /**
@@ -61,14 +65,14 @@ export default class Equalizers {
      *
      * @return {BiquadFilterNode[]} Returns an array of filter nodes.  That should be connected to the audio graph.
      */
-    static createEQNodes(context) {
+    createEQNodes(context) {
         let map = {};
         let webAudioNodes = [];
         let instance = Equalizers.getInstance();
 
         for(let x = 0; x < instance.eq.nodes.length; x++) {
             let emNode = instance.eq.nodes[x];
-            let webAudioNode = Equalizers.createEQNode(context, emNode);
+            let webAudioNode = instance.createEQNode(context, emNode);
 
             map[emNode.id] = webAudioNode;
             webAudioNodes.push(webAudioNode);
@@ -87,7 +91,7 @@ export default class Equalizers {
      *
      * @return {BiquadFilterNode} The created filter node.
      */
-    static createEQNode(context, emNode) {
+    createEQNode(context, emNode) {
         let node = null;
 
         if(context && emNode) {

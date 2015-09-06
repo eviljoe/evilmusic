@@ -30,11 +30,6 @@ describe('EQController', function() {
         ctrl = new EQController(_equalizers);
     });
     
-    it('does stuff', function() {
-        expect(EQController).toBeDefined();
-        expect(EQController).not.toBeNull();
-    });
-    
     describe('$inject', () => {
         it('defines injections', () => {
             expect(EQController.$inject.length).toBeGreaterThan(-1);
