@@ -17,28 +17,32 @@
  */
 
 export default class Libraries {
-    constructor(queues, Library) {
+    constructor($window, queues, Library) {
+        this.$window = $window;
         this.library = null;
         this.queues = queues;
         this.Library = Library;
         
-        this.load();
+        this.init();
     }
     
     static get $inject() {
-        return ['queues', 'Library'];
+        return ['$window', 'queues', 'Library'];
     }
     
     static get injectID() {
-        // JOE TODO change to "libraries"
-        return 'library';
+        return 'libraries';
+    }
+    
+    init() {
+        this.load();
     }
     
     /** Loads the contents of the library using a REST call. */
     load() {
         this.library = this.Library.get();
-        this.library.$promise.catch(function(data) {
-            alert('Could not get library.\n\n' + JSON.stringify(data));
+        this.library.$promise.catch((data) => {
+            this.$window.alert('Could not get library.\n\n' + JSON.stringify(data));
         });
     }
     
@@ -47,16 +51,15 @@ export default class Libraries {
     * be reloaded.
     */
     clear() {
-        this.library.$promise.then(function() {
-            this.library.$delete().then(
-                function() {
-                    this.load();
-                    this.queues.load(true);
-                },
-                function(data) {
-                    alert('Clear library failed.\n\n' + JSON.stringify(data));
-                }
-            );
+        this.library.$promise.then(() => this.clearNow());
+    }
+    
+    clearNow() {
+        this.library.$delete().then(() => {
+            this.load();
+            this.queues.load(true);
+        }, (data) => {
+            this.$window.alert('Clear library failed.\n\n' + JSON.stringify(data));
         });
     }
     
@@ -66,16 +69,15 @@ export default class Libraries {
     * rebuild, the it and the queue will be reloaded.
     */
     rebuild() {
-        this.library.$promise.then(function() {
-            this.library.$rebuild().then(
-                function() {
-                    this.load();
-                    this.queues.load(true);
-                },
-                function(data) {
-                    alert('Library rebuilding failed.\n\n' + JSON.stringify(data));
-                }
-            );
+        this.library.$promise.then(() => this.rebuildNow());
+    }
+    
+    rebuildNow() {
+        this.library.$rebuild().then(() => {
+            this.load();
+            this.queues.load(true);
+        }, (data) => {
+            this.$window.alert('Library rebuilding failed.\n\n' + JSON.stringify(data));
         });
     }
 }

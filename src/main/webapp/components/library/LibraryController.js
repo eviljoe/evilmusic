@@ -17,14 +17,14 @@
  */
 
 export default class LibraryController {
-    constructor(library, queues, emUtils) {
-        this.library = library;
+    constructor(libraries, queues, emUtils) {
+        this.libraries = libraries;
         this.queues = queues;
         this.emUtils = emUtils;
     }
     
     static get $inject() {
-        return ['library', 'queues', 'emUtils'];
+        return ['libraries', 'queues', 'emUtils'];
     }
     
     static get injectID() {

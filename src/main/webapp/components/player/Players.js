@@ -17,12 +17,14 @@
  */
 
 export default class Players {
-    constructor($http, $rootScope, emUtils, queues, equalizers) {
+    constructor($http, $rootScope, $window, emUtils, queues, equalizers) {
         this.$http = $http;
         this.$rootScope = $rootScope;
+        this.$window = $window;
         this.emUtils = emUtils;
         this.queues = queues;
         this.equalizers = equalizers;
+        this.AV = AV; // From global scope
         
         this.playerProgressChangedEventName = 'emPlayerProgressChanged';
         this.avPlayer = null;
@@ -34,31 +36,41 @@ export default class Players {
     }
     
     static get $inject() {
-        return ['$http', '$rootScope', 'emUtils', 'queues', 'equalizers'];
+        return ['$http', '$rootScope', '$window', 'emUtils', 'queues', 'equalizers'];
     }
     
     static get injectID() {
-        return 'player'; // JOE TODO change to "players"
+        return 'players';
     }
     
-    play(queueIndex) {
+    play(qIndex) {
+        this.stop();
+        
+        if(this.queues.q && this.queues.q.id) {
+            this.playSong(qIndex, this.queues.getSong(qIndex));
+        }
+    }
+    
+    playSong(qIndex, song) {
+        this.stop();
+        
+        if(song && this.emUtils.isNumber(qIndex)) {
+            this.avPlayer = this.createPlayer(qIndex);
+            this.updateAVPlayerDefaults(this.avPlayer, song);
+            this.currentSong = song;
+            this.avPlayer.play();
+            this.queues.load();
+        }
+    }
+    
+    createPlayer(qIndex) {
+        return this.AV.Player.fromURL(
+            `/rest/queue/${this.queues.q.id}/stream/queueindex/${qIndex}?updatePlayIndex=true`);
+    }
+    
+    stop() {
         if(this.avPlayer) {
             this.avPlayer.stop();
-        }
-
-        if(this.queues.q && this.queues.q.id) {
-            let song = this.queues.getSong(queueIndex);
-
-            if(song) {
-                this.avPlayer = AV.Player.fromURL(
-                    '/rest/queue/' + this.queues.q.id + '/stream/queueindex/' + queueIndex + '?updatePlayIndex=true');
-
-                this.updateAVPlayerDefaults(this.avPlayer, song);
-
-                this.currentSong = song;
-                this.avPlayer.play();
-                this.queues.load();
-            }
         }
     }
 
@@ -66,20 +78,22 @@ export default class Players {
         if(avPlayer && song) {
             avPlayer.nodeCreationCallback = this.equalizers.createEQNodes;
             avPlayer.volume = this.volume;
-
-            avPlayer.on('progress', (progress) => {
-                this.playerProgress = progress / song.millis * 100;
-                this.$rootScope.$broadcast(this.playerProgressChangedEventName);
-            });
-
-            avPlayer.on('end', () => {
-                avPlayer = null;
-                this.currentSong = null;
-            });
+            avPlayer.on('progress', (progress) => this.playerProgressChanged(song, progress));
+            avPlayer.on('end', () => this.playerSongEnded());
         }
     }
+    
+    playerProgressChanged(song, progress) { // JOE ju
+        this.playerProgress = progress / song.millis * 100;
+        this.$rootScope.$broadcast(this.playerProgressChangedEventName);
+    }
+    
+    playerSongEnded() { // JOE ju
+        this.avPlayer = null;
+        this.currentSong = null;
+    }
 
-    togglePlayback () {
+    togglePlayback() {
         let toggled = false;
 
         if(this.avPlayer) {
@@ -93,7 +107,7 @@ export default class Players {
     seekToMillis(millis) {
         let newMillis = null;
 
-        if(this.emUtils.isNumber(millis) && this.avPlayer) {
+        if(this.avPlayer && this.emUtils.isNumber(millis)) {
             newMillis = this.avPlayer.seek(Math.max(0, millis));
         }
 
@@ -103,7 +117,7 @@ export default class Players {
     seekToPercent(percent) {
         let newMillis = null;
 
-        if(this.emUtils.isNumber(percent) && this.avPlayer) {
+        if(this.avPlayer && this.emUtils.isNumber(percent)) {
             percent = Math.max(0, percent);
             percent = Math.min(1, percent);
 
@@ -123,20 +137,21 @@ export default class Players {
             }
 
             this.volume = volume;
-
-            this.$http.put('/rest/config/volume/' + volume)
-            .error((data, status, headers, config) => {
-                alert('Could not update volume.\n\n' + JSON.stringify(data));
-            });
+            this.putVolume();
         }
     }
     
+    putVolume(volume) {
+        this.$http.put('/rest/config/volume/' + volume).catch((response) => {
+            this.$window.alert('Could not update volume.\n\n' + JSON.stringify(response));
+        });
+    }
+    
     loadVolume() {
-        this.$http.get('/rest/config/volume')
-        .success((data, status, headers, config) => {
-            this.volume = data;
-        }).error((data, status, headers, config) => {
-            alert('Could not load volume.\n\n' + JSON.stringify(data));
+        this.$http.get('/rest/config/volume').then((response) => {
+            this.volume = response.data;
+        }, (response) => {
+            this.$window.alert('Could not load volume.\n\n' + JSON.stringify(response));
         });
     }
 }

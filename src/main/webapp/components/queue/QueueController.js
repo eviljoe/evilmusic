@@ -17,13 +17,13 @@
  */
 
 export default class Controller {
-    constructor(queues, player) {
+    constructor(queues, players) {
         this.queues = queues;
-        this.player = player;
+        this.players = players;
     }
     
     static get $inject() {
-        return ['queues', 'player'];
+        return ['queues', 'players'];
     }
     
     static get injectID() {
@@ -39,7 +39,7 @@ export default class Controller {
     }
     
     play(index) {
-        this.player.play(index);
+        this.players.play(index);
     }
     
     remove(index) {

@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div><h2>Library</h2></div>
 <div class="em-top-table-controls-container">
-    <input type="button" class="btn btn-xs btn-default" value="clear library" ng-click="ctrl.library.clear()"/>
-    <input type="button" class="btn btn-xs btn-default" value="rebuild library" ng-click="ctrl.library.rebuild()"/>
+    <input type="button" class="btn btn-xs btn-default" value="clear library" ng-click="ctrl.libraries.clear()"/>
+    <input type="button" class="btn btn-xs btn-default" value="rebuild library" ng-click="ctrl.libraries.rebuild()"/>
 </div>
 <table class="table table-striped table-condensed">
     <tr>
@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <th align="right">Sample Count</th>
         <th align="left">Controls</th>
     </tr>
-    <tr ng-repeat="song in ctrl.library.library.songs | orderBy : ['artist','trackNumber']">
+    <tr ng-repeat="song in ctrl.libraries.library.songs | orderBy : ['artist','trackNumber']">
         <td align="right">{{song.id}}</td>
         <td align="left">{{song.artist}}</td>
         <td align="left">{{song.album}}</td>

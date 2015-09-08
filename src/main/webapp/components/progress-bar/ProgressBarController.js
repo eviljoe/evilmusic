@@ -17,14 +17,14 @@
  */
 
 export default class ProgressBarController {
-    constructor($scope, $rootScope, player, emUtils) {
+    constructor($scope, $rootScope, players, emUtils) {
         ProgressBarController.instance = this;
         
         this.$scope = $scope;
-        this.player = player;
+        this.players = players;
         this.emUtils = emUtils;
         
-        $rootScope.$on(player.playerProgressChangedEventName, () => $scope.updateMeterWidth());
+        $rootScope.$on(players.playerProgressChangedEventName, () => $scope.updateMeterWidth());
         
         // JOE TODO this whole nightmare needs to be refactored.  I can hear it crying.
         $scope.progressMeterClicked = this.progressMeterClicked;
@@ -32,7 +32,7 @@ export default class ProgressBarController {
     }
 
     static get $inject() {
-        return ['$scope', '$rootScope', 'player', 'emUtils'];
+        return ['$scope', '$rootScope', 'players', 'emUtils'];
     }
 
     static get injectID() {
@@ -47,13 +47,13 @@ export default class ProgressBarController {
         let instance = ProgressBarController.getInstance();
         
         if(instance.emUtils.isNumber(xPos) && instance.emUtils.isNumber(width)) {
-            instance.player.seekToPercent(xPos / width);
+            instance.players.seekToPercent(xPos / width);
         }
     }
     
     updateMeterWidth() {
         let instance = ProgressBarController.getInstance();
-        let p = instance.player.playerProgress;
+        let p = instance.players.playerProgress;
 
         if(instance.emUtils.isNumber(p)) {
             p = Math.max(0, p);

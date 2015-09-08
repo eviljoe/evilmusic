@@ -16,48 +16,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import EQController from 'components/eq/EQController';
+import LibraryController from 'components/library/LibraryController';
 
-describe(EQController.name, function() {
+describe(LibraryController.name, function() {
     let ctrl = null;
-    let _equalizers = null;
+    let _libraries = null;
+    let _queues = null;
+    let _emUtils = null;
     
     beforeEach(() => {
-        _equalizers = {
-            updateNodeGain: function() {}
-        };
+        _libraries = {};
+        _queues = {addLast: () => {}};
+        _emUtils = {};
         
-        ctrl = new EQController(_equalizers);
+        ctrl = new LibraryController(_libraries, _queues, _emUtils);
     });
     
     describe('$inject', () => {
         it('defines injections', () => {
-            expect(EQController.$inject.length).toBeGreaterThan(-1);
+            expect(LibraryController.$inject.length).toBeGreaterThan(-1);
         });
     });
     
     describe('injectID', () => {
         it('defines an injection ID', () => {
-            expect(EQController.injectID).toEqual(jasmine.any(String));
+            expect(LibraryController.injectID).toEqual(jasmine.any(String));
         });
     });
     
-    describe('getEQ', () => {
-        it('returns the EQ', () => {
-            _equalizers.eq = {};
-            expect(ctrl.getEQ()).toBe(_equalizers.eq);
-        });
-    });
-    
-    describe('nodeChanged', () => {
-        beforeEach(() => {
-            spyOn(_equalizers, 'updateNodeGain').and.stub();
-        });
-        
-        it('updates the node\'s gain', () => {
-            let node = {n: 'N'};
-            ctrl.nodeChanged(node);
-            expect(_equalizers.updateNodeGain).toHaveBeenCalledWith(node);
+    describe('addLast', () => {
+        it('adds the song with the given ID to the end of the queue', () => {
+            spyOn(_queues, 'addLast');
+            ctrl.addLast(17);
+            expect(_queues.addLast).toHaveBeenCalledWith(17);
         });
     });
 });

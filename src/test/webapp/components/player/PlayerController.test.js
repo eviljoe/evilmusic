@@ -16,16 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class PlayerController {
-    constructor(players) {
-        this.players = players;
-    }
+import PlayerController from 'components/player/PlayerController';
+
+describe(PlayerController.name, () => {
+    let ctrl = null;
+    let _players = null;
     
-    static get $inject() {
-        return ['players'];
-    }
+    beforeEach(() => {
+        _players = {};
+        ctrl = new PlayerController(_players);
+    });
     
-    static get injectID() {
-        return PlayerController.name;
-    }
-}
+    describe('$inject', () => {
+        it('defines injections', () => {
+            expect(PlayerController.$inject.length).toBeGreaterThan(-1);
+        });
+    });
+    
+    describe('injectID', () => {
+        it('defines an injection ID', () => {
+            expect(PlayerController.injectID).toEqual(jasmine.any(String));
+        });
+    });
+});
