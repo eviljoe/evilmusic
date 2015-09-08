@@ -36,7 +36,7 @@ describe(HertzFilterFactory.name, () => {
         });
         
         it('defines injections', () => {
-            expect(factory.filter.$inject.length).toBeGreaterThan(0);
+            expect(factory.filter.$inject).toEqual(jasmine.any(Array));
         });
         
         it('creates a filter function', () => {

@@ -32,7 +32,7 @@ describe(EQController.name, function() {
     
     describe('$inject', () => {
         it('defines injections', () => {
-            expect(EQController.$inject.length).toBeGreaterThan(-1);
+            expect(EQController.$inject).toEqual(jasmine.any(Array));
         });
     });
     

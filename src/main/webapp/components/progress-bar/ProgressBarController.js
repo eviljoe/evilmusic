@@ -21,14 +21,11 @@ export default class ProgressBarController {
         ProgressBarController.instance = this;
         
         this.$scope = $scope;
+        this.$rootScope = $rootScope;
         this.players = players;
         this.emUtils = emUtils;
         
-        $rootScope.$on(players.playerProgressChangedEventName, () => $scope.updateMeterWidth());
-        
-        // JOE TODO this whole nightmare needs to be refactored.  I can hear it crying.
-        $scope.progressMeterClicked = this.progressMeterClicked;
-        $scope.updateMeterWidth = this.updateMeterWidth;
+        this.init();
     }
 
     static get $inject() {
@@ -41,6 +38,14 @@ export default class ProgressBarController {
     
     static getInstance() {
         return ProgressBarController.instance;
+    }
+    
+    init() {
+        // JOE TODO this whole nightmare needs to be refactored.  I can hear it crying.
+        this.$scope.progressMeterClicked = this.progressMeterClicked;
+        this.$scope.updateMeterWidth = this.updateMeterWidth;
+        
+        this.$rootScope.$on(this.players.playerProgressChangedEventName, () => this.$scope.updateMeterWidth());
     }
     
     progressMeterClicked(xPos, width) {

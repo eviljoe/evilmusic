@@ -76,7 +76,7 @@ describe(Players.name, () => {
     
     describe('$inject', () => {
         it('defines injections', () => {
-            expect(Players.$inject.length).toBeGreaterThan(-1);
+            expect(Players.$inject).toEqual(jasmine.any(Array));
         });
     });
     

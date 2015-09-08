@@ -29,7 +29,7 @@ describe(PlayerController.name, () => {
     
     describe('$inject', () => {
         it('defines injections', () => {
-            expect(PlayerController.$inject.length).toBeGreaterThan(-1);
+            expect(PlayerController.$inject).toEqual(jasmine.any(Array));
         });
     });
     

@@ -43,7 +43,7 @@ describe(Libraries.name, () => {
     
     describe('$inject', () => {
         it('defines injections', () => {
-            expect(Libraries.$inject.length).toBeGreaterThan(-1);
+            expect(Libraries.$inject).toEqual(jasmine.any(Array));
         });
     });
     

@@ -39,7 +39,7 @@ describe(Equalizers.name, () => {
     
     describe('$inject', () => {
         it('defines injections', () => {
-            expect(Equalizers.$inject.length).toBeGreaterThan(-1);
+            expect(Equalizers.$inject).toEqual(jasmine.any(Array));
         });
     });
     

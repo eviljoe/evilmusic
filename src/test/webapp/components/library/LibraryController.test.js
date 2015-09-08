@@ -34,7 +34,7 @@ describe(LibraryController.name, function() {
     
     describe('$inject', () => {
         it('defines injections', () => {
-            expect(LibraryController.$inject.length).toBeGreaterThan(-1);
+            expect(LibraryController.$inject).toEqual(jasmine.any(Array));
         });
     });
     
