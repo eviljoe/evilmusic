@@ -32,62 +32,18 @@ export default class QueueResourceFactory extends ResourceFactory {
             {
                 addLast: {
                     method: 'PUT',
-                    url: '/rest/queue/:id/last',
-                    transformRequest: QueueResourceFactory.emptyRequest
+                    url: '/rest/queue/:id/last'
                 },
                 remove: {
                     method: 'DELETE',
                     url: '/rest/queue/:id/queueindex/:qIndex',
-                    params: {id: '@id', qIndex: '@qIndex'},
-                    transformRequest: QueueResourceFactory.emptyRequest
+                    params: {id: '@id', qIndex: '@qIndex'}
                 },
                 clear: {
                     method: 'DELETE',
-                    url: '/rest/queue/:id/elements',
-                    transformRequest: QueueResourceFactory.emptyRequest
+                    url: '/rest/queue/:id/elements'
                 }
             }
         );
     }
-    
-    static emptyRequest(data) {
-        return undefined;
-    }
 }
-
-// const INJECTIONS = ['$resource'];
-// function resource($resource) {
-//     'use strict';
-//
-//     function emptyRequest(data) {
-//         return undefined;
-//     }
-//
-//     return $resource(
-//         '/rest/queue/:id',
-//         {id: '@id'},
-//         {
-//             addLast: {
-//                 method: 'PUT',
-//                 url: '/rest/queue/:id/last',
-//                 transformRequest: emptyRequest
-//             },
-//             remove: {
-//                 method: 'DELETE',
-//                 url: '/rest/queue/:id/queueindex/:qIndex',
-//                 params: {id: '@id', qIndex: '@qIndex'},
-//                 transformRequest: emptyRequest
-//             },
-//             clear: {
-//                 method: 'DELETE',
-//                 url: '/rest/queue/:id/elements',
-//                 transformRequest: emptyRequest
-//             }
-//         }
-//     );
-// }
-//
-// resource.$inject = INJECTIONS;
-// resource.injectID = 'Queue';
-//
-// export default resource;

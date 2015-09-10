@@ -17,20 +17,25 @@
  */
 
 export default class Queues {
-    constructor(emUtils, Queue) {
+    constructor($window, emUtils, Queue) {
         this.q = null;
+        this.$window = $window;
         this.emUtils = emUtils;
         this.Queue = Queue;
         
-        this.load(true);
+        this.init();
     }
     
     static get $inject() {
-        return ['emUtils', 'Queue'];
+        return ['$window', 'emUtils', 'Queue'];
     }
     
     static get injectID() {
         return 'queues';
+    }
+    
+    init() {
+        this.load(true);
     }
     
     /**
@@ -44,7 +49,7 @@ export default class Queues {
 
         this.q = this.Queue.get({id: id});
         this.q.$promise.catch((data) => {
-            alert('Could not get queue.\n\n' + JSON.stringify(data));
+            this.$window.alert('Could not get queue.\n\n' + JSON.stringify(data));
         });
     }
 
@@ -57,12 +62,13 @@ export default class Queues {
      */
     addLast(songID) {
         this.q.$promise.then(() => {
-            this.q.$addLast({id: this.q.id, songIDs: songID}).then(() => {
-                this.load(false);
-            },
-            (data) => {
-                alert('Failed to enqueue last.\n\n' + JSON.stringify(data));
-            });
+            this.addLastNow(songID);
+        });
+    }
+    
+    addLastNow(songID) {
+        this.q.$addLast({id: this.q.id, songIDs: songID}).catch((data) => {
+            this.$window.alert('Failed to enqueue last.\n\n' + JSON.stringify(data));
         });
     }
 
@@ -75,12 +81,13 @@ export default class Queues {
      */
     remove(queueIndex) {
         this.q.$promise.then(() => {
-            this.q.$remove({id: this.q.id, qIndex: this.queueIndex}).then(() => {
-                this.load(false);
-            },
-            (data) => {
-                alert('Failed to remove from queue (' + this.queueIndex + ')\n\n' + JSON.stringify(data));
-            });
+            this.removeNow(queueIndex);
+        });
+    }
+    
+    removeNow(queueIndex) {
+        this.q.$remove({id: this.q.id, qIndex: queueIndex}).catch((data) => {
+            this.$window.alert('Failed to remove from queue (' + this.queueIndex + ')\n\n' + JSON.stringify(data));
         });
     }
 
@@ -90,12 +97,13 @@ export default class Queues {
      */
     clear() {
         this.q.$promise.then(() => {
-            this.q.$clear().then(() => {
-                this.load(false);
-            },
-            (data) => {
-                alert('Clear queue failed.\n\n' + JSON.stringify(data));
-            });
+            this.clearNow();
+        });
+    }
+    
+    clearNow() {
+        this.q.$clear().catch((data) => {
+            this.$window.alert('Clear queue failed.\n\n' + JSON.stringify(data));
         });
     }
 
@@ -108,13 +116,13 @@ export default class Queues {
      * @return {Song} If a song can be found at the given queue index, it will be returned.  If a song cannot be found,
      *         null will be returned.
      */
-    getSong(queueIndex) {
+    getSong(queueIndex) { // JOE ju
         let song = null;
 
         if(this.emUtils.isNumber(queueIndex) && this.q && this.q.elements) {
             for(let x = 0; x < this.q.elements.length; x++) {
                 let elem = this.q.elements[x];
-
+            
                 if(elem && elem.queueIndex === queueIndex) {
                     song = elem.song;
                 }

@@ -26,18 +26,13 @@ export default class EqualizerResourceFactory extends ResourceFactory {
     }
     
     resource($resource) {
-        return $resource('/rest/eq/:id', {id: '@id'}, {});
+        return $resource(
+            '/rest/eq/:id',
+            {id: '@id'},
+            {
+                update: {
+                    method: 'PUT'
+                }
+            });
     }
 }
-
-// const INJECTIONS = ['$resource'];
-// function resource($resource) {
-//     'use strict';
-//
-//     return $resource('/rest/eq/:id', {id: '@id'}, {});
-// }
-//
-// resource.$inject = INJECTIONS;
-// resource.injectID = 'Equalizer';
-//
-// export default resource;
