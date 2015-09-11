@@ -35,6 +35,7 @@ module.exports = function(config) {
             'node_modules/angular-resource/angular-resource.js', // Needs to be after angular
             'node_modules/angular-bootstrap/dist/ui-bootstrap.js', // Needs to be after angular
             'node_modules/angular-mocks/angular-mocks.js',
+            'node_modules/lodash/index.js',
 
             // Root level HTML & JavaScript files
             webSrcDir + '/index.js',

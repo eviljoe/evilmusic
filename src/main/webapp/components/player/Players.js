@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import AV from 'av';
+
 export default class Players {
     constructor($http, $rootScope, $window, emUtils, queues, equalizers) {
         this.$http = $http;
@@ -24,7 +26,7 @@ export default class Players {
         this.emUtils = emUtils;
         this.queues = queues;
         this.equalizers = equalizers;
-        this.AV = AV; // From global scope
+        this.AV = AV;
         
         this.playerProgressChangedEventName = 'emPlayerProgressChanged';
         this.avPlayer = null;
@@ -83,12 +85,12 @@ export default class Players {
         }
     }
     
-    playerProgressChanged(song, progress) { // JOE ju
+    playerProgressChanged(song, progress) {
         this.playerProgress = progress / song.millis * 100;
         this.$rootScope.$broadcast(this.playerProgressChangedEventName);
     }
     
-    playerSongEnded() { // JOE ju
+    playerSongEnded() {
         this.avPlayer = null;
         this.currentSong = null;
     }

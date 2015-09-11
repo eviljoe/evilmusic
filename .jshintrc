@@ -19,22 +19,5 @@
     "jasmine": true,
     "jquery": true,
     "module": true,
-    "predef": [
-        "afterEach",
-        "alert",
-        "angular",
-        "AV",
-        "beforeEach",
-        "describe",
-        "document",
-        "expect",
-        "fdescribe",
-        "fit",
-        "inject",
-        "it",
-        "jasmine",
-        "module",
-        "require",
-        "spyOn"
-    ]
+    "predef": []
 }

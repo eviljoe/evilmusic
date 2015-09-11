@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import angular from 'angular';
 import Equalizers from 'components/eq/Equalizers';
 
 describe(Equalizers.name, () => {

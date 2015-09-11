@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import _ from 'lodash';
+
 export default class Queues {
     constructor($window, emUtils, Queue) {
         this.q = null;
@@ -116,19 +118,13 @@ export default class Queues {
      * @return {Song} If a song can be found at the given queue index, it will be returned.  If a song cannot be found,
      *         null will be returned.
      */
-    getSong(queueIndex) { // JOE ju
-        let song = null;
+    getSong(queueIndex) {
+        let song;
 
-        if(this.emUtils.isNumber(queueIndex) && this.q && this.q.elements) {
-            for(let x = 0; x < this.q.elements.length; x++) {
-                let elem = this.q.elements[x];
-            
-                if(elem && elem.queueIndex === queueIndex) {
-                    song = elem.song;
-                }
-            }
+        if(this.emUtils.isNumber(queueIndex) && this.q) {
+            song = _.result(_.find(this.q.elements, {queueIndex: queueIndex}), 'song');
         }
 
-        return song;
+        return song || null;
     }
 }

@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import angular from 'angular';
 import Queues from 'components/queue/Queues';
 
 describe(Queues.name, () => {
@@ -33,7 +34,9 @@ describe(Queues.name, () => {
         _window = {
             alert() {}
         };
-        _emUtils = {};
+        _emUtils = {
+            isNumber() {}
+        };
         _Queue = {
             q: {},
             get() {
@@ -250,6 +253,53 @@ describe(Queues.name, () => {
     });
     
     describe('getSong', () => {
-        // JOE todo
+        let songIndex = null;
+        
+        beforeEach(() => {
+            spyOn(_emUtils, 'isNumber').and.returnValue(true);
+            songIndex = 7;
+            queues.q = {
+                elements: [{
+                    queueIndex: songIndex,
+                    song: {}
+                }]
+            };
+        });
+        
+        it('returns null when given a value that is not a number', () => {
+            _emUtils.isNumber.and.returnValue(false);
+            expect(queues.getSong(songIndex)).toBeNull();
+        });
+        
+        it('returns null when there is no queue', () => {
+            queues.q = null;
+            expect(queues.getSong(songIndex)).toBeNull();
+        });
+        
+        it('returns null when the queue\'s elements field is undefined/null', () => {
+            queues.q.elements = undefined;
+            expect(queues.getSong(songIndex)).toBeNull();
+            queues.q.elements = null;
+            expect(queues.getSong(songIndex)).toBeNull();
+        });
+        
+        it('returns null when the queue\'s elements field is empty', () => {
+            queues.q.elements = [];
+            expect(queues.getSong(songIndex)).toBeNull();
+        });
+        
+        it('returns null when the queue does not have an element at the given index', () => {
+            expect(queues.getSong(songIndex + 1)).toBeNull();
+        });
+        
+        it('returns null when the queue element at the given index does not have a song', function() {
+            queues.q.elements[0].song = undefined;
+            expect(queues.getSong(songIndex)).toBeNull();
+        });
+        
+        it('returns the song for the queue element at the given index', () => {
+            queues.q.elements[0].song = {a: 'A'};
+            expect(queues.getSong(songIndex)).toEqual({a: 'A'});
+        });
     });
 });

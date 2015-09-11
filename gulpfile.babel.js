@@ -16,28 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// jshint -W132
+import concat from 'gulp-concat';
+import babelify from 'babelify';
+import browserify from 'browserify';
+import del from 'del';
+import gulp from 'gulp';
+import jscs from 'gulp-jscs';
+import jshint from 'gulp-jshint';
+import jshintStylish from 'jshint-stylish';
+import karma from 'gulp-karma';
+import source from 'vinyl-source-stream';
+import sourcemaps from 'gulp-sourcemaps';
+import templateCache from 'gulp-angular-templatecache';
 
-var concat = require('gulp-concat');
-var babelify = require('babelify');
-var browserify = require('browserify');
-var del = require('del');
-var gulp = require('gulp');
-var jscs = require('gulp-jscs');
-var jshint = require('gulp-jshint');
-var jshintStylish = require('jshint-stylish');
-var karma = require('gulp-karma');
-var source = require('vinyl-source-stream');
-var sourcemaps = require('gulp-sourcemaps');
-var templateCache = require('gulp-angular-templatecache');
+let webSrcDir = './src/main/webapp';
+let webTestSrcDir = './src/test/webapp';
+let destDir = './src/main/webapp/dist';
+let cssDestDir = './src/main/webapp/dist/css';
+let fontsDestDir = './src/main/webapp/dist/fonts';
 
-var webSrcDir = './src/main/webapp';
-var webTestSrcDir = './src/test/webapp';
-var destDir = './src/main/webapp/dist';
-var cssDestDir = './src/main/webapp/dist/css';
-var fontsDestDir = './src/main/webapp/dist/fonts';
-
-var jsFilesToTest = [
+let jsFilesToTest = [
     webSrcDir + '/**/*.js',
     webSrcDir + '/**/*.js',
     webTestSrcDir + '/**/*.js',
@@ -46,11 +44,12 @@ var jsFilesToTest = [
     '!' + webSrcDir + '/dist/**'
 ];
 
-var thirdPartyJSFiles = [
+let thirdPartyJSFiles = [
     'node_modules/jquery/dist/jquery.js', // Needs to be before angular
     'node_modules/angular/angular.js',
     'node_modules/angular-resource/angular-resource.js', // Needs to be after angular
     'node_modules/angular-bootstrap/dist/ui-bootstrap.js', // Needs to be after angular
+    'node_modules/lodash/index.js',
     webSrcDir + '/assets/libs/aurora.js',
     webSrcDir + '/assets/libs/flac.js' // Needs to be after aurora.js
 ];

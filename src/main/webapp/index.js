@@ -12,6 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+import angular from 'angular';
 import eq from './components/eq';
 import evilmusic from './components/evilmusic';
 import library from './components/library';
