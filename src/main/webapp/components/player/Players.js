@@ -19,10 +19,10 @@
 import AV from 'av';
 
 export default class Players {
-    constructor($http, $rootScope, $window, emUtils, queues, equalizers) {
+    constructor($http, $rootScope, alerts, emUtils, queues, equalizers) {
         this.$http = $http;
         this.$rootScope = $rootScope;
-        this.$window = $window;
+        this.alerts = alerts;
         this.emUtils = emUtils;
         this.queues = queues;
         this.equalizers = equalizers;
@@ -38,7 +38,7 @@ export default class Players {
     }
     
     static get $inject() {
-        return ['$http', '$rootScope', '$window', 'emUtils', 'queues', 'equalizers'];
+        return ['$http', '$rootScope', 'alerts', 'emUtils', 'queues', 'equalizers'];
     }
     
     static get injectID() {
@@ -145,7 +145,7 @@ export default class Players {
     
     putVolume(volume) {
         this.$http.put('/rest/config/volume/' + volume).catch((response) => {
-            this.$window.alert('Could not update volume.\n\n' + JSON.stringify(response));
+            this.alerts.error('Could not update volume.', response);
         });
     }
     
@@ -153,7 +153,7 @@ export default class Players {
         this.$http.get('/rest/config/volume').then((response) => {
             this.volume = response.data;
         }, (response) => {
-            this.$window.alert('Could not load volume.\n\n' + JSON.stringify(response));
+            this.alerts.error('Could not load volume.', response);
         });
     }
 }

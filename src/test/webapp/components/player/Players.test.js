@@ -23,7 +23,7 @@ describe(Players.name, () => {
     let players = null;
     let _http = null;
     let _rootScope = null;
-    let _window = null;
+    let _alerts = null;
     let _emUtils = null;
     let _queues = null;
     let _equalizers = null;
@@ -43,8 +43,8 @@ describe(Players.name, () => {
         _rootScope = {
             $broadcast() {}
         };
-        _window = {
-            alert() {}
+        _alerts = {
+            error() {}
         };
         _emUtils = {
             isNumber() {}
@@ -70,7 +70,7 @@ describe(Players.name, () => {
             togglePlayback() {}
         };
         
-        players = new Players(_http, _rootScope, _window, _emUtils, _queues, _equalizers);
+        players = new Players(_http, _rootScope, _alerts, _emUtils, _queues, _equalizers);
         players.AV = _AV;
         players.avPlayer = _avPlayer;
     }));
@@ -411,7 +411,7 @@ describe(Players.name, () => {
         beforeEach(() => {
             volumeDefer = $q.defer();
             spyOn(_http, 'put').and.returnValue(volumeDefer.promise);
-            spyOn(_window, 'alert').and.stub();
+            spyOn(_alerts, 'error').and.stub();
         });
         
         it('makes an HTTP put request to set the volume', () => {
@@ -425,7 +425,7 @@ describe(Players.name, () => {
             volumeDefer.reject();
             $rootScope.$apply();
             
-            expect(_window.alert).toHaveBeenCalled();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
@@ -435,7 +435,7 @@ describe(Players.name, () => {
         beforeEach(() => {
             volumeDefer = $q.defer();
             spyOn(_http, 'get').and.returnValue(volumeDefer.promise);
-            spyOn(_window, 'alert').and.stub();
+            spyOn(_alerts, 'error').and.stub();
         });
         
         it('makes an HTTP get request to get the volume', () => {
@@ -458,7 +458,7 @@ describe(Players.name, () => {
             volumeDefer.reject();
             $rootScope.$apply();
             
-            expect(_window.alert).toHaveBeenCalled();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
 });

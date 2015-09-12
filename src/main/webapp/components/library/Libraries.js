@@ -17,8 +17,8 @@
  */
 
 export default class Libraries {
-    constructor($window, queues, Library) {
-        this.$window = $window;
+    constructor(alerts, queues, Library) {
+        this.alerts = alerts;
         this.library = null;
         this.queues = queues;
         this.Library = Library;
@@ -27,7 +27,7 @@ export default class Libraries {
     }
     
     static get $inject() {
-        return ['$window', 'queues', 'Library'];
+        return ['alerts', 'queues', 'Library'];
     }
     
     static get injectID() {
@@ -42,7 +42,7 @@ export default class Libraries {
     load() {
         this.library = this.Library.get();
         this.library.$promise.catch((data) => {
-            this.$window.alert('Could not get library.\n\n' + JSON.stringify(data));
+            this.alerts.error('Could not get library.', data);
         });
     }
     
@@ -59,7 +59,7 @@ export default class Libraries {
             this.load();
             this.queues.load(true);
         }, (data) => {
-            this.$window.alert('Clear library failed.\n\n' + JSON.stringify(data));
+            this.alerts.error('Clear library failed.', data);
         });
     }
     
@@ -77,7 +77,7 @@ export default class Libraries {
             this.load();
             this.queues.load(true);
         }, (data) => {
-            this.$window.alert('Library rebuilding failed.\n\n' + JSON.stringify(data));
+            this.alerts.error('Library rebuilding failed.', data);
         });
     }
 }

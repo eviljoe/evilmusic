@@ -21,7 +21,7 @@ import Libraries from 'components/library/Libraries';
 
 describe(Libraries.name, () => {
     let libraries = null;
-    let _window = null;
+    let _alerts = null;
     let _queues = null;
     let _Library = null;
     let $q = null;
@@ -31,15 +31,19 @@ describe(Libraries.name, () => {
         $q = _$q_;
         $rootScope = _$rootScope_;
         
-        _window = {alert: () => {}};
-        _queues = {load: () => {}};
+        _alerts = {
+            error() {}
+        };
+        _queues = {
+            load() {}
+        };
         _Library = {
             get: () => {
                 return {$promise: $q.defer().promise};
             }
         };
         
-        libraries = new Libraries(_window, _queues, _Library);
+        libraries = new Libraries(_alerts, _queues, _Library);
     }));
     
     describe('$inject', () => {
@@ -83,13 +87,13 @@ describe(Libraries.name, () => {
         });
         
         it('displays an error message if the library fails to load', () => {
-            spyOn(_window, 'alert').and.stub();
+            spyOn(_alerts, 'error').and.stub();
             
             libraries.load();
             libDefer.reject();
             $rootScope.$apply();
             
-            expect(_window.alert).toHaveBeenCalled();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
@@ -121,7 +125,7 @@ describe(Libraries.name, () => {
             spyOn(_library, '$delete').and.returnValue(libDefer.promise);
             spyOn(libraries, 'load').and.stub();
             spyOn(_queues, 'load').and.stub();
-            spyOn(_window, 'alert').and.stub();
+            spyOn(_alerts, 'error').and.stub();
             
             libraries.library = _library;
         });
@@ -155,7 +159,7 @@ describe(Libraries.name, () => {
             libDefer.reject();
             $rootScope.$apply();
             
-            expect(_window.alert).toHaveBeenCalled();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
@@ -187,7 +191,7 @@ describe(Libraries.name, () => {
             spyOn(_library, '$rebuild').and.returnValue(libDefer.promise);
             spyOn(libraries, 'load').and.stub();
             spyOn(_queues, 'load').and.stub();
-            spyOn(_window, 'alert').and.stub();
+            spyOn(_alerts, 'error').and.stub();
             
             libraries.library = _library;
         });
@@ -221,7 +225,7 @@ describe(Libraries.name, () => {
             libDefer.reject();
             $rootScope.$apply();
             
-            expect(_window.alert).toHaveBeenCalled();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
 });

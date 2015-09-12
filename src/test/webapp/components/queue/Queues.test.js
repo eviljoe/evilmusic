@@ -21,7 +21,7 @@ import Queues from 'components/queue/Queues';
 
 describe(Queues.name, () => {
     let queues = null;
-    let _window = null;
+    let _alerts = null;
     let _emUtils = null;
     let _Queue = null;
     let $q = null;
@@ -31,8 +31,8 @@ describe(Queues.name, () => {
         $q = _$q_;
         $rootScope = _$rootScope_;
         
-        _window = {
-            alert() {}
+        _alerts = {
+            error() {}
         };
         _emUtils = {
             isNumber() {}
@@ -44,7 +44,7 @@ describe(Queues.name, () => {
             }
         };
         
-        queues = new Queues(_window, _emUtils, _Queue);
+        queues = new Queues(_alerts, _emUtils, _Queue);
     }));
     
     describe('$inject', () => {
@@ -78,7 +78,7 @@ describe(Queues.name, () => {
             spyOn(_Queue, 'get').and.returnValue({
                 $promise: qDefer.promise
             });
-            spyOn(_window, 'alert').and.stub();
+            spyOn(_alerts, 'error').and.stub();
         });
         
         it('loads a new queue when given true', () => {
@@ -102,7 +102,7 @@ describe(Queues.name, () => {
             queues.load(true);
             qDefer.reject();
             $rootScope.$apply();
-            expect(_window.alert).toHaveBeenCalled();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
@@ -132,7 +132,7 @@ describe(Queues.name, () => {
                 $addLast() {}
             };
             spyOn(queues.q, '$addLast').and.returnValue(qDefer.promise);
-            spyOn(_window, 'alert').and.stub();
+            spyOn(_alerts, 'error').and.stub();
         });
         
         it('adds the song with the given ID to the end of the queue', () => {
@@ -151,7 +151,7 @@ describe(Queues.name, () => {
             qDefer.reject();
             $rootScope.$apply();
             
-            expect(_window.alert).toHaveBeenCalled();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
@@ -181,7 +181,7 @@ describe(Queues.name, () => {
                 $remove() {}
             };
             spyOn(queues.q, '$remove').and.returnValue(qDefer.promise);
-            spyOn(_window, 'alert').and.stub();
+            spyOn(_alerts, 'error').and.stub();
         });
         
         it('removes the song at the given queue index', () => {
@@ -200,7 +200,7 @@ describe(Queues.name, () => {
             qDefer.reject();
             $rootScope.$apply();
             
-            expect(_window.alert).toHaveBeenCalled();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
@@ -230,7 +230,7 @@ describe(Queues.name, () => {
                 $clear() {}
             };
             spyOn(queues.q, '$clear').and.returnValue(qDefer.promise);
-            spyOn(_window, 'alert').and.stub();
+            spyOn(_alerts, 'error').and.stub();
         });
         
         it('clears the queue', () => {
@@ -248,7 +248,7 @@ describe(Queues.name, () => {
             qDefer.reject();
             $rootScope.$apply();
             
-            expect(_window.alert).toHaveBeenCalled();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
     

@@ -19,9 +19,9 @@
 import _ from 'lodash';
 
 export default class Queues {
-    constructor($window, emUtils, Queue) {
+    constructor(alerts, emUtils, Queue) {
         this.q = null;
-        this.$window = $window;
+        this.alerts = alerts;
         this.emUtils = emUtils;
         this.Queue = Queue;
         
@@ -29,7 +29,7 @@ export default class Queues {
     }
     
     static get $inject() {
-        return ['$window', 'emUtils', 'Queue'];
+        return ['alerts', 'emUtils', 'Queue'];
     }
     
     static get injectID() {
@@ -51,7 +51,7 @@ export default class Queues {
 
         this.q = this.Queue.get({id: id});
         this.q.$promise.catch((data) => {
-            this.$window.alert('Could not get queue.\n\n' + JSON.stringify(data));
+            this.alerts.error('Could not get queue.', data);
         });
     }
 
@@ -69,8 +69,9 @@ export default class Queues {
     }
     
     addLastNow(songID) {
+        this.alerts.error('junk', {stuff: 'and things'}); // JOE rt
         this.q.$addLast({id: this.q.id, songIDs: songID}).catch((data) => {
-            this.$window.alert('Failed to enqueue last.\n\n' + JSON.stringify(data));
+            this.alerts.error('Failed to enqueue last.', data);
         });
     }
 
@@ -89,7 +90,7 @@ export default class Queues {
     
     removeNow(queueIndex) {
         this.q.$remove({id: this.q.id, qIndex: queueIndex}).catch((data) => {
-            this.$window.alert('Failed to remove from queue (' + this.queueIndex + ')\n\n' + JSON.stringify(data));
+            this.alerts.error(`Failed to remove from queue (${queueIndex})`, data);
         });
     }
 
@@ -105,7 +106,7 @@ export default class Queues {
     
     clearNow() {
         this.q.$clear().catch((data) => {
-            this.$window.alert('Clear queue failed.\n\n' + JSON.stringify(data));
+            this.alerts.error('Clear queue failed.', data);
         });
     }
 

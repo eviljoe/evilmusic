@@ -17,9 +17,10 @@
  */
 
 export default class Equalizers {
-    constructor(Equalizer) {
+    constructor(alerts, Equalizer) {
         Equalizers.instance = this;
         
+        this.alerts = alerts;
         this.Equalizer = Equalizer;
         this.webAudioNodes = {};
         this.eq = null;
@@ -28,7 +29,7 @@ export default class Equalizers {
     }
     
     static get $inject() {
-        return ['Equalizer'];
+        return ['alerts', 'Equalizer'];
     }
     
     static get injectID() {
@@ -53,8 +54,8 @@ export default class Equalizers {
         let id = loadNew ? 'default' : this.eq.id;
 
         this.eq = this.Equalizer.get({id: id});
-        this.eq.$promise.catch(function(data) {
-            alert('Could not get equalizer.\n\n' + JSON.stringify(data));
+        this.eq.$promise.catch((data) => {
+            this.alerts.error('Could not get equalizer.', data);
         });
     }
     

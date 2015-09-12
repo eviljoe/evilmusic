@@ -1,0 +1,34 @@
+<!--
+EvilMusic - Web-Based Music Player
+Copyright (C) 2015 Joe Falascino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="modal-header">
+    <h4 class="modal-title">{{ctrl.title}}</h4>
+</div>
+<div class="modal-body">
+    <p>{{ctrl.message}}</p>
+    <div ng-if="ctrl.debugInfo" class="debug-info-container">
+        <div>Debug Information</div>
+        <textarea disabled rows="8" class="form-control debug-info">{{ctrl.debugInfo | alertDebugInfo}}</textarea>
+    </div>
+</div>
+<div class="modal-footer">
+    <button ng-repeat="b in ctrl.buttons" class="btn" ng-class="{'btn-primary': b.primary, 'btn-default': !b.primary}"
+        ng-click="ctrl.buttonClicked(b)">
+        <span class="{{b.icon}}"></span> {{b.text}}
+    </button>
+</div>

@@ -21,6 +21,7 @@ import Equalizers from 'components/eq/Equalizers';
 
 describe(Equalizers.name, () => {
     let equalizers = null;
+    let _alerts = null;
     let _Equalizer = null;
     let $q = null;
     let $rootScope = null;
@@ -29,13 +30,16 @@ describe(Equalizers.name, () => {
         $q = _$q_;
         $rootScope = _$rootScope_;
         
+        _alerts = {
+            error() {}
+        };
         _Equalizer = {
             get: () => {
                 return {$promise: $q.defer().promise};
             }
         };
         
-        equalizers = new Equalizers(_Equalizer);
+        equalizers = new Equalizers(_alerts, _Equalizer);
     }));
     
     describe('$inject', () => {
@@ -67,6 +71,44 @@ describe(Equalizers.name, () => {
         it('loads a new equalizer', () => {
             equalizers.init();
             expect(equalizers.load).toHaveBeenCalledWith(true);
+        });
+    });
+    
+    describe('load', () => {
+        let eqDefer = null;
+        
+        beforeEach(() => {
+            eqDefer = $q.defer();
+            spyOn(_Equalizer, 'get').and.returnValue({
+                $promise: eqDefer.promise
+            });
+            spyOn(_alerts, 'error').and.stub();
+        });
+        
+        it('loads the default queue when given true', () => {
+            equalizers.load(true);
+            expect(_Equalizer.get).toHaveBeenCalledWith({id: 'default'});
+        });
+        
+        it('reloads the current queue given false', () => {
+            equalizers.eq.id = 7;
+            equalizers.load(false);
+            expect(_Equalizer.get).toHaveBeenCalledWith({id: 7});
+        });
+        
+        it('reloads the current queue given nothing', () => {
+            equalizers.eq.id = 13;
+            equalizers.load();
+            expect(_Equalizer.get).toHaveBeenCalledWith({id: 13});
+        });
+        
+        it('displays an error message if the queue fails to loads', () => {
+            equalizers.load();
+            
+            eqDefer.reject();
+            $rootScope.$apply();
+            
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
     

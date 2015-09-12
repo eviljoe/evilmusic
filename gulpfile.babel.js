@@ -45,13 +45,27 @@ let jsFilesToTest = [
 ];
 
 let thirdPartyJSFiles = [
-    'node_modules/jquery/dist/jquery.js', // Needs to be before angular
+    // JQuery (Needs to be before Angular)
+    'node_modules/jquery/dist/jquery.js',
+    
+    // Angular
     'node_modules/angular/angular.js',
-    'node_modules/angular-resource/angular-resource.js', // Needs to be after angular
-    'node_modules/angular-bootstrap/dist/ui-bootstrap.js', // Needs to be after angular
+    
+    // ngResource (Needs to be after Angular)
+    'node_modules/angular-resource/angular-resource.js',
+    
+    // UI Bootstrap (Needs to be after Angular)
+    'node_modules/angular-bootstrap/dist/ui-bootstrap.js',
+    'node_modules/angular-bootstrap/dist/ui-bootstrap-tpls.js',
+    
+    // Lodash
     'node_modules/lodash/index.js',
+    
+    // Aurora
     webSrcDir + '/assets/libs/aurora.js',
-    webSrcDir + '/assets/libs/flac.js' // Needs to be after aurora.js
+    
+    // FLAC (Needs to be after Aurora)
+    webSrcDir + '/assets/libs/flac.js'
 ];
  
 // JOE TODO task convert src/main/webapp/assets/less to CSS (and get rid of src/main/webapp/assets/css/evilmusic.css)
@@ -119,7 +133,7 @@ gulp.task('copy-third-party-css-source-maps', ['clean'], function() {
 });
 
 gulp.task('create-template-cache', ['clean'], function() {
-    return gulp.src(webSrcDir + '/components/**/*.html')
+    return gulp.src(webSrcDir + '/**/*.html')
     .pipe(templateCache('evilmusic-templates.js', {module: 'EvilMusicApp'}))
     .pipe(gulp.dest(destDir));
 });

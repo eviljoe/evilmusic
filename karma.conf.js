@@ -30,10 +30,11 @@ module.exports = function(config) {
             // Third party libraries
             webSrcDir + '/assets/libs/aurora.js',
             webSrcDir + '/assets/libs/flac.js',
-            'node_modules/jquery/dist/jquery.js', // Needs to be before angular
+            'node_modules/jquery/dist/jquery.js', // Needs to be before Angular
             'node_modules/angular/angular.js',
-            'node_modules/angular-resource/angular-resource.js', // Needs to be after angular
-            'node_modules/angular-bootstrap/dist/ui-bootstrap.js', // Needs to be after angular
+            'node_modules/angular-resource/angular-resource.js', // Needs to be after Angular
+            'node_modules/angular-bootstrap/dist/ui-bootstrap.js', // Needs to be after Angular
+            'node_modules/angular-bootstrap/dist/ui-bootstrap-tpls.js', // Needs to be after Angular
             'node_modules/angular-mocks/angular-mocks.js',
             'node_modules/lodash/index.js',
 

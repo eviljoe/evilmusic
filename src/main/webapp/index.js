@@ -13,6 +13,7 @@
  */
 
 import angular from 'angular';
+import emAlert from './components/alert';
 import eq from './components/eq';
 import evilmusic from './components/evilmusic';
 import library from './components/library';
@@ -36,6 +37,7 @@ class EvilMusicApp {
     }
     
     init() {
+        emAlert(this);
         eq(this);
         evilmusic(this);
         library(this);
