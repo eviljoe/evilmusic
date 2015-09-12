@@ -30,8 +30,8 @@ export default class VolumeControlController {
     }
     
     volumeChanged() {
-        // JOE TODO this feels super weird.  I know setVolume(...) does a server put, but it feels like I am just
+        // TODO this feels super weird.  I know setVolume(...) does a server put, but it feels like I am just
         // setting the volume to what it already is.
-        this.players.setVolume(this.player.volume);
+        this.players.setVolume(this.players.volume);
     }
 }

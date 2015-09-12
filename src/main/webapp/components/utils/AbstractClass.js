@@ -16,24 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class Interface {
-    constructor(interfaceFunctionNames) {
-        if(Array.isArray(interfaceFunctionNames)) {
-            this._checkForFunctions(interfaceFunctionNames);
-        } else if(typeof interfaceFunctionNames === 'string') {
-            this._checkForFunction(interfaceFunctionNames);
+import _ from 'lodash';
+
+export default class AbstractClass {
+    constructor(abstractFunctionNames) {
+        this._initAbstractClass(abstractFunctionNames);
+    }
+    
+    _initAbstractClass(abstractFunctionNames) {
+        if(Array.isArray(abstractFunctionNames)) {
+            this._checkForAbstractFunctions(abstractFunctionNames);
+        } else if(typeof abstractFunctionNames === 'string') {
+            this._checkForAbstractFunction(abstractFunctionNames);
         }
     }
     
-    _checkForFunction(name) {
-        if(typeof this[name] !== 'function') {
-            throw new Error(this.constructor.name + ' must define a "' + name + '()" function');
+    _checkForAbstractFunction(abstractFunctionName) {
+        if(typeof this[abstractFunctionName] !== 'function') {
+            throw new Error(this.constructor.name + ' must define a "' + abstractFunctionName + '()" function');
         }
     }
     
-    _checkForFunctions(names) {
-        for(let x = 0; x < names.length; x++) {
-            this._checkForFunction(names[x]);
-        }
+    _checkForAbstractFunctions(abstractFunctionNames) {
+        _.forEach(abstractFunctionNames, (name) => this._checkForAbstractFunction(name));
     }
 }

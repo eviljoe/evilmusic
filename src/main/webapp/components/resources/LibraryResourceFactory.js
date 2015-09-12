@@ -35,21 +35,3 @@ export default class LibraryResourceFactory extends ResourceFactory {
         );
     }
 }
-
-// const INJECTIONS = ['$resource'];
-// function resource($resource) {
-//     'use strict';
-//
-//     return $resource(
-//         '/rest/library',
-//         null,
-//         {
-//             rebuild: {method: 'POST'}
-//         }
-//     );
-// }
-//
-// resource.$inject = INJECTIONS;
-// resource.injectID = 'Library';
-//
-// export default resource;
