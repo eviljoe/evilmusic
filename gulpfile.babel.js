@@ -118,7 +118,8 @@ gulp.task('concat-em-css', ['clean'], function() {
 gulp.task('concat-third-party-css', ['clean'], function() {
     return gulp.src([
         'node_modules/bootstrap/dist/css/bootstrap.css',
-        'node_modules/bootstrap/dist/css/bootstrap-theme.css'
+        'node_modules/bootstrap/dist/css/bootstrap-theme.css',
+        'node_modules/font-awesome/css/font-awesome.css'
     ])
     .pipe(concat('evilmusic-third-party.css'))
     .pipe(gulp.dest(cssDestDir));
@@ -127,7 +128,8 @@ gulp.task('concat-third-party-css', ['clean'], function() {
 gulp.task('copy-third-party-css-source-maps', ['clean'], function() {
     return gulp.src([
         'node_modules/bootstrap/dist/css/bootstrap.css.map',
-        'node_modules/bootstrap/dist/css/bootstrap-theme.css.map'
+        'node_modules/bootstrap/dist/css/bootstrap-theme.css.map',
+        '/node_modules/font-awesome/css/font-awesome.min.css'
     ])
     .pipe(gulp.dest(cssDestDir));
 });
@@ -140,7 +142,7 @@ gulp.task('create-template-cache', ['clean'], function() {
 
 gulp.task('copy-fonts', ['clean'], function() {
     return gulp.src([
-        'node_modules/bootstrap/dist/fonts/*'
+        'node_modules/font-awesome/fonts/*'
     ])
     .pipe(gulp.dest(fontsDestDir));
 });
