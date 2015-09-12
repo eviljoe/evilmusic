@@ -31,7 +31,7 @@ export default class PlayerDirectiveFactory extends DirectiveFactory {
             scope: {},
             controller: PlayerController.injectID,
             controllerAs: 'ctrl',
-            templateUrl: '/components/player/player.html'
+            templateUrl: 'components/player/player.html'
         };
     }
 }

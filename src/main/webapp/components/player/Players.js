@@ -139,12 +139,12 @@ export default class Players {
             }
 
             this.volume = volume;
-            this.putVolume();
+            this.putVolume(volume);
         }
     }
     
     putVolume(volume) {
-        this.$http.put('/rest/config/volume/' + volume).catch((response) => {
+        this.$http.put(`/rest/config/volume/${volume}`).catch((response) => {
             this.alerts.error('Could not update volume.', response);
         });
     }

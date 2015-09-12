@@ -31,7 +31,7 @@ export default class EQDirectiveFactory extends DirectiveFactory {
             scope: {},
             controller: EQController.injectID,
             controllerAs: 'ctrl',
-            templateUrl: '/components/eq/eq.html'
+            templateUrl: 'components/eq/eq.html'
         };
     }
 }

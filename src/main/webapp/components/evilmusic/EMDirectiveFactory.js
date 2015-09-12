@@ -31,7 +31,7 @@ export default class EMDirectiveFactory extends DirectiveFactory {
             scope: {},
             controller: EMController.injectID,
             controllerAs: 'ctrl',
-            templateUrl: '/components/evilmusic/evilmusic.html'
+            templateUrl: 'components/evilmusic/evilmusic.html'
         };
     }
 }

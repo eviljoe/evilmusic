@@ -23,7 +23,7 @@ export default class ProgressBarDirective {
     constructor() {
         this.restrict = 'E';
         this.scope = {};
-        this.templateUrl = '/components/progress-bar/progress-bar.html';
+        this.templateUrl = 'components/progress-bar/progress-bar.html';
         this.controller = ProgressBarController.injectID;
         this.controllerAs = 'ctrl';
         this.angular = angular;

@@ -29,7 +29,7 @@ export default class QueueDirectiveFactory extends DirectiveFactory {
         return {
             scope: {},
             restrict: 'E',
-            templateUrl: '/components/queue/queue.html',
+            templateUrl: 'components/queue/queue.html',
             controller: QueueController.injectID,
             controllerAs: 'ctrl'
         };

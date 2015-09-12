@@ -31,7 +31,7 @@ export default class LibraryDirectiveFactory extends DirectiveFactory {
             scope: {},
             controller: LibraryController.injectID,
             controllerAs: 'ctrl',
-            templateUrl: '/components/library/library.html'
+            templateUrl: 'components/library/library.html'
         };
     }
 }

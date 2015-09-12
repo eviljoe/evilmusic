@@ -69,7 +69,6 @@ export default class Queues {
     }
     
     addLastNow(songID) {
-        this.alerts.error('junk', {stuff: 'and things'}); // JOE rt
         this.q.$addLast({id: this.q.id, songIDs: songID}).catch((data) => {
             this.alerts.error('Failed to enqueue last.', data);
         });
