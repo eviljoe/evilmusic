@@ -68,7 +68,7 @@ let thirdPartyJSFiles = [
     webSrcDir + '/assets/libs/flac.js'
 ];
  
-// JOE TODO task convert src/main/webapp/assets/less to CSS (and get rid of src/main/webapp/assets/css/evilmusic.css)
+// TODO task convert src/main/webapp/assets/less to CSS (and get rid of src/main/webapp/assets/css/evilmusic.css)
 
 gulp.task('lint-js-jshint', function() {
     return gulp.src(jsFilesToTest)

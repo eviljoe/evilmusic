@@ -16,21 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import EQButtonController from './eq-button/EQButtonController';
-import EQButtonDirectiveFactory from './eq-button/EQButtonDirectiveFactory';
-import EQController from './EQController';
-import EQDialogController from './eq-dialog/EQDialogController';
-import EQDirectiveFactory from './EQDirectiveFactory';
-import Equalizers from './Equalizers';
-import HertzFilterFactory from './HertzFilterFactory';
+import DirectiveFactory from 'components/utils/DirectiveFactory';
+import EQButtonController from './EQButtonController.js';
 
-export default (emApp) => {
-    return emApp
-    .controller(EQButtonController)
-    .directive(EQButtonDirectiveFactory)
-    .controller(EQController)
-    .controller(EQDialogController)
-    .directive(EQDirectiveFactory)
-    .service(Equalizers)
-    .filter(HertzFilterFactory);
-};
+export default class EQButtonDirectiveFactory extends DirectiveFactory {
+    constructor() {
+        super();
+        this.directive.injectID = 'eqButton';
+    }
+    
+    directive() {
+        return {
+            restrict: 'E',
+            scope: {},
+            controller: EQButtonController.injectID,
+            controllerAs: 'ctrl',
+            templateUrl: 'components/eq/eq-button/eq-button.html'
+        };
+    }
+}

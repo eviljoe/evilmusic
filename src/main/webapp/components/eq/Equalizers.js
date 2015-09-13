@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import _ from 'lodash';
+
 export default class Equalizers {
     constructor(alerts, Equalizer) {
         Equalizers.instance = this;
@@ -128,5 +130,22 @@ export default class Equalizers {
         }
 
         return updated;
+    }
+    
+    save() {
+        let promise = this.eq.$update();
+        
+        promise.catch((data) => {
+            this.alerts.error('An error occurred, and the equalizer could not be saved.', data);
+        });
+        
+        return promise;
+    }
+    
+    reset() {
+        _.forEach(this.eq.nodes, (node) => {
+            _.set(node, 'gain', 0);
+            this.updateNodeGain(node);
+        });
     }
 }

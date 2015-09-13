@@ -16,11 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div><h2>Player Controls</h2></div>
-<div>
-    <button class="btn btn-xs btn-default" ng-click="ctrl.player.togglePlayback()">
-        <i class="fa fa-play"></i> play/pause
-    </button>
-    <eq-button></eq-button>
-    <div em-volume-control style="display:inline-block"></div>
-</div>
+<button class="btn btn-xs btn-default" ng-click="ctrl.openEQ()" title="open equalizer">
+    <i class="fa fa-sliders fa-rotate-90"></i>
+</button>

@@ -16,21 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import EQButtonController from './eq-button/EQButtonController';
-import EQButtonDirectiveFactory from './eq-button/EQButtonDirectiveFactory';
-import EQController from './EQController';
-import EQDialogController from './eq-dialog/EQDialogController';
-import EQDirectiveFactory from './EQDirectiveFactory';
-import Equalizers from './Equalizers';
-import HertzFilterFactory from './HertzFilterFactory';
+import EQDialogController from '../eq-dialog/EQDialogController';
 
-export default (emApp) => {
-    return emApp
-    .controller(EQButtonController)
-    .directive(EQButtonDirectiveFactory)
-    .controller(EQController)
-    .controller(EQDialogController)
-    .directive(EQDirectiveFactory)
-    .service(Equalizers)
-    .filter(HertzFilterFactory);
-};
+export default class EQButtonController {
+    constructor($modal) {
+        this.$modal = $modal;
+    }
+    
+    static get $inject() {
+        return ['$modal'];
+    }
+    
+    static get injectID() {
+        return EQButtonController.name;
+    }
+    
+    openEQ() {
+        this.$modal.open({
+            templateUrl: 'components/eq/eq-dialog/eq-dialog.html',
+            controller: EQDialogController.injectID,
+            controllerAs: 'ctrl',
+            size: 'lg',
+            windowClass: 'eq-dialog'
+        });
+    }
+}

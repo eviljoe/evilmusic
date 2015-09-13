@@ -41,7 +41,7 @@ export default class ProgressBarController {
     }
     
     init() {
-        // JOE TODO this whole nightmare needs to be refactored.  I can hear it crying.
+        // TODO this whole nightmare needs to be refactored.  I can hear it crying.
         this.$scope.progressMeterClicked = this.progressMeterClicked;
         this.$scope.updateMeterWidth = this.updateMeterWidth;
         

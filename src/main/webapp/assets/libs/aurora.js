@@ -3502,7 +3502,7 @@ WebAudioDevice = (function(_super) {
     this.node = this.context[createProcessor](4096, this.channels, this.channels);
     this.node.onaudioprocess = this.refill;
 
-    // JOE tb
+    // FIXME tb
     // var lastNode = insertBeforeDest(this.context, this.node);
 
     // if(lastNode) {
@@ -3510,9 +3510,9 @@ WebAudioDevice = (function(_super) {
     // } else {
     //   this.node.connect(this.context.destination);
     // }
-    // JOE eb
+    // FIXME eb
 
-    // this.node.connect(this.context.destination); // JOE ol
+    // this.node.connect(this.context.destination); // FIXME ol
   }
 
   WebAudioDevice.prototype.connectBeforeDestination = function(nodes) {

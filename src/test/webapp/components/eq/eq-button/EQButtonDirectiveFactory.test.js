@@ -16,21 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import EQButtonController from './eq-button/EQButtonController';
-import EQButtonDirectiveFactory from './eq-button/EQButtonDirectiveFactory';
-import EQController from './EQController';
-import EQDialogController from './eq-dialog/EQDialogController';
-import EQDirectiveFactory from './EQDirectiveFactory';
-import Equalizers from './Equalizers';
-import HertzFilterFactory from './HertzFilterFactory';
+import EQButtonDirectiveFactory from 'components/eq/eq-button/EQButtonDirectiveFactory';
 
-export default (emApp) => {
-    return emApp
-    .controller(EQButtonController)
-    .directive(EQButtonDirectiveFactory)
-    .controller(EQController)
-    .controller(EQDialogController)
-    .directive(EQDirectiveFactory)
-    .service(Equalizers)
-    .filter(HertzFilterFactory);
-};
+describe(EQButtonDirectiveFactory.name, () => {
+    let factory = null;
+    
+    beforeEach(() => {
+        factory = new EQButtonDirectiveFactory();
+    });
+    
+    describe('directive', () => {
+        it('defines an injection ID', () => {
+            expect(factory.directive.injectID).toEqual(jasmine.any(String));
+        });
+        
+        it('creates a directive configuration object', () => {
+            expect(factory.directive()).toEqual(jasmine.any(Object));
+        });
+    });
+});

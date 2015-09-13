@@ -18,6 +18,7 @@
 
 import angular from 'angular';
 import Equalizers from 'components/eq/Equalizers';
+import _ from 'lodash';
 
 describe(Equalizers.name, () => {
     let equalizers = null;
@@ -197,7 +198,7 @@ describe(Equalizers.name, () => {
         });
     });
     
-    describe('updateGainNode', () => {
+    describe('updateNodeGain', () => {
         let webAudioNodeID = null;
         let webAudioNode = null;
         
@@ -233,6 +234,29 @@ describe(Equalizers.name, () => {
         
         it('returns true when a corresponding web audio node can be found', () => {
             expect(equalizers.updateNodeGain({id: webAudioNodeID})).toEqual(true);
+        });
+    });
+    
+    describe('reset', () => {
+        beforeEach(() => {
+            spyOn(equalizers, 'updateNodeGain').and.stub();
+            equalizers.eq = {
+                nodes: [{gain: 7}, {gain: 11}, {gain: 13}]
+            };
+        });
+        
+        it('sets each of the nodes in the equalizer to have a gain of 0', () => {
+            equalizers.reset();
+            _.forEach(equalizers.eq.nodes, (node) => {
+                expect(node.gain).toEqual(0);
+            });
+        });
+        
+        it('updates the gain of the web audio node for each of the equalizer nodes', () => {
+            equalizers.reset();
+            _.forEach(equalizers.eq.nodes, (node) => {
+                expect(equalizers.updateNodeGain).toHaveBeenCalledWith(node);
+            });
         });
     });
 });
