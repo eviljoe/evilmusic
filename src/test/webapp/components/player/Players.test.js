@@ -50,7 +50,8 @@ describe(Players.name, () => {
             isNumber() {}
         };
         _queues = {
-            q() {},
+            q: {},
+            getNextSongQueueIndex() {},
             getSong() {},
             load() {}
         };
@@ -265,6 +266,10 @@ describe(Players.name, () => {
     });
     
     describe('playerSongEnded', () => {
+        beforeEach(() => {
+            spyOn(players, 'playNext').and.stub();
+        });
+        
         it('sets the AV Player to null', () => {
             players.avPlayer = {};
             players.playerSongEnded();
@@ -275,6 +280,11 @@ describe(Players.name, () => {
             players.currentSong = {};
             players.playerSongEnded();
             expect(players.currentSong).toBeNull();
+        });
+        
+        it('plays the next song', () => {
+            players.playerSongEnded();
+            expect(players.playNext).toHaveBeenCalled();
         });
     });
     
@@ -459,6 +469,24 @@ describe(Players.name, () => {
             $rootScope.$apply();
             
             expect(_alerts.error).toHaveBeenCalled();
+        });
+    });
+    
+    describe('playNext', () => {
+        beforeEach(() => {
+            spyOn(_queues, 'getNextSongQueueIndex').and.returnValue(3);
+            spyOn(players, 'play').and.stub();
+        });
+        
+        it('plays the next song when the next song\'s queue index is greater than -1', () => {
+            players.playNext();
+            expect(players.play).toHaveBeenCalledWith(3);
+        });
+        
+        it('does not play the next song when the next song\'s queue index is negative', () => {
+            _queues.getNextSongQueueIndex.and.returnValue(-1);
+            players.playNext();
+            expect(players.play).not.toHaveBeenCalled();
         });
     });
 });

@@ -302,4 +302,20 @@ describe(Queues.name, () => {
             expect(queues.getSong(songIndex)).toEqual({a: 'A'});
         });
     });
+    
+    describe('getNextSongQueueIndex', () => {
+        beforeEach(() => {
+            queues.q.playIndex = 1;
+            queues.q.elements = [{}, {}, {}];
+        });
+        
+        it('returns the queues play index + 1', () => {
+            expect(queues.getNextSongQueueIndex()).toEqual(2);
+        });
+        
+        it('returns -1 when the next play index does not exist', () => {
+            queues.q.playIndex = 2;
+            expect(queues.getNextSongQueueIndex()).toEqual(-1);
+        });
+    });
 });

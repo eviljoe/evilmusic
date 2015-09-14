@@ -53,6 +53,14 @@ export default class Players {
         }
     }
     
+    playNext() {
+        let nextQIndex = this.queues.getNextSongQueueIndex();
+        
+        if(nextQIndex > -1) {
+            this.play(nextQIndex);
+        }
+    }
+    
     playSong(qIndex, song) {
         this.stop();
         
@@ -93,6 +101,7 @@ export default class Players {
     playerSongEnded() {
         this.avPlayer = null;
         this.currentSong = null;
+        this.playNext();
     }
 
     togglePlayback() {

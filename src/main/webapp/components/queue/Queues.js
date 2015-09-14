@@ -127,4 +127,10 @@ export default class Queues {
 
         return song || null;
     }
+    
+    getNextSongQueueIndex() {
+        let nextIndex = this.q.playIndex + 1;
+        
+        return nextIndex > (this.q.elements.length - 1) ? -1 : nextIndex;
+    }
 }
