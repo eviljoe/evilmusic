@@ -25,6 +25,7 @@ import jscs from 'gulp-jscs';
 import jshint from 'gulp-jshint';
 import jshintStylish from 'jshint-stylish';
 import karma from 'gulp-karma';
+import runSeq from 'run-sequence';
 import source from 'vinyl-source-stream';
 import sourcemaps from 'gulp-sourcemaps';
 import templateCache from 'gulp-angular-templatecache';
@@ -87,7 +88,7 @@ gulp.task('clean', function() {
     del([destDir], function (err, deletedFiles) {});
 });
 
-gulp.task('concat-em-js', ['clean'], function() {
+gulp.task('concat-em-js', function() {
     browserify({
         paths: [webSrcDir],
         entries: webSrcDir + '/index.js',
@@ -99,7 +100,7 @@ gulp.task('concat-em-js', ['clean'], function() {
     .pipe(gulp.dest(destDir));
 });
 
-gulp.task('concat-third-party-js', ['clean'], function() {
+gulp.task('concat-third-party-js', function() {
     return gulp.src(thirdPartyJSFiles)
     .pipe(sourcemaps.init())
     .pipe(concat('evilmusic-third-party.js'))
@@ -107,7 +108,7 @@ gulp.task('concat-third-party-js', ['clean'], function() {
     .pipe(gulp.dest(destDir));
 });
 
-gulp.task('concat-em-css', ['clean'], function() {
+gulp.task('concat-em-css', function() {
     return gulp.src([
         webSrcDir + '/assets/css/**/*.css'
     ])
@@ -115,7 +116,7 @@ gulp.task('concat-em-css', ['clean'], function() {
     .pipe(gulp.dest(cssDestDir));
 });
 
-gulp.task('concat-third-party-css', ['clean'], function() {
+gulp.task('concat-third-party-css', function() {
     return gulp.src([
         'node_modules/bootstrap/dist/css/bootstrap.css',
         'node_modules/bootstrap/dist/css/bootstrap-theme.css',
@@ -125,7 +126,7 @@ gulp.task('concat-third-party-css', ['clean'], function() {
     .pipe(gulp.dest(cssDestDir));
 });
 
-gulp.task('copy-third-party-css-source-maps', ['clean'], function() {
+gulp.task('copy-third-party-css-source-maps', function() {
     return gulp.src([
         'node_modules/bootstrap/dist/css/bootstrap.css.map',
         'node_modules/bootstrap/dist/css/bootstrap-theme.css.map',
@@ -134,35 +135,47 @@ gulp.task('copy-third-party-css-source-maps', ['clean'], function() {
     .pipe(gulp.dest(cssDestDir));
 });
 
-gulp.task('create-template-cache', ['clean'], function() {
+gulp.task('create-template-cache', function() {
     return gulp.src(webSrcDir + '/**/*.html')
     .pipe(templateCache('evilmusic-templates.js', {module: 'EvilMusicApp'}))
     .pipe(gulp.dest(destDir));
 });
 
-gulp.task('copy-fonts', ['clean'], function() {
+gulp.task('copy-fonts', function() {
     return gulp.src([
         'node_modules/font-awesome/fonts/*'
     ])
     .pipe(gulp.dest(fontsDestDir));
 });
 
-gulp.task('build', [
-    'clean',
+gulp.task('build-first-party', [
     'concat-em-js',
-    'concat-third-party-js',
     'concat-em-css',
+    'create-template-cache'
+]);
+
+gulp.task('build-third-party', [
+    'concat-third-party-js',
     'concat-third-party-css',
     'copy-third-party-css-source-maps',
-    'create-template-cache',
     'copy-fonts'
 ]);
 
+gulp.task('build', function() {
+    return runSeq(
+        'clean',
+        ['build-first-party', 'build-third-party']);
+});
+    
 gulp.task('watch', ['build'], function() {
-    gulp.watch(webSrcDir + '/assets/**/*', ['build']);
-    gulp.watch(webSrcDir + '/components/**/*', ['build']);
-    gulp.watch(webSrcDir + '/index.html', ['build']);
-    gulp.watch(webSrcDir + '/index.js', ['build']);
+    return gulp.watch([
+            webSrcDir + '/assets/**/*',
+            webSrcDir + '/components/**/*',
+            webSrcDir + '/index.html',
+            webSrcDir + '/index.js'
+        ],
+        {},
+        ['build-first-party']);
 });
 
 gulp.task('test', function() {
