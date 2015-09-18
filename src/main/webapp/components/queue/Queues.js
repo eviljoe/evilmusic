@@ -128,9 +128,31 @@ export default class Queues {
         return song || null;
     }
     
+    /**
+     * Returns queue index for the next song in the queue.  If there is no next song, -1 is returned.
+     *
+     * @return {int} Returns the index for the next song or -1 if there is no next song.
+     */
     getNextSongQueueIndex() {
         let nextIndex = this.q.playIndex + 1;
         
         return nextIndex > (this.q.elements.length - 1) ? -1 : nextIndex;
+    }
+    
+    /**
+    * Returns queue index for the previous song in the queue.  If there is no previous song, -1 is returned.
+    *
+    * @return {int} Returns the index for the previous song or -1 if there is no previous song.
+     */
+    getPreviousSongQueueIndex() {
+        let prevIndex = this.q.playIndex + -1;
+        
+        return prevIndex < 0 ? -1 : prevIndex;
+    }
+    
+    setPlayIndex(playIndex) {
+        this.q.$setPlayIndex({id: this.q.id, playIndex: playIndex}).catch((data) => {
+            this.alerts.error('Failed to set the play index.', data);
+        });
     }
 }

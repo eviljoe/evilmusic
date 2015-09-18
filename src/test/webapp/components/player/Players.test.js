@@ -51,9 +51,11 @@ describe(Players.name, () => {
         };
         _queues = {
             q: {},
+            load() {},
             getNextSongQueueIndex() {},
+            getPreviousSongQueueIndex() {},
             getSong() {},
-            load() {}
+            setPlayIndex() {}
         };
         _equalizers = {
             createEQNodes() {}
@@ -131,7 +133,7 @@ describe(Players.name, () => {
             spyOn(players, 'createPlayer').and.returnValue(_avPlayer);
             spyOn(players, 'updateAVPlayerDefaults').and.stub();
             spyOn(_avPlayer, 'play').and.stub();
-            spyOn(_queues, 'load').and.stub();
+            spyOn(_queues, 'setPlayIndex').and.stub();
         });
         
         it('stops the currently playing song', () => {
@@ -172,9 +174,9 @@ describe(Players.name, () => {
             expect(_avPlayer.play).toHaveBeenCalled();
         });
         
-        it('reloads the queue', () => {
+        it('sets the play index on the queue', () => {
             players.playSong(7, {});
-            expect(_queues.load).toHaveBeenCalled();
+            expect(_queues.setPlayIndex).toHaveBeenCalled();
         });
     });
     
@@ -189,7 +191,7 @@ describe(Players.name, () => {
         it('creates a player from a URL', () => {
             _queues.q.id = 7;
             players.createPlayer(13);
-            expect(_AV.Player.fromURL).toHaveBeenCalledWith('/rest/queue/7/stream/queueindex/13?updatePlayIndex=true');
+            expect(_AV.Player.fromURL).toHaveBeenCalledWith('/rest/queue/7/queueindex/13/stream');
         });
         
         it('returns the created player', () => {
@@ -486,6 +488,24 @@ describe(Players.name, () => {
         it('does not play the next song when the next song\'s queue index is negative', () => {
             _queues.getNextSongQueueIndex.and.returnValue(-1);
             players.playNext();
+            expect(players.play).not.toHaveBeenCalled();
+        });
+    });
+    
+    describe('playPrevious', () => {
+        beforeEach(() => {
+            spyOn(_queues, 'getPreviousSongQueueIndex').and.returnValue(3);
+            spyOn(players, 'play').and.stub();
+        });
+        
+        it('plays the previous song when the previous song\'s queue index is greater than -1', () => {
+            players.playPrevious();
+            expect(players.play).toHaveBeenCalledWith(3);
+        });
+        
+        it('does not play the next song when the next song\'s queue index is negative', () => {
+            _queues.getPreviousSongQueueIndex.and.returnValue(-1);
+            players.playPrevious();
             expect(players.play).not.toHaveBeenCalled();
         });
     });

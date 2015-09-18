@@ -133,6 +133,24 @@ public class QueueRESTCalls {
         return expectStatusCode == 200 ? toQueue(r.getBody().asString()) : null;
     }
     
+    public static Queue setPlayIndex(int qID, int playIndex) throws IOException {
+        return setPlayIndex(200, qID, playIndex);
+    }
+    
+    public static Queue setPlayIndex(int expectStatusCode, int qID, int playIndex) throws IOException {
+        final RequestSpecification req = given();
+        final ResponseSpecification res;
+        final Response r;
+        
+        res = req.then();
+        res.expect().statusCode(expectStatusCode);
+        res.expect().contentType(ContentType.JSON);
+        
+        r = res.put(RESTTestConfig.getInstance().getFullURL("/queue/{qID}/playindex/{playIndex}"), qID, playIndex);
+        
+        return expectStatusCode == 200 ? toQueue(r.getBody().asString()) : null;
+    }
+    
     public static Queue toQueue(String json) throws IOException {
         return new ObjectMapper().readValue(json, new TypeReference<Queue>() {
         });

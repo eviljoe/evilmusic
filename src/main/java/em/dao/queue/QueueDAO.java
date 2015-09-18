@@ -18,12 +18,14 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import em.dao.AbstractDAO;
 import em.model.Queue;
+import em.model.QueueElement;
 
 /**
  * @since v0.1
@@ -67,6 +69,29 @@ public class QueueDAO extends AbstractDAO {
         }
         
         return q;
+    }
+    
+    public QueueElement getElement(int qID, int qIndex) {
+        final StringBuilder jpql = new StringBuilder();
+        final TypedQuery<QueueElement> q;
+        final QueueElement elem;
+        
+        jpql.append("SELECT qe ");
+        jpql.append("FROM ").append(QueueElement.class.getName()).append(" qe ");
+        jpql.append("WHERE qe.queue.id = :Q_ID ");
+        jpql.append("AND qe.queueIndex = :Q_INDEX ");
+        
+        try {
+            q = em.createQuery(jpql.toString(), QueueElement.class);
+            q.setParameter("Q_ID", qID);
+            q.setParameter("Q_INDEX", qIndex);
+            
+            elem = q.getSingleResult();
+        } catch(NoResultException e) {
+            throw new QueueElementNotFoundException(qID, qIndex, e);
+        }
+        
+        return elem;
     }
     
     public Queue save(Queue q) {

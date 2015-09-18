@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <th>Title</th>
         <th>Controls</th>
     </tr>
-    <tr ng-repeat="elem in ctrl.getQueue().elements">
+    <tr ng-repeat="elem in ctrl.getQueue().elements" ng-class="{'info': elem.playIndex === 0}">
         <td>{{elem.playIndex}}</td>
         <td>{{elem.queueIndex}}</td>
         <td>{{elem.song.id}}</td>

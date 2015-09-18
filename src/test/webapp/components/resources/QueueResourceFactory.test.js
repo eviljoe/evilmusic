@@ -45,4 +45,10 @@ describe(QueueResourceFactory.name, () => {
             expect(_resource).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(Object), jasmine.any(Object));
         });
     });
+    
+    describe('emptyRequest', () => {
+        it('returns undefined', () => {
+            expect(QueueResourceFactory.emptyRequest()).toEqual(undefined);
+        });
+    });
 });

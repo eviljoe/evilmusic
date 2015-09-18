@@ -42,8 +42,18 @@ export default class QueueResourceFactory extends ResourceFactory {
                 clear: {
                     method: 'DELETE',
                     url: '/rest/queue/:id/elements'
+                },
+                setPlayIndex: {
+                    method: 'PUT',
+                    url: '/rest/queue/:id/playindex/:playIndex',
+                    params: {id: '@id', playIndex: '@playIndex'},
+                    transformReqeust: QueueResourceFactory.emptyRequest
                 }
             }
         );
+    }
+    
+    static emptyRequest(data) {
+        return undefined;
     }
 }

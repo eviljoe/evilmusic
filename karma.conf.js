@@ -58,8 +58,7 @@ module.exports = function(config) {
         browserify: {
             debug: true,
             paths: [webSrcDir],
-            transform: ['babelify'],
-            bundleDelay: 1000
+            transform: ['babelify']
         },
         autoWatch: true,
         usePolling: true

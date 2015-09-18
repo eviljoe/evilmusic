@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import em.dao.queue.InvalidQueueIndexException;
+import em.dao.queue.InvalidQueuePlayIndexException;
 import em.dao.queue.QueueDAO;
 import em.dao.queue.QueueNotFoundException;
 import em.dao.song.SongInfoDAO;
@@ -160,24 +161,34 @@ public class QueueController {
     }
     
     @Transactional
+    @RequestMapping(value = "/rest/queue/{qID}/playindex/{playIndex}", method = RequestMethod.PUT)
+    public Queue setPlayIndex(@PathVariable("qID") int qID, @PathVariable("playIndex") int playIndex) {
+        final Queue q = qDAO.get(qID);
+        
+        if(playIndex < 0 || playIndex > q.size() - 1) {
+            throw new InvalidQueuePlayIndexException(qID, playIndex);
+        }
+        
+        q.setPlayIndex(playIndex);
+        qDAO.save(q);
+        
+        return q;
+    }
+    
+    @Transactional
     @RequestMapping( //
-            value = "/rest/queue/{qID}/stream/queueindex/{qIndex}", //
+            value = "/rest/queue/{qID}/queueindex/{qIndex}/stream", //
             method = {RequestMethod.GET, RequestMethod.HEAD})
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getSongStream( //
             @Context HttpServletRequest request, //
             @Context HttpServletResponse response, //
             @PathVariable("qID") int qID, //
-            @PathVariable("qIndex") int qIndex, //
-            @RequestParam(value = "updatePlayIndex", required = true) boolean updatePlayIndex) throws IOException {
+            @PathVariable("qIndex") int qIndex) throws IOException {
         
-        final Queue q = qDAO.get(qID);
-        final QueueElement qElem = q.getElement(qIndex);
+        final QueueElement qElem = qDAO.getElement(qID, qIndex);
         final SongInfo fullSong = songDAO.get(qElem.getSong().getID());
         final String reqMethod = request.getMethod();
-        
-        q.setPlayIndex(qIndex);
-        qDAO.save(q);
         
         LibraryUtils.streamSongToResponse(response, fullSong, EMUtils.equalsIgnoreCase("head", reqMethod));
         

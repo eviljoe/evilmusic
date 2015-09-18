@@ -14,8 +14,11 @@
 
 package em.test.rest.queue;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -457,5 +460,135 @@ public class QueueTest {
     @Test
     public void testRemoveElement_InvalidQueue() throws IOException {
         QueueRESTCalls.removeElement(404, Integer.MIN_VALUE + 117, 0);
+    }
+    
+    /* ******************** */
+    /* Set Play Index Tests */
+    /* ******************** */
+    
+    /**
+     * Tests to ensure that an HTTP 404 will be returned when attempting to set the play index on a queue that does not
+     * exist.
+     */
+    @Test
+    public void testSetPlayIndex_InvalidQueue() throws IOException {
+        QueueRESTCalls.setPlayIndex(404, -17, 1);
+    }
+    
+    /**
+     * Tests to ensure that an HTTP 400 will be returned when attempting to a negative value.
+     */
+    @Test
+    public void testSetPlayIndex_ValidQueue_PlayIndexTooLow() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        final int songID1 = lib.getSongs().get(0).getID();
+        Queue q = QueueRESTCalls.createQueue();
+        final int qID;
+        
+        queuesToCleanup.add(q);
+        qID = q.getID();
+        
+        // Add songs to the queue
+        q = QueueRESTCalls.addLast(200, qID, songID1);
+        
+        // Verify that the play index cannot be set to -1
+        QueueRESTCalls.setPlayIndex(400, qID, -1);
+    }
+    
+    /**
+     * Tests to ensure that an HTTP 400 will be returned when attempting to a value that is greater than the last queue
+     * index.
+     */
+    @Test
+    public void testSetPlayIndex_ValidQueue_PlayIndexTooHigh() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        final int songID1 = lib.getSongs().get(0).getID();
+        final int songID2 = lib.getSongs().get(1).getID();
+        Queue q = QueueRESTCalls.createQueue();
+        final int qID;
+        
+        queuesToCleanup.add(q);
+        qID = q.getID();
+        
+        // Add songs to the queue
+        q = QueueRESTCalls.addLast(200, qID, songID1, songID2);
+        
+        // Verify that the play index cannot be set to 2
+        QueueRESTCalls.setPlayIndex(400, qID, 2);
+    }
+    
+    /** Tests to ensure that a queue's play index can be set to its first element */
+    @Test
+    public void testSetPlayIndex_ValidQueue_FirstElement() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        final int songID1 = lib.getSongs().get(0).getID();
+        final int songID2 = lib.getSongs().get(1).getID();
+        final int songID3 = lib.getSongs().get(2).getID();
+        Queue q = QueueRESTCalls.createQueue();
+        final int qID;
+        
+        queuesToCleanup.add(q);
+        qID = q.getID();
+        
+        // Add songs to the queue
+        q = QueueRESTCalls.addLast(200, qID, songID1, songID2, songID3);
+        
+        // Verify that the play index can be set to 2
+        q = QueueRESTCalls.setPlayIndex(qID, 0);
+        assertThat(q.getPlayIndex(), is(equalTo(0)));
+        assertThat(q.getElement(0).getPlayIndex(), is(equalTo(0)));
+        assertThat(q.getElement(1).getPlayIndex(), is(equalTo(1)));
+        assertThat(q.getElement(2).getPlayIndex(), is(equalTo(2)));
+        
+    }
+    
+    /** Tests to ensure that a queue's play index can be set one of its middle elements */
+    @Test
+    public void testSetPlayIndex_ValidQueue_MiddleElement() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        final int songID1 = lib.getSongs().get(0).getID();
+        final int songID2 = lib.getSongs().get(1).getID();
+        final int songID3 = lib.getSongs().get(2).getID();
+        Queue q = QueueRESTCalls.createQueue();
+        final int qID;
+        
+        queuesToCleanup.add(q);
+        qID = q.getID();
+        
+        // Add songs to the queue
+        q = QueueRESTCalls.addLast(200, qID, songID1, songID2, songID3);
+        
+        // Verify that the play index can be set to 1
+        q = QueueRESTCalls.setPlayIndex(qID, 1);
+        assertThat(q.getPlayIndex(), is(equalTo(1)));
+        assertThat(q.getElement(0).getPlayIndex(), is(equalTo(-1)));
+        assertThat(q.getElement(1).getPlayIndex(), is(equalTo(0)));
+        assertThat(q.getElement(2).getPlayIndex(), is(equalTo(1)));
+        
+    }
+    
+    /** Tests to ensure that a queue's play index can be set to its last element */
+    @Test
+    public void testSetPlayIndex_ValidQueue_LastElement() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        final int songID1 = lib.getSongs().get(0).getID();
+        final int songID2 = lib.getSongs().get(1).getID();
+        final int songID3 = lib.getSongs().get(2).getID();
+        Queue q = QueueRESTCalls.createQueue();
+        final int qID;
+        
+        queuesToCleanup.add(q);
+        qID = q.getID();
+        
+        // Add songs to the queue
+        q = QueueRESTCalls.addLast(200, qID, songID1, songID2, songID3);
+        
+        // Verify that the play index can be set to 2
+        q = QueueRESTCalls.setPlayIndex(qID, 2);
+        assertThat(q.getPlayIndex(), is(equalTo(2)));
+        assertThat(q.getElement(0).getPlayIndex(), is(equalTo(-2)));
+        assertThat(q.getElement(1).getPlayIndex(), is(equalTo(-1)));
+        assertThat(q.getElement(2).getPlayIndex(), is(equalTo(0)));
+        
     }
 }

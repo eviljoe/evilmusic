@@ -61,6 +61,14 @@ export default class Players {
         }
     }
     
+    playPrevious() {
+        let prevQIndex = this.queues.getPreviousSongQueueIndex();
+        
+        if(prevQIndex > -1) {
+            this.play(prevQIndex);
+        }
+    }
+    
     playSong(qIndex, song) {
         this.stop();
         
@@ -69,13 +77,12 @@ export default class Players {
             this.updateAVPlayerDefaults(this.avPlayer, song);
             this.currentSong = song;
             this.avPlayer.play();
-            this.queues.load();
+            this.queues.setPlayIndex(qIndex);
         }
     }
     
     createPlayer(qIndex) {
-        return this.AV.Player.fromURL(
-            `/rest/queue/${this.queues.q.id}/stream/queueindex/${qIndex}?updatePlayIndex=true`);
+        return this.AV.Player.fromURL(`/rest/queue/${this.queues.q.id}/queueindex/${qIndex}/stream`);
     }
     
     stop() {

@@ -40,7 +40,10 @@ describe(Queues.name, () => {
         _Queue = {
             q: {},
             get() {
-                return {$promise: $q.defer().promise};
+                return {
+                    $promise: $q.defer().promise,
+                    $setPlayIndex() {}
+                };
             }
         };
         
@@ -316,6 +319,47 @@ describe(Queues.name, () => {
         it('returns -1 when the next play index does not exist', () => {
             queues.q.playIndex = 2;
             expect(queues.getNextSongQueueIndex()).toEqual(-1);
+        });
+    });
+    
+    describe('getPreviousSongQueueIndex', () => {
+        beforeEach(() => {
+            queues.q.playIndex = 1;
+            queues.q.elements = [{}, {}, {}];
+        });
+        
+        it('returns the queues play index - 1', () => {
+            expect(queues.getPreviousSongQueueIndex()).toEqual(0);
+        });
+        
+        it('returns -1 when the previous play index does not exist', () => {
+            queues.q.playIndex = 0;
+            expect(queues.getPreviousSongQueueIndex()).toEqual(-1);
+        });
+    });
+    
+    describe('setPlayIndex', () => {
+        let piDefer = null;
+        
+        beforeEach(() => {
+            piDefer = $q.defer();
+            spyOn(queues.q, '$setPlayIndex').and.returnValue(piDefer.promise);
+            spyOn(_alerts, 'error').and.stub();
+        });
+        
+        it('sets the play index on the queue', () => {
+            queues.q.id = 7;
+            queues.setPlayIndex(13);
+            expect(queues.q.$setPlayIndex).toHaveBeenCalledWith({id: 7, playIndex: 13});
+        });
+        
+        it('displays an error message if the play index cannot be set', () => {
+            queues.setPlayIndex(13);
+            
+            piDefer.reject();
+            $rootScope.$apply();
+            
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
 });
