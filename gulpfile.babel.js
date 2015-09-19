@@ -20,6 +20,7 @@ import concat from 'gulp-concat';
 import babelify from 'babelify';
 import browserify from 'browserify';
 import del from 'del';
+import fs from 'fs';
 import gulp from 'gulp';
 import jscs from 'gulp-jscs';
 import jshint from 'gulp-jshint';
@@ -29,12 +30,17 @@ import runSeq from 'run-sequence';
 import source from 'vinyl-source-stream';
 import sourcemaps from 'gulp-sourcemaps';
 import templateCache from 'gulp-angular-templatecache';
+import _ from 'lodash';
+
+/* ********* */
+/* Variables */
+/* ********* */
 
 let webSrcDir = './src/main/webapp';
 let webTestSrcDir = './src/test/webapp';
 let destDir = './src/main/webapp/dist';
-let cssDestDir = './src/main/webapp/dist/css';
-let fontsDestDir = './src/main/webapp/dist/fonts';
+let cssDestDir = destDir + '/css';
+let fontsDestDir = destDir + '/fonts';
 
 let jsFilesToTest = [
     webSrcDir + '/**/*.js',
@@ -56,8 +62,8 @@ let thirdPartyJSFiles = [
     'node_modules/angular-resource/angular-resource.js',
     
     // UI Bootstrap (Needs to be after Angular)
-    'node_modules/angular-bootstrap/dist/ui-bootstrap.js',
-    'node_modules/angular-bootstrap/dist/ui-bootstrap-tpls.js',
+    'node_modules/angular-bootstrap/ui-bootstrap.js',
+    'node_modules/angular-bootstrap/ui-bootstrap-tpls.js',
     
     // Lodash
     'node_modules/lodash/index.js',
@@ -68,8 +74,22 @@ let thirdPartyJSFiles = [
     // FLAC (Needs to be after Aurora)
     webSrcDir + '/assets/libs/flac.js'
 ];
- 
-// TODO task convert src/main/webapp/assets/less to CSS (and get rid of src/main/webapp/assets/css/evilmusic.css)
+
+let thirdPartyCSSFiles = [
+    'node_modules/bootstrap/dist/css/bootstrap.css',
+    'node_modules/bootstrap/dist/css/bootstrap-theme.css',
+    'node_modules/font-awesome/css/font-awesome.css'
+];
+
+let thirdPartyCSSMapFiles = [
+    'node_modules/bootstrap/dist/css/bootstrap.css.map',
+    'node_modules/bootstrap/dist/css/bootstrap-theme.css.map',
+    'node_modules/font-awesome/css/font-awesome.css.map'
+];
+
+/* ******* */
+/* Linting */
+/* ******* */
 
 gulp.task('lint-js-jshint', function() {
     return gulp.src(jsFilesToTest)
@@ -84,11 +104,15 @@ gulp.task('lint-js-jscs', function() {
 
 gulp.task('lint', ['lint-js-jshint', 'lint-js-jscs']);
 
-gulp.task('clean', function() {
-    del([destDir], function (err, deletedFiles) {});
+gulp.task('clean', function(cb) {
+    del([destDir + '/**'], cb);
 });
 
-gulp.task('concat-em-js', function() {
+/* ********** */
+/* JavaScript */
+/* ********** */
+
+gulp.task('concat-em-js', function(cb) {
     browserify({
         paths: [webSrcDir],
         entries: webSrcDir + '/index.js',
@@ -98,15 +122,22 @@ gulp.task('concat-em-js', function() {
     .bundle()
     .pipe(source('evilmusic.js'))
     .pipe(gulp.dest(destDir));
+    cb();
 });
 
 gulp.task('concat-third-party-js', function() {
+    verifyFilesExist(thirdPartyJSFiles);
+    
     return gulp.src(thirdPartyJSFiles)
     .pipe(sourcemaps.init())
     .pipe(concat('evilmusic-third-party.js'))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(destDir));
 });
+
+/* *** */
+/* CSS */
+/* *** */
 
 gulp.task('concat-em-css', function() {
     return gulp.src([
@@ -117,23 +148,23 @@ gulp.task('concat-em-css', function() {
 });
 
 gulp.task('concat-third-party-css', function() {
-    return gulp.src([
-        'node_modules/bootstrap/dist/css/bootstrap.css',
-        'node_modules/bootstrap/dist/css/bootstrap-theme.css',
-        'node_modules/font-awesome/css/font-awesome.css'
-    ])
+    verifyFilesExist(thirdPartyCSSFiles);
+    
+    return gulp.src(thirdPartyCSSFiles)
     .pipe(concat('evilmusic-third-party.css'))
     .pipe(gulp.dest(cssDestDir));
 });
 
 gulp.task('copy-third-party-css-source-maps', function() {
-    return gulp.src([
-        'node_modules/bootstrap/dist/css/bootstrap.css.map',
-        'node_modules/bootstrap/dist/css/bootstrap-theme.css.map',
-        '/node_modules/font-awesome/css/font-awesome.min.css'
-    ])
+    verifyFilesExist(thirdPartyCSSMapFiles);
+    
+    return gulp.src(thirdPartyCSSMapFiles)
     .pipe(gulp.dest(cssDestDir));
 });
+
+/* **** */
+/* HTML */
+/* **** */
 
 gulp.task('create-template-cache', function() {
     return gulp.src(webSrcDir + '/**/*.html')
@@ -141,12 +172,20 @@ gulp.task('create-template-cache', function() {
     .pipe(gulp.dest(destDir));
 });
 
+/* ***** */
+/* Fonts */
+/* ***** */
+
 gulp.task('copy-fonts', function() {
     return gulp.src([
         'node_modules/font-awesome/fonts/*'
     ])
     .pipe(gulp.dest(fontsDestDir));
 });
+
+/* ****** */
+/* Builds */
+/* ****** */
 
 gulp.task('build-first-party', [
     'concat-em-js',
@@ -166,7 +205,11 @@ gulp.task('build', function() {
         'clean',
         ['build-first-party', 'build-third-party']);
 });
-    
+
+/* ******* */
+/* Watches */
+/* ******* */
+
 gulp.task('watch', ['build'], function() {
     return gulp.watch([
             webSrcDir + '/assets/**/*',
@@ -177,6 +220,10 @@ gulp.task('watch', ['build'], function() {
         {},
         ['build-first-party']);
 });
+
+/* ***** */
+/* Tests */
+/* ***** */
 
 gulp.task('test', function() {
     return gulp.src([])
@@ -189,4 +236,22 @@ gulp.task('test', function() {
     });
 });
 
+/* ******* */
+/* Default */
+/* ******* */
+
 gulp.task('default', ['build'], function() {});
+
+/* ********* */
+/* Functions */
+/* ********* */
+
+function verifyFilesExist(files) {
+    _.forEach(files, function(file) {
+        fs.stat(file, function(err, stat) {
+            if(err) {
+                throw err;
+            }
+        });
+    });
+}

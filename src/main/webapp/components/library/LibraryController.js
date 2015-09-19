@@ -34,4 +34,8 @@ export default class LibraryController {
     addLast(songID) {
         this.queues.addLast(songID);
     }
+    
+    getArtists() { // JOE ju
+        return this.libraries.getArtists();
+    }
 }

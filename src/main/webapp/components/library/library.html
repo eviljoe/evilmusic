@@ -25,7 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <i class="fa fa-cubes"></i> rebuild
     </button>
 </div>
-<table class="table table-striped table-condensed table-hover">
+<div>
+    <div ng-repeat="artist in ctrl.getArtists() | orderBy">{{artist}}</div>
+</div>
+
+<!-- <table class="table table-striped table-condensed table-hover">
     <tr>
         <th align="right">ID</th>
         <th align="left">Artist</th>
@@ -52,4 +56,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </button>
         </td>
     </tr>
-</table>
+</table> -->

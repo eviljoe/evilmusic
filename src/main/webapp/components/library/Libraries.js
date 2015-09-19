@@ -16,12 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import _ from 'lodash';
+
 export default class Libraries {
     constructor(alerts, queues, Library) {
         this.alerts = alerts;
         this.library = null;
         this.queues = queues;
         this.Library = Library;
+        
+        this.cache = {
+            artists: new Set()
+        };
         
         this.init();
     }
@@ -40,10 +46,37 @@ export default class Libraries {
     
     /** Loads the contents of the library using a REST call. */
     load() {
-        this.library = this.Library.get();
-        this.library.$promise.catch((data) => {
+        this.library = this.Library.get().$promise.then((library) => {
+            this.updateCache(library);
+        }).catch((data) => {
             this.alerts.error('Could not get library.', data);
         });
+    }
+    
+    updateCache(lib) {
+        this.cache.artists.clear();
+        
+        _.forEach(lib.songs, (song) => {
+            this.cache.artists.add(song.artist);
+        });
+    }
+    
+    /**
+     * Returns an array containing each unique artist in the library.  The array is not sorted.
+     *
+     * HACK: This should be a Set instead of an Array, but AngularJS's ngRepeat doesn't seem to work when given a Set.
+     * The internet seems to think this should work, so I think Babel might be breaking the functionality.  When
+     * EvilMusic is no longer using Babel, try using a Set again.
+     *
+     * @return {Array<string>} An array containing the unique artists in the library.
+     */
+    getArtists() { // JOE ju
+        let artists = [];
+        
+        // JOE ? how do i test this if phantom js doesn't support sets?!?
+        this.cache.artists.forEach((artist) => artists.push(artist));
+        
+        return artists;
     }
     
     /**

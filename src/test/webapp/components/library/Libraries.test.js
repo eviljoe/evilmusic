@@ -43,6 +43,12 @@ describe(Libraries.name, () => {
             }
         };
         
+        window.Set = class { // HACK: remove this when PhantomJS supports Sets
+            add() {}
+            
+            clear() {}
+        };
+        
         libraries = new Libraries(_alerts, _queues, _Library);
     }));
     
@@ -77,6 +83,7 @@ describe(Libraries.name, () => {
             spyOn(_Library, 'get').and.returnValue({
                 $promise: libDefer.promise
             });
+            spyOn(libraries, 'updateCache').and.stub();
         });
         
         it('creates and sets a library', () => {
@@ -84,6 +91,16 @@ describe(Libraries.name, () => {
             libraries.load();
             expect(libraries.library).toBeDefined();
             expect(libraries.library).not.toBeNull();
+        });
+        
+        it('updates the cache when the library is successfully loaded', () => {
+            spyOn(_alerts, 'error').and.stub();
+            
+            libraries.load();
+            libDefer.resolve();
+            $rootScope.$apply();
+            
+            expect(libraries.updateCache).toHaveBeenCalled();
         });
         
         it('displays an error message if the library fails to load', () => {
@@ -227,5 +244,34 @@ describe(Libraries.name, () => {
             
             expect(_alerts.error).toHaveBeenCalled();
         });
+    });
+    
+    describe('updateCache', () => {
+        beforeEach(() => {
+            spyOn(libraries.cache.artists, 'clear').and.stub();
+            spyOn(libraries.cache.artists, 'add').and.stub();
+        });
+        
+        it('clears the cached artists', () => {
+            libraries.updateCache({});
+            expect(libraries.cache.artists.clear).toHaveBeenCalled();
+        });
+        
+        it('adds each song\'s artist to the artists cache', () => {
+            libraries.updateCache({songs: [
+                {artist: 'abc'},
+                {artist: '123'}
+            ]});
+            expect(libraries.cache.artists.add).toHaveBeenCalledWith('abc');
+            expect(libraries.cache.artists.add).toHaveBeenCalledWith('123');
+        });
+    });
+    
+    describe('getArtists', () => {
+        beforeEach(() => {
+            libraries.cache.artists = jasmine.createSpyObj('artists', 'forEach');
+        });
+        
+        it('adds each artists to an array');
     });
 });
