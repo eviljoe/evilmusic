@@ -16,38 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class LibraryController {
-    constructor(libraries, queues, emUtils) {
-        this.libraries = libraries;
-        this.queues = queues;
-        this.emUtils = emUtils;
-        
-        this.artist = null;
-        this.album = null;
+import DirectiveFactory from 'components/utils/DirectiveFactory';
+import LibraryAlbumsController from './LibraryAlbumsController';
+
+export default class LibraryAlbumsDirectiveFactory extends DirectiveFactory {
+    constructor() {
+        super();
+        this.directive.injectID = 'libraryAlbums';
     }
     
-    static get $inject() {
-        return ['libraries', 'queues', 'emUtils'];
-    }
-    
-    static get injectID() {
-        return 'LibraryController';
-    }
-    
-    backToArtists() {
-        this.artist = null;
-        this.album = null;
-    }
-    
-    backToAlbums() {
-        this.album = null;
-    }
-    
-    addLast(songID) {
-        this.queues.addLast(songID);
-    }
-    
-    getSongs() {
-        return this.libraries.getSongsForAlbum(this.artist, this.album);
+    directive() {
+        return {
+            restrict: 'E',
+            scope: {
+                artist: '=',
+                album: '='
+            },
+            controller: LibraryAlbumsController.injectID,
+            controllerAs: 'ctrl',
+            templateUrl: 'components/library/library-albums/library-albums.html'
+        };
     }
 }

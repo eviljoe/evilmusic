@@ -18,6 +18,10 @@
 
 import LibraryController from './LibraryController';
 import LibraryDirectiveFactory from './LibraryDirectiveFactory';
+import LibraryAlbumsController from './library-albums/LibraryAlbumsController';
+import LibraryAlbumsDirectiveFactory from './library-albums/LibraryAlbumsDirectiveFactory';
+import LibraryArtistsController from './library-artists/LibraryArtistsController';
+import LibraryArtistsDirectiveFactory from './library-artists/LibraryArtistsDirectiveFactory';
 import Libraries from './Libraries';
 
 export default function(emApp) {
@@ -26,5 +30,9 @@ export default function(emApp) {
     return emApp
         .directive(LibraryDirectiveFactory)
         .controller(LibraryController)
+        .directive(LibraryAlbumsDirectiveFactory)
+        .controller(LibraryAlbumsController)
+        .directive(LibraryArtistsDirectiveFactory)
+        .controller(LibraryArtistsController)
         .service(Libraries);
 }

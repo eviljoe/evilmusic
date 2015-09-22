@@ -16,38 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class LibraryController {
-    constructor(libraries, queues, emUtils) {
+export default class LibraryArtistsController {
+    constructor($scope, libraries) {
+        this.$scope = $scope;
         this.libraries = libraries;
-        this.queues = queues;
-        this.emUtils = emUtils;
-        
-        this.artist = null;
-        this.album = null;
     }
     
     static get $inject() {
-        return ['libraries', 'queues', 'emUtils'];
+        return ['$scope', 'libraries'];
     }
     
     static get injectID() {
-        return 'LibraryController';
+        return 'LibraryArtistsController';
     }
     
-    backToArtists() {
-        this.artist = null;
-        this.album = null;
+    getArtists() {
+        return this.libraries.getArtists();
     }
     
-    backToAlbums() {
-        this.album = null;
-    }
-    
-    addLast(songID) {
-        this.queues.addLast(songID);
-    }
-    
-    getSongs() {
-        return this.libraries.getSongsForAlbum(this.artist, this.album);
+    artistChanged(artist) {
+        this.$scope.artist = artist;
     }
 }

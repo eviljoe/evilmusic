@@ -27,6 +27,9 @@ module.exports = function(config) {
     config.set({
         basePath: '',
         files: [
+            // Necessary for Babel to be able to convert some things (like the new ES6 data structures)
+            'node_modules/babel-core/browser-polyfill.js',
+            
             // Third party libraries
             webSrcDir + '/assets/libs/aurora.js',
             webSrcDir + '/assets/libs/flac.js',

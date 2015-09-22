@@ -98,12 +98,8 @@ class EvilMusicApp {
         let injectID;
         let functName = functionName || type;
         
-        // console.log('registering ' + type + '...');
         injectID = this.getInjectID(type, angularable);
-        // console.log('  > ' + injectID);
-        
         this.getAngularModule()[functName](injectID, angularable);
-        // console.log('  > done!');
         
         return this;
     }

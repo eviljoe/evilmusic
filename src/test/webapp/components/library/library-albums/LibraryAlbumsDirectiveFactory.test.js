@@ -16,38 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class LibraryController {
-    constructor(libraries, queues, emUtils) {
-        this.libraries = libraries;
-        this.queues = queues;
-        this.emUtils = emUtils;
+import LibraryArtistsDirectiveFactory from 'components/library/library-artists/LibraryArtistsDirectiveFactory';
+
+describe(LibraryArtistsDirectiveFactory.name, () => {
+    let factory = null;
+    
+    beforeEach(() => {
+        factory = new LibraryArtistsDirectiveFactory();
+    });
+    
+    describe('directive', () => {
+        it('defines an injection ID', () => {
+            expect(factory.directive.injectID).toEqual(jasmine.any(String));
+        });
         
-        this.artist = null;
-        this.album = null;
-    }
-    
-    static get $inject() {
-        return ['libraries', 'queues', 'emUtils'];
-    }
-    
-    static get injectID() {
-        return 'LibraryController';
-    }
-    
-    backToArtists() {
-        this.artist = null;
-        this.album = null;
-    }
-    
-    backToAlbums() {
-        this.album = null;
-    }
-    
-    addLast(songID) {
-        this.queues.addLast(songID);
-    }
-    
-    getSongs() {
-        return this.libraries.getSongsForAlbum(this.artist, this.album);
-    }
-}
+        it('returns a directive configuration object', function() {
+            expect(factory.directive()).toEqual(jasmine.any(Object));
+        });
+    });
+});
