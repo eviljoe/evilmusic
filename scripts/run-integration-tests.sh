@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # EvilMusic - Web-Based Music Player
 # Copyright (C) 2015 Joe Falascino
 #
@@ -14,11 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#!/bin/bash
 # A script that will run the integration EvilMusic tests.
 
 gradle configIntTest bootRun &
-pid=$!
 
 sleep 20
 gradle intTest
