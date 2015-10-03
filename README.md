@@ -1,6 +1,8 @@
 EvilMusic
 =========
 
+[![Build Status](https://travis-ci.org/eviljoe/evilmusic.svg?branch=master)](https://travis-ci.org/eviljoe/evilmusic)
+
 Web based music player for lossless formats.
 
 ## Supported Formats
