@@ -1,18 +1,17 @@
 {
-  "libs": [
-    "browser",
-    "ecma5",
-    "ecma6",
-    "jquery"
-  ],
-  "loadEagerly": [
-    "src/main/webapp/**/*.js"
-  ],
-  "plugins": {
-    "complete_strings": {},
-    "angular": {},
-    "doc_comment": {
-      "fullDocs": true
+    "ecmaVersion": 6,
+    "libs": [
+        "browser"
+    ],
+    "loadEagerly": [
+        "src/main/webapp/**/*.js"
+    ],
+    "plugins": {
+        "es_modules": {},
+        "complete_strings": {},
+        "angular": {},
+        "doc_comment": {
+            "fullDocs": true
+        }
     }
-  }
 }
