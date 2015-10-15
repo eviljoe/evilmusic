@@ -20,20 +20,18 @@ import ProgressBarController from 'components/progress-bar/ProgressBarController
 
 describe(ProgressBarController.name, () => {
     let ctrl = null;
-    let _scope = null;
     let _rootScope = null;
+    let _scope = null;
+    let _timeout = null;
     let _players = null;
     let _emUtils = null;
     
     beforeEach(() => {
-        _scope = {
-            meterElem: {
-                width() {}
-            }
-        };
         _rootScope = {
             $on() {}
         };
+        _scope = {};
+        _timeout = jasmine.createSpy('$timeout');
         _players = {
             seekToPercent() {}
         };
@@ -41,7 +39,7 @@ describe(ProgressBarController.name, () => {
             isNumber() {}
         };
         
-        ctrl = new ProgressBarController(_scope, _rootScope, _players, _emUtils);
+        ctrl = new ProgressBarController(_rootScope, _scope, _timeout, _players, _emUtils);
         ProgressBarController.instance = ctrl;
     });
     
@@ -58,13 +56,8 @@ describe(ProgressBarController.name, () => {
     });
     
     describe('init', () => {
-        it('puts the progress meter click callback on the scope', () => {
-            ctrl.init();
-            expect(_scope.progressMeterClicked).toEqual(jasmine.any(Function));
-        });
-        
-        it('puts the update meter width function on the scope', () => {
-            expect(_scope.updateMeterWidth).toEqual(jasmine.any(Function));
+        beforeEach(() => {
+            spyOn(ctrl, 'draw').and.stub();
         });
         
         it('adds a listener for player progress change events on the root scope', () => {
@@ -73,74 +66,186 @@ describe(ProgressBarController.name, () => {
             ctrl.init();
             expect(_rootScope.$on).toHaveBeenCalledWith('asdf', jasmine.any(Function));
         });
-    });
-    
-    describe('progressMeterClicked', () => {
-        beforeEach(function() {
-            spyOn(_players, 'seekToPercent').and.stub();
-            spyOn(_emUtils, 'isNumber').and.callFake((val) => {
-                return typeof val === 'number';
-            });
+        
+        it('draws after a timeout', () => {
+            ctrl.init();
+            _timeout.calls.mostRecent().args[0]();
+            expect(ctrl.draw).toHaveBeenCalled();
         });
         
-        it('calls the seek callback with x-position / width', () => {
-            ctrl.progressMeterClicked(17, 100);
+        it('draws after a timeout of zero', () => {
+            _timeout.calls.reset();
+            ctrl.init();
+            expect(_timeout).toHaveBeenCalledWith(jasmine.any(Function), 0);
+        });
+    });
+    
+    describe('barClicked', () => {
+        let _event = null;
+        
+        beforeEach(() => {
+            _event = jasmine.createSpyObj('event', ['stopPropagation']);
+            spyOn(ctrl, 'getCanvasWidth').and.returnValue(100);
+            spyOn(_players, 'seekToPercent').and.stub();
+        });
+        
+        it('stops the event propogation', () => {
+            ctrl.barClicked(_event);
+            expect(_event.stopPropagation).toHaveBeenCalled();
+        });
+        
+        it('seeks to the requested player progress based off of the x-offset of the click event', () => {
+            _event.offsetX = 17;
+            ctrl.barClicked(_event);
             expect(_players.seekToPercent).toHaveBeenCalledWith(0.17);
         });
-        
-        it('does nothing when given an x-position that is not a number', () => {
-            ctrl.progressMeterClicked('asdf', 100);
-            expect(_players.seekToPercent).not.toHaveBeenCalled();
-        });
-        
-        it('does nothing when given a width that is not a number', () => {
-            ctrl.progressMeterClicked(17, 'asdf');
-            expect(_players.seekToPercent).not.toHaveBeenCalled();
-        });
     });
     
-    describe('updateMeterWidth', () => {
+    describe('getPlayerProgress', () => {
         beforeEach(() => {
-            spyOn(_scope.meterElem, 'width').and.stub();
             spyOn(_emUtils, 'isNumber').and.callFake((val) => {
                 return typeof val === 'number';
             });
         });
         
-        it('updates the meter width when the player progress is between 0 and 100', () => {
+        it('returns the player progress when it is between 0 and 100', () => {
             ctrl.players.playerProgress = 17.5;
-            ctrl.updateMeterWidth();
-            expect(_scope.meterElem.width).toHaveBeenCalledWith('17.5%');
+            ctrl.getPlayerProgress();
+            expect(ctrl.getPlayerProgress()).toEqual(17.5);
         });
         
-        it('updates the meter width to 0% when the player progress is 0', () => {
+        it('returns 0 when the player progress is 0', () => {
             ctrl.players.playerProgress = 0;
-            ctrl.updateMeterWidth();
-            expect(_scope.meterElem.width).toHaveBeenCalledWith('0%');
+            expect(ctrl.getPlayerProgress()).toEqual(0);
         });
         
-        it('updates the meter width to 0% when the player progress is negative', () => {
+        it('returns 0 when the player progress is negative', () => {
             ctrl.players.playerProgress = -13.5;
-            ctrl.updateMeterWidth();
-            expect(_scope.meterElem.width).toHaveBeenCalledWith('0%');
+            ctrl.getPlayerProgress();
+            expect(ctrl.getPlayerProgress()).toEqual(0);
         });
         
-        it('updates the meter width to 100% when the player progress is 100', () => {
+        it('returns 100 when the player progress is 100', () => {
             ctrl.players.playerProgress = 100;
-            ctrl.updateMeterWidth();
-            expect(_scope.meterElem.width).toHaveBeenCalledWith('100%');
+            ctrl.getPlayerProgress();
+            expect(ctrl.getPlayerProgress()).toEqual(100);
         });
         
-        it('updates the meter width to 100% when the player progress is greater than 100', () => {
+        it('returns 100 when the player progress is greater than 100', () => {
             ctrl.players.playerProgress = 117;
-            ctrl.updateMeterWidth();
-            expect(_scope.meterElem.width).toHaveBeenCalledWith('100%');
+            ctrl.getPlayerProgress();
+            expect(ctrl.getPlayerProgress()).toEqual(100);
         });
         
-        it('updates the meter width to 0% when the player progress is not a number', () => {
+        it('returns 0 when the player progress is not a number', () => {
             ctrl.players.playerProgress = 'asdf';
-            ctrl.updateMeterWidth();
-            expect(_scope.meterElem.width).toHaveBeenCalledWith('0%');
+            ctrl.getPlayerProgress();
+            expect(ctrl.getPlayerProgress()).toEqual(0);
+        });
+    });
+    
+    describe('getCanvas', () => {
+        let _canvas;
+        
+        beforeEach(() => {
+            _canvas = {a: 'A'};
+            _scope.canvas = [_canvas];
+        });
+        
+        it('returns the canvas from the scope', () => {
+            expect(ctrl.getCanvas()).toBe(_canvas);
+        });
+    });
+    
+    describe('getCanvasWidth', () => {
+        let _canvasContainer;
+        
+        beforeEach(() => {
+            _canvasContainer = jasmine.createSpyObj('canvasContainer', ['width']);
+            _scope.canvasContainer = _canvasContainer;
+        });
+        
+        it('returns 0 when the scope does not have a canvas container', () => {
+            _scope.canvasContainer = null;
+            expect(ctrl.getCanvasWidth()).toEqual(0);
+        });
+        
+        it("returns the canvas container's width the canvas container exists", () => {
+            _canvasContainer.width.and.returnValue(17);
+            expect(ctrl.getCanvasWidth()).toEqual(17);
+        });
+    });
+    
+    describe('draw', () => {
+        let _canvas;
+        let _ctx;
+        
+        beforeEach(() => {
+            _canvas = {
+                width: 100,
+                height: 10,
+                getContext() {}
+            };
+            _ctx = jasmine.createSpyObj('context', ['clearRect']);
+            
+            spyOn(ctrl, 'getCanvas').and.returnValue(_canvas);
+            spyOn(_canvas, 'getContext').and.returnValue(_ctx);
+            spyOn(ctrl, 'drawMeter').and.stub();
+            spyOn(ctrl, 'drawGutter').and.stub();
+            spyOn(ctrl, 'getPlayerProgress').and.stub();
+        });
+        
+        it('clears the entire canvas', () => {
+            ctrl.draw();
+            expect(_ctx.clearRect).toHaveBeenCalledWith(0, 0, 100, 10);
+        });
+        
+        it("draws a meter filling the percentage of the player's progress", () => {
+            ctrl.getPlayerProgress.and.returnValue(25);
+            ctrl.draw();
+            expect(ctrl.drawMeter).toHaveBeenCalledWith(_ctx, 0, 0, 25, 10);
+        });
+        
+        it('draws a gutter filling portion of the bar not filled by the meter', () => {
+            ctrl.getPlayerProgress.and.returnValue(25);
+            ctrl.draw();
+            expect(ctrl.drawGutter).toHaveBeenCalledWith(_ctx, 25, 0, 75, 10);
+        });
+    });
+    
+    describe('drawMeter', () => {
+        let _ctx;
+        
+        beforeEach(() => {
+            _ctx = jasmine.createSpyObj('ctx', ['fillRect']);
+        });
+        
+        it('draws the meter in blue', () => {
+            ctrl.drawMeter(_ctx, 1, 2, 3, 4);
+            expect(_ctx.fillStyle).toEqual('blue');
+        });
+        
+        it('draws the meter as a rectangle filling the given bounds', () => {
+            ctrl.drawMeter(_ctx, 1, 2, 3, 4);
+            expect(_ctx.fillRect).toHaveBeenCalledWith(1, 2, 3, 4);
+        });
+    });
+    
+    describe('drawGutter', () => {
+        let _ctx;
+        
+        beforeEach(() => {
+            _ctx = jasmine.createSpyObj('ctx', ['fillRect']);
+        });
+        
+        it('draws the meter in light grey', () => {
+            ctrl.drawGutter(_ctx, 1, 2, 3, 4);
+            expect(_ctx.fillStyle).toEqual('lightgrey');
+        });
+        
+        it('draws the meter as a rectangle filling the given bounds', () => {
+            ctrl.drawGutter(_ctx, 1, 2, 3, 4);
+            expect(_ctx.fillRect).toHaveBeenCalledWith(1, 2, 3, 4);
         });
     });
 });

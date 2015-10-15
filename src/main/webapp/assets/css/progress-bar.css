@@ -16,30 +16,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-.eq-slider-container {
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 12px;
+.em-progress-bar-container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
-
-.eq-slider {
-    /* IE */
-    writing-mode: bt-lr;
-    
-    /* WebKit */
-    -webkit-appearance: slider-vertical;
-    
-    width: 8px;
-    height: 200px;
-    margin-bottom: 3px;
-    text-align: center;
-}
-
-.eq-slider-text-field {
-    width: 45px;
-}
-
-.em-top-table-controls-container {
-    margin-bottom: 5px;
-}
-

@@ -17,11 +17,12 @@
  */
 
 export default class ProgressBarController {
-    constructor($scope, $rootScope, players, emUtils) {
+    constructor($rootScope, $scope, $timeout, players, emUtils) {
         ProgressBarController.instance = this;
         
-        this.$scope = $scope;
         this.$rootScope = $rootScope;
+        this.$scope = $scope;
+        this.$timeout = $timeout;
         this.players = players;
         this.emUtils = emUtils;
         
@@ -29,44 +30,61 @@ export default class ProgressBarController {
     }
 
     static get $inject() {
-        return ['$scope', '$rootScope', 'players', 'emUtils'];
+        return ['$rootScope', '$scope', '$timeout', 'players', 'emUtils'];
     }
 
     static get injectID() {
         return 'ProgressBarController';
     }
     
-    static getInstance() {
-        return ProgressBarController.instance;
-    }
-    
     init() {
-        // TODO this whole nightmare needs to be refactored.  I can hear it crying.
-        this.$scope.progressMeterClicked = this.progressMeterClicked;
-        this.$scope.updateMeterWidth = this.updateMeterWidth;
-        
-        this.$rootScope.$on(this.players.playerProgressChangedEventName, () => this.$scope.updateMeterWidth());
+        this.$rootScope.$on(this.players.playerProgressChangedEventName, () => this.draw());
+        this.$timeout(() => this.draw(), 0);
     }
     
-    progressMeterClicked(xPos, width) {
-        let instance = ProgressBarController.getInstance();
-        
-        if(instance.emUtils.isNumber(xPos) && instance.emUtils.isNumber(width)) {
-            instance.players.seekToPercent(xPos / width);
-        }
+    barClicked(event) {
+        event.stopPropagation();
+        this.players.seekToPercent(event.offsetX / this.getCanvasWidth());
     }
     
-    updateMeterWidth() {
-        let instance = ProgressBarController.getInstance();
-        let p = instance.players.playerProgress;
+    getPlayerProgress() {
+        let p = this.players.playerProgress;
 
-        if(instance.emUtils.isNumber(p)) {
+        if(this.emUtils.isNumber(p)) {
             p = Math.max(0, p);
             p = Math.min(100, p);
         } else {
             p = 0;
         }
+        
+        return p;
+    }
+    
+    getCanvas() {
+        return this.$scope.canvas[0];
+    }
+    
+    getCanvasWidth() {
+        return this.$scope.canvasContainer ? this.$scope.canvasContainer.width() : 0;
+    }
+    
+    draw() {
+        let canvas = this.getCanvas();
+        let ctx = canvas.getContext('2d');
+        let barWidth = this.getPlayerProgress() / 100.0 * canvas.width;
 
-        instance.$scope.meterElem.width(p + '%');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.drawMeter(ctx, 0, 0, barWidth, canvas.height);
+        this.drawGutter(ctx, barWidth, 0, canvas.width - barWidth, canvas.height);
+    }
+    
+    drawMeter(ctx, x, y, width, height) {
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(x, y, width, height);
+    }
+    
+    drawGutter(ctx, x, y, width, height) {
+        ctx.fillStyle = 'lightgrey';
+        ctx.fillRect(x, y, width, height);
     }
 }

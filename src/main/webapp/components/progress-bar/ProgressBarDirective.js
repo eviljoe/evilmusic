@@ -27,26 +27,18 @@ export default class ProgressBarDirective {
         this.controller = ProgressBarController.injectID;
         this.controllerAs = 'ctrl';
         this.angular = angular;
-        this.link = (scope, element, attrs) => this._link(scope, element, attrs);
+        this.link = (scope, element, attrs, ctrl) => this._link(scope, element, attrs, ctrl);
     }
         
-    _link(scope, element, attrs) {
-        scope.barElem = element;
-        scope.gutterElem = this.getElement(element[0], '.em-progress-gutter');
-        scope.meterElem = this.getElement(element[0], '.em-progress-meter');
+    _link(scope, element, attrs, ctrl) {
+        scope.canvasContainer = this.getElement(element[0], '.em-progress-bar-container');
+        scope.canvas = this.getElement(element[0], '.em-progress-bar-canvas');
+        scope.canvas.on('click', (event) => ctrl.barClicked(event));
         
-        scope.gutterElem.on('click', (event) => this.barClicked(scope, event));
-        scope.meterElem.on('click', (event) => this.barClicked(scope, event));
-        
-        scope.updateMeterWidth();
+        ctrl.draw();
     }
     
     getElement(rootElem, selector) {
         return this.angular.element(rootElem.querySelector(selector));
-    }
-    
-    barClicked(scope, event) {
-        event.stopPropagation();
-        scope.progressMeterClicked(event.offsetX, scope.gutterElem.width());
     }
 }

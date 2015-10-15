@@ -26,101 +26,56 @@ describe(ProgressBarDirective.name, () => {
     });
     
     describe('_link', () => {
-        let _gutterElem = null;
-        let _meterElem = null;
+        let _canvasContainer = null;
+        let _canvas = null;
         let _scope = null;
-        let _element = null;
+        let _controller = null;
         
         beforeEach(() => {
-            _gutterElem = {
-                on: () => {},
-                width: () => {}
+            _canvasContainer = {};
+            _canvas = {
+                on() {}
+            };
+            _scope = {};
+            _controller = {
+                draw() {}
             };
             
-            _meterElem = {on: () => {}};
-            
-            _scope = {
-                progressMeterClicked: () => {},
-                updateMeterWidth: () => {}
-            };
-            
-            _element = {};
-            
-            spyOn(dir, 'getElement').and.callFake((elem, selector) => {
-                let e = null;
+            spyOn(dir, 'getElement').and.callFake((root, selector) => {
+                let elem = null;
                 
-                if(selector === '.em-progress-gutter') {
-                    e = _gutterElem;
-                } else if(selector === '.em-progress-meter') {
-                    e = _meterElem;
+                if(selector === '.em-progress-bar-container') {
+                    elem = _canvasContainer;
+                } else if(selector === '.em-progress-bar-canvas') {
+                    elem = _canvas;
                 }
                 
-                return e;
+                return elem;
             });
         });
         
-        it('puts the bar element on the scope', () => {
-            _scope.barElem = null;
-            dir._link(_scope, _element, {});
-            expect(_scope.barElem).toBe(_element);
+        it('puts the canvas container element on the scope', () => {
+            _scope.canvasContainer = null;
+            dir._link(_scope, {}, {}, _controller);
+            expect(_scope.canvasContainer).toBe(_canvasContainer);
         });
         
-        it('puts the gutter element on the scope', () => {
-            _scope.gutterElem = null;
-            dir._link(_scope, _element, {});
-            expect(_scope.gutterElem).toBe(_gutterElem);
+        it('puts the canvas element on the scope', () => {
+            _scope.canvas = null;
+            dir._link(_scope, {}, {}, _controller);
+            expect(_scope.canvas).toBe(_canvas);
         });
         
-        it('puts the meter element on the scope', () => {
-            _scope.gutterElem = null;
-            dir._link(_scope, _element, {});
-            expect(_scope.meterElem).toBe(_meterElem);
+        it('adds a listener for click events on the canvas element', () => {
+            spyOn(_canvas, 'on').and.stub();
+            dir._link(_scope, {}, {}, _controller);
+            expect(_canvas.on).toHaveBeenCalledWith('click', jasmine.any(Function));
         });
         
-        it('adds a listener for click events on the gutter element', () => {
-            spyOn(_gutterElem, 'on').and.stub();
-            dir._link(_scope, _element, {});
-            expect(_gutterElem.on).toHaveBeenCalledWith('click', jasmine.any(Function));
-        });
-        
-        it('adds a listener for click events on the meter element', () => {
-            spyOn(_meterElem, 'on').and.stub();
-            dir._link(_scope, _element, {});
-            expect(_meterElem.on).toHaveBeenCalledWith('click', jasmine.any(Function));
-        });
-        
-        it('updates the meter width', () => {
-            spyOn(_scope, 'updateMeterWidth').and.stub();
-            dir._link(_scope, _element, {});
-            expect(_scope.updateMeterWidth).toHaveBeenCalled();
-        });
-    });
-    
-    describe('barClicked', () => {
-        let _scope = null;
-        let _event = null;
-        
-        beforeEach(() => {
-            _scope = {
-                gutterElem: {width: () => {}},
-                progressMeterClicked: () => {}
-            };
-            _event = {stopPropagation: () => {}};
-        });
-        
-        it('stops the event propogation', () => {
-            spyOn(_event, 'stopPropagation').and.stub();
-            dir.barClicked(_scope, _event);
-            expect(_event.stopPropagation).toHaveBeenCalled();
-        });
-        
-        it('notifies the scope that the progress bar was clicked', () => {
-            spyOn(_scope, 'progressMeterClicked').and.stub();
-            spyOn(_scope.gutterElem, 'width').and.returnValue(13);
-            _event.offsetX = 7;
-
-            dir.barClicked(_scope, _event);
-            expect(_scope.progressMeterClicked).toHaveBeenCalledWith(7, 13);
+        it('draws the progress bar', () => {
+            spyOn(_controller, 'draw').and.stub();
+            dir._link(_scope, {}, {}, _controller);
+            expect(_controller.draw).toHaveBeenCalled();
         });
     });
 });
