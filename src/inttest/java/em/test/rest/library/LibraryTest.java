@@ -14,9 +14,12 @@
 
 package em.test.rest.library;
 
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -28,7 +31,6 @@ import em.controllers.LibraryController;
 import em.model.Library;
 import em.model.SongInfo;
 import em.test.rest.calls.LibraryRESTCalls;
-import em.utils.EMUtils;
 
 /**
  * A class containing REST tests for {@link LibraryController}.
@@ -49,6 +51,30 @@ public class LibraryTest {
         LibraryRESTCalls.rebuildLibrary();
     }
     
+    /* ********* */
+    /* Get Tests */
+    /* ********* */
+    
+    /** Tests to ensure that the library can be requested. */
+    @Test
+    public void testGetLibrary() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        
+        assertThat(lib, is(not(nullValue())));
+        assertThat(lib.getSongs(), is(not(nullValue())));
+        assertThat(lib.getSongs(), is(not(empty())));
+    }
+    
+    /** Tests to ensure that songs in the library do not have their file populated when passed to the client. */
+    @Test
+    public void testGetLibrary_SongsDoNotHaveFile() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        
+        for(SongInfo song : lib.getSongs()) {
+            assertThat(song.getFile(), is(nullValue()));
+        }
+    }
+    
     /* ************* */
     /* Rebuild Tests */
     /* ************* */
@@ -65,8 +91,8 @@ public class LibraryTest {
         assertNotNull(lib);
         
         songs = lib.getSongs();
-        assertNotNull(songs);
-        assertTrue(songs.size() > 0);
+        assertThat(songs, is(not(nullValue())));
+        assertThat(songs, is(not(empty())));
     }
     
     /* ************* */
@@ -77,6 +103,6 @@ public class LibraryTest {
     @Test
     public void testClearLibrary() throws IOException {
         LibraryRESTCalls.clearLibrary();
-        assertFalse(EMUtils.hasValues(LibraryRESTCalls.getLibrary().getSongs()));
+        assertThat(LibraryRESTCalls.getLibrary().getSongs(), is(empty()));
     }
 }

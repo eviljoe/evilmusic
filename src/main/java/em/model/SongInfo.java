@@ -22,6 +22,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @since v0.1
  * @author eviljoe
@@ -147,10 +149,12 @@ public class SongInfo implements Identifiable, Cloneable {
         this.trackNumber = track;
     }
     
+    @JsonIgnore
     public File getFile() {
         return file;
     }
     
+    @JsonIgnore
     public void setFile(File file) {
         this.file = file;
     }

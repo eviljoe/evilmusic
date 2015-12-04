@@ -31,7 +31,12 @@ public class Library {
     /* ************ */
     
     public Library() {
+        this(null);
+    }
+    
+    public Library(Collection<SongInfo> songs) {
         super();
+        this.setSongs(songs);
     }
     
     /* ***************** */

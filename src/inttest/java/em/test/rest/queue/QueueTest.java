@@ -16,8 +16,9 @@ package em.test.rest.queue;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ import org.junit.Test;
 import em.controllers.QueueController;
 import em.model.Library;
 import em.model.Queue;
+import em.model.QueueElement;
 import em.model.SongInfo;
 import em.test.rest.calls.LibraryRESTCalls;
 import em.test.rest.calls.QueueRESTCalls;
@@ -78,8 +80,8 @@ public class QueueTest {
         final Queue q = QueueRESTCalls.createQueue();
         
         queuesToCleanup.add(q);
-        assertNotNull(q);
-        assertNotNull(q.getID());
+        assertThat(q, is(not(nullValue())));
+        assertThat(q.getID(), is(not(nullValue())));
     }
     
     /* ************ */
@@ -255,14 +257,33 @@ public class QueueTest {
         
         // Get the queue and verify the correct one was returned
         q = QueueRESTCalls.getQueue(qID);
-        assertNotNull(q);
-        assertEquals(new Integer(qID), q.getID());
+        assertThat(q, is(not(nullValue())));
+        assertThat(q.getID(), is(equalTo(new Integer(qID))));
     }
     
     /** Tests to ensure that HTTP 404 will be returned when an attempting to obtain a queue using an invalid ID. */
     @Test
     public void testGetQueue_Invalid() throws IOException {
         QueueRESTCalls.getQueue(404, Integer.MIN_VALUE + 117);
+    }
+    
+    /** Tests to ensure that songs in the queue do not have their file populated when passed to the client. */
+    @Test
+    public void testGetQueue_SongsDoNotHaveFile() throws IOException {
+        final Library lib = LibraryRESTCalls.getLibrary();
+        Queue q = QueueRESTCalls.createQueue();
+        
+        // Add the songs to the queue
+        q = QueueRESTCalls.addLast(200, q.getID(), lib.getSongs().get(0).getID(), lib.getSongs().get(1).getID());
+        for(QueueElement elem : q.getElements()) {
+            assertThat(elem.getSong().getFile(), is(nullValue()));
+        }
+        
+        // Get the queue and verify they do not have their files populated
+        q = QueueRESTCalls.getQueue(q.getID());
+        for(QueueElement elem : q.getElements()) {
+            assertThat(elem.getSong().getFile(), is(nullValue()));
+        }
     }
     
     /* *********** */

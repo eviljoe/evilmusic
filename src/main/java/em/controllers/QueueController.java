@@ -97,8 +97,7 @@ public class QueueController {
         Queue q;
         
         try {
-            q = qDAO.getFirst().clone();
-            LibraryUtils.sanitizeElementsForClient(q.getElements());
+            q = qDAO.getFirst();
         } catch(QueueNotFoundException e) {
             q = qDAO.add(new Queue());
         }
@@ -110,9 +109,7 @@ public class QueueController {
     @RequestMapping(value = "/rest/queue/{id}", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public Queue getQueue(@PathVariable("id") int id) {
-        final Queue q = qDAO.get(id).clone();
-        LibraryUtils.sanitizeElementsForClient(q.getElements());
-        return q;
+        return qDAO.get(id);
     }
     
     @Transactional

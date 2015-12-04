@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -31,7 +30,6 @@ import java.util.logging.Logger;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import em.model.QueueElement;
 import em.model.SongInfo;
 import em.utils.metadatareaders.MetaDataReadException;
 import em.utils.metadatareaders.MetaDataReader;
@@ -114,42 +112,6 @@ public class LibraryUtils {
         }
         
         return info;
-    }
-    
-    public static SongInfo sanitizeForClient(SongInfo info) {
-        if(info != null) {
-            info.setFile(null);
-        }
-        
-        return info;
-    }
-    
-    public static QueueElement sanitizeForClient(QueueElement element) {
-        if(element != null) {
-            sanitizeForClient(element.getSong());
-        }
-        
-        return element;
-    }
-    
-    public static <S extends SongInfo, C extends Collection<S>> C sanitizeSongsForClient(C infos) {
-        if(infos != null) {
-            for(SongInfo info : infos) {
-                sanitizeForClient(info);
-            }
-        }
-        
-        return infos;
-    }
-    
-    public static <S extends QueueElement, C extends Collection<S>> C sanitizeElementsForClient(C elements) {
-        if(elements != null) {
-            for(QueueElement element : elements) {
-                sanitizeForClient(element);
-            }
-        }
-        
-        return elements;
     }
     
     public static void streamSongToResponse(HttpServletResponse response, SongInfo info, boolean updateHeadersOnly)

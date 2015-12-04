@@ -16,7 +16,6 @@ package em.controllers;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -67,17 +66,7 @@ public class LibraryController {
     @RequestMapping(value = "/rest/library", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     public Library getLibrary() {
-        final List<SongInfo> songs = songDAO.getAll();
-        final List<SongInfo> clones = new ArrayList<>();
-        final Library lib = new Library();
-        
-        for(SongInfo song : songs) {
-            clones.add(song.clone());
-        }
-        
-        lib.setSongs(LibraryUtils.sanitizeSongsForClient(clones));
-        
-        return lib;
+        return new Library(songDAO.getAll());
     }
     
     @Transactional
