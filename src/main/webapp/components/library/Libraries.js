@@ -48,7 +48,8 @@ export default class Libraries {
     
     /** Loads the contents of the library using a REST call. */
     load() {
-        this.library = this.Library.get().$promise.then((library) => {
+        this.library = this.Library.get();
+        this.library.$promise.then((library) => {
             this.rebuildCache(library);
         }).catch((data) => {
             this.alerts.error('Could not get library.', data);
