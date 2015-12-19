@@ -105,7 +105,7 @@ gulp.task('lint-js-jscs', function() {
 gulp.task('lint', ['lint-js-jshint', 'lint-js-jscs']);
 
 gulp.task('clean', function(cb) {
-    del([destDir + '/**'], cb);
+    return del([destDir + '/**']);
 });
 
 /* ********** */
@@ -200,10 +200,11 @@ gulp.task('build-third-party', [
     'copy-fonts'
 ]);
 
-gulp.task('build', function() {
+gulp.task('build', function(cb) {
     return runSeq(
         'clean',
-        ['build-first-party', 'build-third-party']);
+        ['build-first-party', 'build-third-party'],
+        cb);
 });
 
 /* ******* */
