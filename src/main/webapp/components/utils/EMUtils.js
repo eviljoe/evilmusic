@@ -17,6 +17,14 @@
  */
 
 export default class EMUtils {
+    
+    constructor() {
+        this.HERTZ_IN_KILOHERTZ = 1000;
+        this.MILLISECONDS_IN_SECOND = 1000;
+        this.MILLISECONDS_IN_TEN_SECONDS = 10000;
+        this.MILLISECONDS_IN_MINUTE = 60000;
+    }
+    
     static get injectID() {
         return 'emUtils';
     }
@@ -63,10 +71,10 @@ export default class EMUtils {
 
             hertz = Math.abs(hertz);
 
-            if(hertz < 1000) {
-                str += hertz + ' Hz';
+            if(hertz < this.HERTZ_IN_KILOHERTZ) {
+                str += `${hertz} Hz`;
             } else {
-                str += hertz / 1000 + ' kHz';
+                str += `${hertz / this.HERTZ_IN_KILOHERTZ} kHz`;
             }
         }
 
@@ -102,18 +110,18 @@ export default class EMUtils {
             
             if(millis === 0) {
                 str = '0:00';
-            } else if(millis <= 1000) {
+            } else if(millis <= this.MILLISECONDS_IN_SECOND) {
                 str += '0:01';
-            } else if(millis < 60000) {
-                str += millis < 10000 ? '0:0' : '0:';
-                str += Math.ceil(millis / 1000);
+            } else if(millis < this.MILLISECONDS_IN_MINUTE) {
+                str += millis < this.MILLISECONDS_IN_TEN_SECONDS ? '0:0' : '0:';
+                str += Math.ceil(millis / this.MILLISECONDS_IN_SECOND);
             } else {
-                let minutes = Math.floor(millis / 60000);
+                let minutes = Math.floor(millis / this.MILLISECONDS_IN_MINUTE);
                 
-                millis = millis % 60000;
+                millis = millis % this.MILLISECONDS_IN_MINUTE;
                 str += minutes;
-                str += millis < 10000 ? ':0' : ':';
-                str += Math.ceil(millis / 1000);
+                str += millis < this.MILLISECONDS_IN_TEN_SECONDS ? ':0' : ':';
+                str += Math.ceil(millis / this.MILLISECONDS_IN_SECOND);
             }
         }
 

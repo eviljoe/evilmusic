@@ -19,14 +19,6 @@
 import PlayerController from 'components/player/PlayerController';
 
 describe(PlayerController.name, () => {
-    let ctrl = null;
-    let _players = null;
-    
-    beforeEach(() => {
-        _players = {};
-        ctrl = new PlayerController(_players);
-    });
-    
     describe('$inject', () => {
         it('defines injections', () => {
             expect(PlayerController.$inject).toEqual(jasmine.any(Array));

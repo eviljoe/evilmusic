@@ -20,8 +20,6 @@ import ProgressBarController from './ProgressBarController';
 import ProgressBarDirectiveFactory from './ProgressBarDirectiveFactory';
 
 export default function(emApp) {
-    'use strict';
-    
     return emApp
         .directive(ProgressBarDirectiveFactory)
         .controller(ProgressBarController);

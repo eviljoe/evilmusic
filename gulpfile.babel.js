@@ -16,21 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import concat from 'gulp-concat';
+/* eslint-disable arrow-body-style */
+
+import _ from 'lodash';
 import babelify from 'babelify';
 import browserify from 'browserify';
+import concat from 'gulp-concat';
 import del from 'del';
+import eslint from 'gulp-eslint';
 import fs from 'fs';
 import gulp from 'gulp';
 import jscs from 'gulp-jscs';
-import jshint from 'gulp-jshint';
-import jshintStylish from 'jshint-stylish';
 import karma from 'gulp-karma';
 import runSeq from 'run-sequence';
 import source from 'vinyl-source-stream';
 import sourcemaps from 'gulp-sourcemaps';
 import templateCache from 'gulp-angular-templatecache';
-import _ from 'lodash';
 
 /* ********* */
 /* Variables */
@@ -39,16 +40,16 @@ import _ from 'lodash';
 let webSrcDir = './src/main/webapp';
 let webTestSrcDir = './src/test/webapp';
 let destDir = './src/main/webapp/dist';
-let cssDestDir = destDir + '/css';
-let fontsDestDir = destDir + '/fonts';
+let cssDestDir = `${destDir}/css`;
+let fontsDestDir = `${destDir}/fonts`;
 
-let jsFilesToTest = [
-    webSrcDir + '/**/*.js',
-    webSrcDir + '/**/*.js',
-    webTestSrcDir + '/**/*.js',
+let jsFilesToLint = [
+    `${webSrcDir}/**/*.js`,
+    `${webTestSrcDir}/**/*.js`,
     '.package.json',
-    '!' + webSrcDir + '/assets/**',
-    '!' + webSrcDir + '/dist/**'
+    'gulpfile*.js',
+    `!${webSrcDir}/assets/**`,
+    `!${webSrcDir}/dist/**`
 ];
 
 let thirdPartyJSFiles = [
@@ -69,10 +70,10 @@ let thirdPartyJSFiles = [
     'node_modules/lodash/index.js',
     
     // Aurora
-    webSrcDir + '/assets/libs/aurora.js',
+    `${webSrcDir}/assets/libs/aurora.js`,
     
     // FLAC (Needs to be after Aurora)
-    webSrcDir + '/assets/libs/flac.js'
+    `${webSrcDir}/assets/libs/flac.js`
 ];
 
 let thirdPartyCSSFiles = [
@@ -87,35 +88,40 @@ let thirdPartyCSSMapFiles = [
     'node_modules/font-awesome/css/font-awesome.css.map'
 ];
 
+/* ******** */
+/* Cleaning */
+/* ******** */
+
+gulp.task('clean', (cb) => {
+    return del([`${destDir}/**`]);
+});
+
 /* ******* */
 /* Linting */
 /* ******* */
 
-gulp.task('lint-js-jshint', function() {
-    return gulp.src(jsFilesToTest)
-    .pipe(jshint())
-    .pipe(jshint.reporter(jshintStylish));
+gulp.task('lint-js-eslint', () => {
+    return gulp.src(jsFilesToLint)
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 });
 
-gulp.task('lint-js-jscs', function() {
-    return gulp.src(jsFilesToTest)
+gulp.task('lint-js-jscs', () => {
+    return gulp.src(jsFilesToLint)
     .pipe(jscs());
 });
 
-gulp.task('lint', ['lint-js-jshint', 'lint-js-jscs']);
-
-gulp.task('clean', function(cb) {
-    return del([destDir + '/**']);
-});
+gulp.task('lint', ['lint-js-eslint', 'lint-js-jscs']);
 
 /* ********** */
 /* JavaScript */
 /* ********** */
 
-gulp.task('concat-em-js', function(cb) {
+gulp.task('concat-em-js', (cb) => {
     browserify({
         paths: [webSrcDir],
-        entries: webSrcDir + '/index.js',
+        entries: `${webSrcDir}/index.js`,
         debug: true
     })
     .transform(babelify)
@@ -125,7 +131,7 @@ gulp.task('concat-em-js', function(cb) {
     cb();
 });
 
-gulp.task('concat-third-party-js', function() {
+gulp.task('concat-third-party-js', () => {
     verifyFilesExist(thirdPartyJSFiles);
     
     return gulp.src(thirdPartyJSFiles)
@@ -139,15 +145,15 @@ gulp.task('concat-third-party-js', function() {
 /* CSS */
 /* *** */
 
-gulp.task('concat-em-css', function() {
+gulp.task('concat-em-css', () => {
     return gulp.src([
-        webSrcDir + '/assets/css/**/*.css'
+        `${webSrcDir}/assets/css/**/*.css`
     ])
     .pipe(concat('evilmusic.css'))
     .pipe(gulp.dest(cssDestDir));
 });
 
-gulp.task('concat-third-party-css', function() {
+gulp.task('concat-third-party-css', () => {
     verifyFilesExist(thirdPartyCSSFiles);
     
     return gulp.src(thirdPartyCSSFiles)
@@ -155,7 +161,7 @@ gulp.task('concat-third-party-css', function() {
     .pipe(gulp.dest(cssDestDir));
 });
 
-gulp.task('copy-third-party-css-source-maps', function() {
+gulp.task('copy-third-party-css-source-maps', () => {
     verifyFilesExist(thirdPartyCSSMapFiles);
     
     return gulp.src(thirdPartyCSSMapFiles)
@@ -166,8 +172,8 @@ gulp.task('copy-third-party-css-source-maps', function() {
 /* HTML */
 /* **** */
 
-gulp.task('create-template-cache', function() {
-    return gulp.src(webSrcDir + '/**/*.html')
+gulp.task('create-template-cache', () => {
+    return gulp.src(`${webSrcDir}/**/*.html`)
     .pipe(templateCache('evilmusic-templates.js', {module: 'EvilMusicApp'}))
     .pipe(gulp.dest(destDir));
 });
@@ -176,7 +182,7 @@ gulp.task('create-template-cache', function() {
 /* Fonts */
 /* ***** */
 
-gulp.task('copy-fonts', function() {
+gulp.task('copy-fonts', () => {
     return gulp.src([
         'node_modules/font-awesome/fonts/*'
     ])
@@ -200,7 +206,7 @@ gulp.task('build-third-party', [
     'copy-fonts'
 ]);
 
-gulp.task('build', function(cb) {
+gulp.task('build', (cb) => {
     return runSeq(
         'clean',
         ['build-first-party', 'build-third-party'],
@@ -211,12 +217,12 @@ gulp.task('build', function(cb) {
 /* Watches */
 /* ******* */
 
-gulp.task('watch', ['build'], function() {
+gulp.task('watch', ['build'], () => {
     return gulp.watch([
-            webSrcDir + '/assets/**/*',
-            webSrcDir + '/components/**/*',
-            webSrcDir + '/index.html',
-            webSrcDir + '/index.js'
+            `${webSrcDir}/assets/**/*`,
+            `${webSrcDir}/components/**/*`,
+            `${webSrcDir}/index.html`,
+            `${webSrcDir}/index.js`
         ],
         {},
         ['build-first-party']);
@@ -226,13 +232,13 @@ gulp.task('watch', ['build'], function() {
 /* Tests */
 /* ***** */
 
-gulp.task('test', function() {
+gulp.task('test', () => {
     return gulp.src([])
     .pipe(karma({
         configFile: 'karma.conf.js',
         action: 'run'
     }))
-    .on('error', function(err) {
+    .on('error', (err) => {
         throw err;
     });
 });
@@ -241,15 +247,15 @@ gulp.task('test', function() {
 /* Default */
 /* ******* */
 
-gulp.task('default', ['build'], function() {});
+gulp.task('default', ['build']);
 
 /* ********* */
 /* Functions */
 /* ********* */
 
 function verifyFilesExist(files) {
-    _.forEach(files, function(file) {
-        fs.stat(file, function(err, stat) {
+    _.forEach(files, (file) => {
+        fs.stat(file, (err, stat) => {
             if(err) {
                 throw err;
             }

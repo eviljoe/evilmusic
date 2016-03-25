@@ -21,8 +21,6 @@ import PlayerDirectiveFactory from './PlayerDirectiveFactory';
 import Players from './Players';
 
 export default function(emApp) {
-    'use strict';
-    
     return emApp
         .directive(PlayerDirectiveFactory)
         .controller(PlayerController)

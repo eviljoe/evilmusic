@@ -103,9 +103,7 @@ describe(ProgressBarController.name, () => {
     
     describe('getPlayerProgress', () => {
         beforeEach(() => {
-            spyOn(_emUtils, 'isNumber').and.callFake((val) => {
-                return typeof val === 'number';
-            });
+            spyOn(_emUtils, 'isNumber').and.callFake((val) => typeof val === 'number');
         });
         
         it('returns the player progress when it is between 0 and 100', () => {

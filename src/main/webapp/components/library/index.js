@@ -25,8 +25,6 @@ import LibraryArtistsDirectiveFactory from './library-artists/LibraryArtistsDire
 import Libraries from './Libraries';
 
 export default function(emApp) {
-    'use strict';
-    
     return emApp
         .directive(LibraryDirectiveFactory)
         .controller(LibraryController)

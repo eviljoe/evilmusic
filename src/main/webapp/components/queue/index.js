@@ -21,8 +21,6 @@ import QueueDirectiveFactory from './QueueDirectiveFactory';
 import Queues from './Queues';
 
 export default function(emApp) {
-    'use strict';
-    
     return emApp
         .directive(QueueDirectiveFactory)
         .controller(QueueController)

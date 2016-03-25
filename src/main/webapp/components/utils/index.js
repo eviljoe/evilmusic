@@ -19,7 +19,5 @@
 import EMUtils from './EMUtils';
 
 export default function(emApp) {
-    'use strict';
-    
     return emApp.service(EMUtils);
 }

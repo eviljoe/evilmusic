@@ -18,13 +18,13 @@
 
 import EQController from 'components/eq/EQController';
 
-describe(EQController.name, function() {
+describe(EQController.name, () => {
     let ctrl = null;
     let _equalizers = null;
     
     beforeEach(() => {
         _equalizers = {
-            updateNodeGain: function() {}
+            updateNodeGain() {}
         };
         
         ctrl = new EQController(_equalizers);

@@ -19,6 +19,8 @@
 export default class ProgressBarController {
     constructor($rootScope, $scope, $timeout, players, emUtils) {
         ProgressBarController.instance = this;
+        this.MIN_PROGRESS = 0;
+        this.MAX_PROGRESS = 100;
         
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -51,8 +53,8 @@ export default class ProgressBarController {
         let p = this.players.playerProgress;
 
         if(this.emUtils.isNumber(p)) {
-            p = Math.max(0, p);
-            p = Math.min(100, p);
+            p = Math.max(this.MIN_PROGRESS, p);
+            p = Math.min(this.MAX_PROGRESS, p);
         } else {
             p = 0;
         }
@@ -71,7 +73,7 @@ export default class ProgressBarController {
     draw() {
         let canvas = this.getCanvas();
         let ctx = canvas.getContext('2d');
-        let barWidth = this.getPlayerProgress() / 100.0 * canvas.width;
+        let barWidth = this.getPlayerProgress() / 100.0 * canvas.width; // eslint-disable-line no-magic-numbers
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.drawMeter(ctx, 0, 0, barWidth, canvas.height);

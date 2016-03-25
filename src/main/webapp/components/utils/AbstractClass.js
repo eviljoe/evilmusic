@@ -33,7 +33,7 @@ export default class AbstractClass {
     
     _checkForAbstractFunction(abstractFunctionName) {
         if(typeof this[abstractFunctionName] !== 'function') {
-            throw new Error(this.constructor.name + ' must define a "' + abstractFunctionName + '()" function');
+            throw new Error('${this.constructor.name} must define a "${abstractFunctionName}()" function');
         }
     }
     

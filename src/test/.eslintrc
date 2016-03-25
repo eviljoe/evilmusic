@@ -1,0 +1,19 @@
+{
+    "extends": "../../.eslintrc",
+     
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    
+    "env": {
+        "jasmine": true,
+        "protractor": true,
+        "phantomjs": true
+    },
+    
+    "rules": {
+        "no-empty-function": ["off"],
+        "no-magic-numbers": ["off"]
+    }
+}

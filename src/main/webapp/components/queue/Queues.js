@@ -49,7 +49,7 @@ export default class Queues {
     load(loadNew) {
         let id = loadNew ? 'default' : this.q.id;
 
-        this.q = this.Queue.get({id: id});
+        this.q = this.Queue.get({id});
         this.q.$promise.catch((data) => {
             this.alerts.error('Could not get queue.', data);
         });
@@ -122,7 +122,7 @@ export default class Queues {
         let song;
 
         if(this.emUtils.isNumber(queueIndex) && this.q) {
-            song = _.result(_.find(this.q.elements, {queueIndex: queueIndex}), 'song');
+            song = _.result(_.find(this.q.elements, {queueIndex}), 'song');
         }
 
         return song || null;
@@ -136,7 +136,7 @@ export default class Queues {
     getNextSongQueueIndex() {
         let nextIndex = this.q.playIndex + 1;
         
-        return nextIndex > (this.q.elements.length - 1) ? -1 : nextIndex;
+        return nextIndex > this.q.elements.length - 1 ? -1 : nextIndex;
     }
     
     /**
@@ -151,7 +151,7 @@ export default class Queues {
     }
     
     setPlayIndex(playIndex) {
-        this.q.$setPlayIndex({id: this.q.id, playIndex: playIndex}).catch((data) => {
+        this.q.$setPlayIndex({id: this.q.id, playIndex}).catch((data) => {
             this.alerts.error('Failed to set the play index.', data);
         });
     }

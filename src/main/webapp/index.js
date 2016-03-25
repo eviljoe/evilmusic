@@ -75,10 +75,10 @@ class EvilMusicApp {
             } else if(injectIDType === 'string') {
                 injectID = obj.injectID;
             } else {
-                throw new Error(type + ' injectID field is of an unsupported type: ' + injectIDType);
+                throw new Error(`${type} injectID field is of an unsupported type: ${injectIDType}`);
             }
         } else {
-            throw new Error(type + ' has no injectID field');
+            throw new Error(`${type} has no injectID field`);
         }
         
         return injectID;

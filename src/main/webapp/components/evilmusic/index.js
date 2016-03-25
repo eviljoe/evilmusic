@@ -20,8 +20,6 @@ import EMController from './EMController';
 import EMDirectiveFactory from './EMDirectiveFactory';
 
 export default function(emApp) {
-    'use strict';
-    
     return emApp
         .directive(EMDirectiveFactory)
         .controller(EMController);

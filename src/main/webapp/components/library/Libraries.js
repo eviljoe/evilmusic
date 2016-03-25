@@ -20,6 +20,8 @@ import _ from 'lodash';
 
 export default class Libraries {
     constructor(alerts, queues, Library) {
+        this.SONG_KEY_HASH_PRIME = 37;
+        
         this.alerts = alerts;
         this.library = null;
         this.queues = queues;
@@ -151,14 +153,14 @@ export default class Libraries {
         let albumHash = album ? album.split('').reduce(this.reduceSongKey, 0) : 1;
         let hash = 0;
         
-        hash = 37 * hash + artistHash;
-        hash = 37 * hash + albumHash;
+        hash = this.SONG_KEY_HASH_PRIME * hash + artistHash;
+        hash = this.SONG_KEY_HASH_PRIME * hash + albumHash;
         
         return hash;
     }
     
     reduceSongKey(prevVal, currVal) {
-        let hash = ((prevVal << 5) - prevVal) + currVal.charCodeAt(0);
+        let hash = (prevVal << 5 - prevVal) + currVal.charCodeAt(0); // eslint-disable-line no-magic-numbers
         
         return hash & hash;
     }

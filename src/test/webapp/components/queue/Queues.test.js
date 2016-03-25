@@ -295,7 +295,7 @@ describe(Queues.name, () => {
             expect(queues.getSong(songIndex + 1)).toBeNull();
         });
         
-        it('returns null when the queue element at the given index does not have a song', function() {
+        it('returns null when the queue element at the given index does not have a song', () => {
             queues.q.elements[0].song = undefined;
             expect(queues.getSong(songIndex)).toBeNull();
         });

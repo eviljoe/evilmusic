@@ -20,8 +20,6 @@ import VolumeControlDirectiveFactory from './VolumeControlDirectiveFactory';
 import VolumeControlController from './VolumeControlController';
 
 export default function(emApp) {
-    'use strict';
-    
     return emApp
         .directive(VolumeControlDirectiveFactory)
         .controller(VolumeControlController);

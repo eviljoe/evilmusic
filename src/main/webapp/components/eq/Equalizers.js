@@ -55,7 +55,7 @@ export default class Equalizers {
     load(loadNew) {
         let id = loadNew ? 'default' : this.eq.id;
 
-        this.eq = this.Equalizer.get({id: id});
+        this.eq = this.Equalizer.get({id});
         this.eq.$promise.catch((data) => {
             this.alerts.error('Could not get equalizer.', data);
         });
@@ -120,7 +120,7 @@ export default class Equalizers {
             let webAudioNode = this.webAudioNodes[emNode.id];
 
             if(typeof emNode.gain !== 'number') {
-                emNode.gain = parseInt(emNode.gain);
+                emNode.gain = parseInt(emNode.gain, 10);
             }
 
             if(webAudioNode) {

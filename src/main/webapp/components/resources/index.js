@@ -21,8 +21,6 @@ import LibraryResourceFactory from './LibraryResourceFactory';
 import QueueResourceFactory from './QueueResourceFactory';
 
 export default function(emApp) {
-    'use strict';
-    
     return emApp
         .resource(EqualizerResourceFactory)
         .resource(LibraryResourceFactory)

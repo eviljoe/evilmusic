@@ -180,7 +180,7 @@ describe(Players.name, () => {
         });
     });
     
-    describe('createPlayer', function() {
+    describe('createPlayer', () => {
         let createdPlayer = null;
         
         beforeEach(() => {
@@ -304,7 +304,7 @@ describe(Players.name, () => {
         });
     });
     
-    describe('seekToMillis', function() {
+    describe('seekToMillis', () => {
         beforeEach(() => {
             spyOn(_emUtils, 'isNumber').and.returnValue(true);
             spyOn(_avPlayer, 'seek').and.callFake((m) => m);

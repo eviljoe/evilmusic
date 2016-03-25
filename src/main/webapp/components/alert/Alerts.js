@@ -37,20 +37,12 @@ export default class Alerts {
             templateUrl: 'components/alert/alert.html',
             controller: AlertController.injectID,
             controllerAs: 'ctrl',
-            size: size,
+            size,
             resolve: {
-                buttons: () => {
-                    return buttons;
-                },
-                debugInfo: () => {
-                    return debugInfo;
-                },
-                message: () => {
-                    return msg;
-                },
-                title: () => {
-                    return title;
-                }
+                buttons: () => buttons,
+                debugInfo: () => debugInfo,
+                message: () => msg,
+                title: () => title
             }
         });
     }

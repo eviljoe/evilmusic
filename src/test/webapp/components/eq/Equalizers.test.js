@@ -35,7 +35,7 @@ describe(Equalizers.name, () => {
             error() {}
         };
         _Equalizer = {
-            get: () => {
+            get: () => { // eslint-disable-line arrow-body-style
                 return {$promise: $q.defer().promise};
             }
         };
@@ -56,7 +56,7 @@ describe(Equalizers.name, () => {
     });
     
     describe('getInstance', () => {
-        it('returns an the instance', function() {
+        it('returns an the instance', () => {
             let inst = {a: 'A'};
             
             Equalizers.instance = inst;
@@ -171,7 +171,7 @@ describe(Equalizers.name, () => {
             });
         });
         
-        it('returns null when no context is given', function() {
+        it('returns null when no context is given', () => {
             expect(equalizers.createEQNode(null, {})).toBeNull();
         });
         

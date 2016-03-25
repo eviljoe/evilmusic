@@ -20,6 +20,9 @@ import AV from 'av';
 
 export default class Players {
     constructor($http, $rootScope, alerts, emUtils, queues, equalizers) {
+        this.MIN_VOLUME = 0;
+        this.MAX_VOLUME = 100;
+        
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.alerts = alerts;
@@ -32,7 +35,7 @@ export default class Players {
         this.avPlayer = null;
         this.currentSong = null;
         this.playerProgress = null;
-        this.volume = 100;
+        this.volume = this.MAX_VOLUME;
         
         this.loadVolume();
     }
@@ -101,7 +104,7 @@ export default class Players {
     }
     
     playerProgressChanged(song, progress) {
-        this.playerProgress = progress / song.millis * 100;
+        this.playerProgress = progress / song.millis * 100;  // eslint-disable-line no-magic-numbers
         this.$rootScope.$broadcast(this.playerProgressChangedEventName);
     }
     
@@ -147,8 +150,8 @@ export default class Players {
 
     setVolume(volume) {
         if(this.emUtils.isNumber(volume)) {
-            volume = Math.max(0, volume);
-            volume = Math.min(100, volume);
+            volume = Math.max(this.MIN_VOLUME, volume);
+            volume = Math.min(this.MAX_VOLUME, volume);
 
             if(this.avPlayer) {
                 this.avPlayer.volume = volume;

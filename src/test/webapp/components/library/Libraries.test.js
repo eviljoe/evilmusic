@@ -38,7 +38,7 @@ describe(Libraries.name, () => {
             load() {}
         };
         _Library = {
-            get: () => {
+            get: () => { // eslint-disable-line arrow-body-style
                 return {$promise: $q.defer().promise};
             }
         };
@@ -141,7 +141,7 @@ describe(Libraries.name, () => {
             libraries.library = _library;
         });
         
-        it('makes a call to delete the library', function() {
+        it('makes a call to delete the library', () => {
             libraries.clearNow();
             expect(_library.$delete).toHaveBeenCalled();
         });
@@ -207,7 +207,7 @@ describe(Libraries.name, () => {
             libraries.library = _library;
         });
         
-        it('makes a call to rebuild the library', function() {
+        it('makes a call to rebuild the library', () => {
             libraries.rebuildNow();
             expect(_library.$rebuild).toHaveBeenCalled();
         });
@@ -326,9 +326,7 @@ describe(Libraries.name, () => {
     
     describe('cacheSong', () => {
         beforeEach(() => {
-            spyOn(libraries, 'getSongKey').and.callFake((artist, album) => {
-                return `${artist}_${album}`;
-            });
+            spyOn(libraries, 'getSongKey').and.callFake((artist, album) => `${artist}_${album}`);
         });
         
         it('adds a new entry to the songs cache cache when one does not exist for the song', () => {
@@ -389,9 +387,7 @@ describe(Libraries.name, () => {
             libraries.cache.songsForAlbum.set('artist1_album1', new Set([song1, song2]));
             libraries.cache.songsForAlbum.set('artist2_album2', new Set());
             
-            spyOn(libraries, 'getSongKey').and.callFake((artist, album) => {
-                return `${artist}_${album}`;
-            });
+            spyOn(libraries, 'getSongKey').and.callFake((artist, album) => `${artist}_${album}`);
         });
         
         it('returns an empty array when the given artist+album has no songs', () => {

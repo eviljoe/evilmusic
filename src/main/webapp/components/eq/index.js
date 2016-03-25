@@ -24,7 +24,7 @@ import EQDirectiveFactory from './EQDirectiveFactory';
 import Equalizers from './Equalizers';
 import HertzFilterFactory from './HertzFilterFactory';
 
-export default (emApp) => {
+export default (emApp) => { // eslint-disable-line arrow-body-style
     return emApp
     .controller(EQButtonController)
     .directive(EQButtonDirectiveFactory)

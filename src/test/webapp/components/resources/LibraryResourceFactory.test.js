@@ -40,7 +40,7 @@ describe(LibraryResourceFactory.name, () => {
             expect(factory.resource.injectID).toEqual(jasmine.any(String));
         });
         
-        it('creates a resource', function() {
+        it('creates a resource', () => {
             factory.resource(_resource);
             expect(_resource).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(Object), jasmine.any(Object));
         });

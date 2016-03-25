@@ -30,7 +30,7 @@ describe(VolumeControlDirectiveFactory.name, () => {
             expect(factory.directive.injectID).toEqual(jasmine.any(String));
         });
         
-        it('returns a directive configuration object', function() {
+        it('returns a directive configuration object', () => {
             expect(factory.directive()).toEqual(jasmine.any(Object));
         });
     });

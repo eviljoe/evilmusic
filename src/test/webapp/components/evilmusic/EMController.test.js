@@ -19,12 +19,6 @@
 import EMController from 'components/evilmusic/EMController';
 
 describe(EMController.name, () => {
-    let ctrl = null;
-    
-    beforeEach(() => {
-        ctrl = new EMController();
-    });
-    
     describe('injectID', () => {
         it('defines an injection ID', () => {
             expect(EMController.injectID).toEqual(jasmine.any(String));
