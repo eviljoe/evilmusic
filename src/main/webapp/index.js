@@ -12,28 +12,31 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+import 'zone.js';
+import 'reflect-metadata';
+import {bootstrap} from '@angular/platform-browser-dynamic';
 import angular from 'angular';
+
 import emAlert from './components/alert';
 import eq from './components/eq';
 import evilmusic from './components/evilmusic';
 import library from './components/library';
+import ng2Example from './components/ng2-example';
 import player from './components/player';
 import progressBar from './components/progress-bar';
 import queue from './components/queue';
 import resources from './components/resources';
+import {upgradeAdapter} from './upgrade-adapter';
 import utils from './components/utils';
 import volumeControl from './components/volume-control';
 
 const NG_RESOURCE_MODULE_INJECT_ID = 'ngResource';
 const UI_BOOTSTRAP_MODULE_INJECT_ID = 'ui.bootstrap';
+const EVIL_MUSIC_APP = 'EvilMusicApp';
 
 class EvilMusicApp {
-    constructor() {
-        this.init();
-    }
-    
     static get injectID() {
-        return 'EvilMusicApp';
+        return EVIL_MUSIC_APP;
     }
     
     init() {
@@ -41,6 +44,7 @@ class EvilMusicApp {
         eq(this);
         evilmusic(this);
         library(this);
+        ng2Example(this);
         player(this);
         progressBar(this);
         queue(this);
@@ -50,10 +54,15 @@ class EvilMusicApp {
     }
 
     createAngularModule() {
-        return angular.module(EvilMusicApp.injectID, [
+        const module = angular.module(EvilMusicApp.injectID, [
             NG_RESOURCE_MODULE_INJECT_ID,
             UI_BOOTSTRAP_MODULE_INJECT_ID
         ]);
+        
+        upgradeAdapter.bootstrap(
+            document.body, [EVIL_MUSIC_APP], {strictDi: true}); // eslint-disable-line no-restricted-globals
+        
+        return module;
     }
 
     getAngularModule() {
@@ -101,6 +110,23 @@ class EvilMusicApp {
         injectID = this.getInjectID(type, angularable);
         this.getAngularModule()[functName](injectID, angularable);
         
+        return this;
+    }
+    
+    /**
+     * Creates a new Angular2 component using the given Component class.
+     *
+     * @param  {Object} The component class (not instance!) to be used to create the Angular2 component.
+     *
+     * @return {EvilMusicApp} Returns the EvilMusicApp
+     */
+    component(Component, providers) {
+        if(!Component) {
+            throw new Error('A component to be created must be specified');
+        }
+        
+        bootstrap(Component, providers);
+
         return this;
     }
 
@@ -162,4 +188,6 @@ class EvilMusicApp {
     }
 }
 
-export default new EvilMusicApp();
+const evilMusicApp = new EvilMusicApp();
+evilMusicApp.init();
+export default evilMusicApp;

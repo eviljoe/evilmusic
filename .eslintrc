@@ -125,7 +125,7 @@
         "no-use-before-define": ["error", {"functions": false, "classes": false}],
         
         # ECMAScript 6
-        "arrow-body-style": ["warn", "as-needed"],
+        "arrow-body-style": ["off"],
         "arrow-parens": ["warn", "always"],
         "arrow-spacing": ["off"],
         "constructor-super": ["warn"],

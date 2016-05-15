@@ -27,7 +27,7 @@ export default class VolumeControlDirectiveFactory extends DirectiveFactory {
     
     directive() {
         return {
-            restrict: 'A',
+            restrict: 'AE',
             scope: {},
             templateUrl: 'components/volume-control/volume-control.html',
             controller: VolumeControlController.injectID,

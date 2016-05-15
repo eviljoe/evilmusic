@@ -16,13 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import VolumeControlDirectiveFactory from './VolumeControlDirectiveFactory';
-import VolumeControlController from './VolumeControlController';
-// import {VolumeControlComponent} from './VolumeControlComponent';
+import {Injectable} from '@angular/core';
 
-export default function(emApp) {
-    return emApp
-        .directive(VolumeControlDirectiveFactory)
-        .controller(VolumeControlController);
-    // .component(VolumeControlComponent, true);
+export class NG2Examples {
+    
+    static get annotations() {
+        return [new Injectable()];
+    }
+    
+    getText() {
+        return 'hello, world.  (from service)';
+    }
 }
+
+export default NG2Examples;

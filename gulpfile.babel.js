@@ -219,13 +219,13 @@ gulp.task('build', (cb) => {
 
 gulp.task('watch', ['build'], () => {
     return gulp.watch([
-            `${webSrcDir}/assets/**/*`,
-            `${webSrcDir}/components/**/*`,
-            `${webSrcDir}/index.html`,
-            `${webSrcDir}/index.js`
-        ],
-        {},
-        ['build-first-party']);
+        `${webSrcDir}/assets/**/*`,
+        `${webSrcDir}/components/**/*`,
+        `${webSrcDir}/index.html`,
+        `${webSrcDir}/index.js`
+    ],
+    {},
+    ['build-first-party']);
 });
 
 /* ***** */

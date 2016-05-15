@@ -16,13 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import VolumeControlDirectiveFactory from './VolumeControlDirectiveFactory';
-import VolumeControlController from './VolumeControlController';
-// import {VolumeControlComponent} from './VolumeControlComponent';
+import {Component} from '@angular/core';
+import {NG2Examples} from './NG2ExampleService';
 
-export default function(emApp) {
-    return emApp
-        .directive(VolumeControlDirectiveFactory)
-        .controller(VolumeControlController);
-    // .component(VolumeControlComponent, true);
+export class NG2ExampleComponent {
+    constructor(ng2Examples) {
+        this.text = ng2Examples.getText();
+    }
+    
+    static get annotations() {
+        return [new Component({
+            selector: 'ng2-example',
+            templateUrl: 'components/ng2-example/ng2-example.html',
+            viewProviders: [NG2Examples]
+        })];
+    }
+    
+    static get parameters() {
+        return [[NG2Examples]];
+    }
+    
 }
+
+export default NG2ExampleComponent;

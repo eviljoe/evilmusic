@@ -16,13 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import VolumeControlDirectiveFactory from './VolumeControlDirectiveFactory';
-import VolumeControlController from './VolumeControlController';
-// import {VolumeControlComponent} from './VolumeControlComponent';
+import {NG2ExampleComponent} from './NG2ExampleComponent';
 
 export default function(emApp) {
     return emApp
-        .directive(VolumeControlDirectiveFactory)
-        .controller(VolumeControlController);
-    // .component(VolumeControlComponent, true);
+        .component(NG2ExampleComponent);
 }

@@ -16,13 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import VolumeControlDirectiveFactory from './VolumeControlDirectiveFactory';
-import VolumeControlController from './VolumeControlController';
-// import {VolumeControlComponent} from './VolumeControlComponent';
+import {Component} from '@angular/core';
 
-export default function(emApp) {
-    return emApp
-        .directive(VolumeControlDirectiveFactory)
-        .controller(VolumeControlController);
-    // .component(VolumeControlComponent, true);
+export default class VolumeControlController {
+    constructor(players) {
+        this.players = players;
+    }
+    
+    static get annotations() {
+        return [new Component({
+            selector: 'em-volume-control',
+            templateUrl: 'components/volume-control/volume-control.html'
+        })];
+    }
+    
+    volumeChanged() {
+        // TODO this feels super weird.  I know setVolume(...) does a server put, but it feels like I am just
+        // setting the volume to what it already is.
+        this.players.setVolume(this.players.volume);
+    }
 }
