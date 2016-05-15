@@ -221,6 +221,7 @@ gulp.task('watch', ['build'], () => {
     return gulp.watch([
         `${webSrcDir}/assets/**/*`,
         `${webSrcDir}/components/**/*`,
+        `${webSrcDir}/services/**/*`,
         `${webSrcDir}/index.html`,
         `${webSrcDir}/index.js`
     ],

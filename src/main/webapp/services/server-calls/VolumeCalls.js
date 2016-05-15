@@ -16,17 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Http} from '@angular/http';
 import {Injectable} from '@angular/core';
 
-export class NG2Examples {
+export class VolumeCalls {
+    constructor(http) {
+        this.http = http;
+    }
     
     static get annotations() {
         return [new Injectable()];
     }
     
-    getText() {
-        return 'hello, world.  (from service)';
+    static get parameters() {
+        return [[Http]];
+    }
+    
+    get() {
+        return this.http.get('/rest/config/volume')
+            .map((res) => res.json());
+    }
+    
+    save(volume) {
+        return this.http.put(`/rest/config/volume/${volume}`)
+            .map((res) => res.json());
     }
 }
 
-export default NG2Examples;
+export default VolumeCalls;

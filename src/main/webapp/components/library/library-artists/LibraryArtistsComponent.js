@@ -16,29 +16,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
-import {NG2Examples} from './NG2Examples';
-import {NG2ChildExampleComponent} from '../ng2-child-example/NG2ChildExampleComponent';
+import {Component, EventEmitter} from '@angular/core';
 
-export class NG2ExampleComponent {
-    constructor(ng2Examples) {
-        this.text = ng2Examples.getText();
-        this.tfp = 'this is the text from the parent';
+import {Libraries} from 'services/Libraries';
+
+export class LibraryArtistsComponent {
+    constructor(libraries) {
+        this.libraries = libraries;
+        this.artistChanged = new EventEmitter();
     }
     
     static get annotations() {
         return [new Component({
-            selector: 'ng2-example',
-            templateUrl: 'components/ng2-example/ng2-example.html',
-            viewProviders: [NG2Examples],
-            directives: [NG2ChildExampleComponent]
+            selector: 'library-artists',
+            templateUrl: 'components/library/library-artists/library-artists.html',
+            inputs: ['artist'],
+            outputs: ['artistChanged']
         })];
     }
     
     static get parameters() {
-        return [[NG2Examples]];
+        return [[Libraries]];
     }
     
+    getArtists() {
+        let artists = this.libraries.getArtists();
+        
+        if(artists) {
+            artists.sort();
+        }
+        
+        return artists;
+    }
+    
+    artistClicked(artist) {
+        this.artistChanged.emit(artist);
+    }
 }
 
-export default NG2ExampleComponent;
+export default LibraryArtistsComponent;

@@ -18,22 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div><h2>Library</h2></div>
 <div class="em-top-table-controls-container">
-    <button type="button" class="btn btn-xs btn-default" ng-click="ctrl.libraries.clear()" title="clear library">
+    <button type="button" class="btn btn-xs btn-default" (click)="libraries.clear()" title="clear library">
         <i class="fa fa-ban"></i> clear
     </button>
-    <button type="button" class="btn btn-xs btn-default" ng-click="ctrl.libraries.rebuild()" title="rebuild library">
+    <button type="button" class="btn btn-xs btn-default" (click)="libraries.rebuild()" title="rebuild library">
         <i class="fa fa-cubes"></i> rebuild
     </button>
 </div>
-<div ng-show="!ctrl.artist">
-    <library-artists artist="ctrl.artist"></library-artists>
+<div [hidden]="artist">
+    <library-artists [artist]="artist" (artistChanged)="artistChanged($event)"></library-artists>
 </div>
-<div ng-show="ctrl.artist && !ctrl.album">
-    <button class="btn btn-default btn-xs" ng-click="ctrl.backToArtists()">&lt; back</button>
-    <library-albums artist="ctrl.artist" album="ctrl.album"></library-albums>
+<div [hidden]="!artist || album">
+    <button class="btn btn-default btn-xs" (click)="backToArtists()">&lt; back</button>
+    <library-albums [artist]="artist" [album]="album" (albumChanged)="albumChanged($event)"></library-albums>
 </div>
-<div ng-show="ctrl.album">
-    <button class="btn btn-default btn-xs" ng-click="ctrl.backToAlbums()">&lt; back</button>
+<div [hidden]="!album">
+    <button class="btn btn-default btn-xs" (click)="backToAlbums()">&lt; back</button>
     <table class="table table-striped table-condensed table-hover">
         <tr>
             <th align="right">ID</th>
@@ -46,17 +46,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <th align="right">Sample Count</th>
             <th align="left">Controls</th>
         </tr>
-        <tr ng-repeat="s in ctrl.getSongs() | orderBy: 'trackNumber'">
+        <tr *ngFor="let s of getSongs()">
             <td align="right">{{s.id}}</td>
             <td align="left">{{s.artist}}</td>
             <td align="left">{{s.album}}</td>
             <td align="right">{{s.trackNumber}}</td>
             <td align="left">{{s.title}}</td>
-            <td align="right">{{ctrl.emUtils.millisecondsToString(s.millis)}} s</td>
-            <td align="right">{{ctrl.emUtils.hertzToString(s.sampleRate)}}</td>
+            <td align="right">{{emUtils.millisecondsToString(s.millis)}} s</td>
+            <td align="right">{{emUtils.hertzToString(s.sampleRate)}}</td>
             <td align="right">{{s.sampleCount}}</td>
             <td align="left">
-                <button type="button" class="btn btn-xs btn-default" ng-click="ctrl.addLast(s.id)" title="add last">
+                <button type="button" class="btn btn-xs btn-default" (click)="addLast(s.id)" title="add last">
                     <i class="fa fa-plus"></i>
                 </button>
             </td>

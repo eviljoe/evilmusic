@@ -17,21 +17,20 @@
  */
 
 import {Component} from '@angular/core';
-import {NG2Examples} from './NG2Examples';
-import {NG2ChildExampleComponent} from '../ng2-child-example/NG2ChildExampleComponent';
+import {NG2Examples} from '../ng2-example/NG2Examples';
 
-export class NG2ExampleComponent {
+export class NG2ChildExampleComponent {
     constructor(ng2Examples) {
-        this.text = ng2Examples.getText();
-        this.tfp = 'this is the text from the parent';
+        this.text = ng2Examples.getChildText();
+        this.tfp = null;
     }
     
     static get annotations() {
         return [new Component({
-            selector: 'ng2-example',
-            templateUrl: 'components/ng2-example/ng2-example.html',
+            selector: 'ng2-child-example',
+            templateUrl: 'components/ng2-child-example/ng2-child-example.html',
             viewProviders: [NG2Examples],
-            directives: [NG2ChildExampleComponent]
+            inputs: ['tfp']
         })];
     }
     
@@ -39,6 +38,9 @@ export class NG2ExampleComponent {
         return [[NG2Examples]];
     }
     
+    ngOnInit() {
+        console.log('tfp', this.tfp);
+    }
 }
 
-export default NG2ExampleComponent;
+export default NG2ChildExampleComponent;

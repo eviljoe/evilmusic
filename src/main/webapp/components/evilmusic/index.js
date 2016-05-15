@@ -16,11 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import EMController from './EMController';
-import EMDirectiveFactory from './EMDirectiveFactory';
+// import EMController from './EMController';
+// import EMDirectiveFactory from './EMDirectiveFactory';
+import EvilMusicComponent from './EvilMusicComponent';
 
 export default function(emApp) {
     return emApp
-        .directive(EMDirectiveFactory)
-        .controller(EMController);
+        // .directive(EMDirectiveFactory)
+        // .controller(EMController);
+        .component(EvilMusicComponent);
 }

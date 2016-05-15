@@ -88,7 +88,7 @@
         "no-param-reassign": ["off"],
         "no-proto": ["error"],
         "no-redeclare": ["error"],
-        "no-return-assign": ["error"],
+        "no-return-assign": ["off"],
         "no-script-url": ["error"],
         "no-self-assign": ["error"],
         "no-self-compare": ["error"],

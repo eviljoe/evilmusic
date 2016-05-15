@@ -16,4 +16,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div ng-repeat="a in ctrl.getArtists() | orderBy" ng-click="ctrl.artistChanged(a)">{{a}}</div>
+<div *ngFor="let a of getArtists()" (click)="artistClicked(a)">{{a}}</div>

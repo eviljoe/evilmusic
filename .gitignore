@@ -10,6 +10,7 @@
 /node_modules/
 /npm-debug.log
 /.project
+/RemoteSystemsTempFiles/
 /.settings/
 /src/main/webapp/dist
 /*.sublime-project

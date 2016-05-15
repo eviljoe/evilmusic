@@ -16,29 +16,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
-import {NG2Examples} from './NG2Examples';
-import {NG2ChildExampleComponent} from '../ng2-child-example/NG2ChildExampleComponent';
+import {Http} from '@angular/http';
+import {Injectable} from '@angular/core';
 
-export class NG2ExampleComponent {
-    constructor(ng2Examples) {
-        this.text = ng2Examples.getText();
-        this.tfp = 'this is the text from the parent';
+export class LibraryCalls {
+    constructor(http) {
+        this.http = http;
     }
     
     static get annotations() {
-        return [new Component({
-            selector: 'ng2-example',
-            templateUrl: 'components/ng2-example/ng2-example.html',
-            viewProviders: [NG2Examples],
-            directives: [NG2ChildExampleComponent]
-        })];
+        return [new Injectable()];
     }
     
     static get parameters() {
-        return [[NG2Examples]];
+        return [[Http]];
     }
     
+    get() {
+        return this.http.get('/rest/library')
+            .map((res) => res.json());
+    }
+    
+    clear() {
+        return this.http.delete('/rest/library')
+            .map((res) => res.json());
+    }
+    
+    rebuild() {
+        return this.http.post('/rest/library')
+            .map((res) => res.json());
+    }
 }
 
-export default NG2ExampleComponent;
+export default LibraryCalls;

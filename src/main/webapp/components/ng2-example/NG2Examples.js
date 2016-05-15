@@ -16,29 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
-import {NG2Examples} from './NG2Examples';
-import {NG2ChildExampleComponent} from '../ng2-child-example/NG2ChildExampleComponent';
+import {Injectable} from '@angular/core';
 
-export class NG2ExampleComponent {
-    constructor(ng2Examples) {
-        this.text = ng2Examples.getText();
-        this.tfp = 'this is the text from the parent';
-    }
+export class NG2Examples {
     
     static get annotations() {
-        return [new Component({
-            selector: 'ng2-example',
-            templateUrl: 'components/ng2-example/ng2-example.html',
-            viewProviders: [NG2Examples],
-            directives: [NG2ChildExampleComponent]
-        })];
+        return [new Injectable()];
     }
     
-    static get parameters() {
-        return [[NG2Examples]];
+    getText() {
+        return 'hello, world.  (from service)';
     }
     
+    getChildText() {
+        return 'child text';
+    }
 }
 
-export default NG2ExampleComponent;
+export default NG2Examples;
