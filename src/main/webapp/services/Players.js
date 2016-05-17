@@ -170,16 +170,16 @@ export class Players {
     }
     
     putVolume(volume) {
-        this.volumeCalls.save().subscribe(
+        this.volumeCalls.save(this.volume).subscribe(
             null,
-            (err) => console.log.error('Could not update volume.', err)
+            (err) => console.log('Could not update volume.', err)
         );
     }
     
     loadVolume() {
         this.volumeCalls.get().subscribe(
             (data) => this.volume = data,
-            (err) => console.log.error('Could not load volume.', err)
+            (err) => console.log('Could not load volume.', err)
         );
     }
 }

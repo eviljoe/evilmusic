@@ -19,28 +19,44 @@
 import {Component} from '@angular/core';
 
 import {Players} from 'services/Players';
+import {Queues} from 'services/Queues';
 
-export class VolumeControlComponent {
-    constructor(players) {
+export class QueueComponent {
+    constructor(players, queues) {
         this.players = players;
+        this.queues = queues;
     }
     
     static get annotations() {
         return [new Component({
-            selector: 'em-volume-control',
-            templateUrl: 'components/volume-control/volume-control.html'
+            selector: 'em-queue',
+            templateUrl: 'components/queue/queue.html'
         })];
     }
     
     static get parameters() {
-        return [[Players]];
+        return [[Players], [Queues]];
     }
     
-    volumeChanged() {
-        // TODO this feels super weird.  I know setVolume(...) does a server put, but it feels like I am just
-        // setting the volume to what it already is.
-        this.players.setVolume(this.players.volume);
+    clear() {
+        this.queues.clear();
+    }
+    
+    play(index) {
+        this.players.play(index);
+    }
+    
+    remove(index) {
+        this.queues.remove(index);
+    }
+    
+    getQueueElements() {
+        return this.queues.q ? this.queues.q.elements : null;
+    }
+    
+    isElementPlaying(elem) {
+        return elem && elem.playIndex === 0;
     }
 }
 
-export default VolumeControlComponent;
+export default QueueComponent;

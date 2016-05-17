@@ -19,28 +19,28 @@
 import {Component} from '@angular/core';
 
 import {Players} from 'services/Players';
+import {VolumeControlComponent} from 'components/volume-control/VolumeControlComponent';
 
-export class VolumeControlComponent {
+// TODO rename this to match the selector (which I think is better)...
+//   * directory: player-controls
+//   * component: PlayerControlsComponent
+//   * template: player-controls.html
+export class PlayerComponent {
     constructor(players) {
         this.players = players;
     }
     
     static get annotations() {
         return [new Component({
-            selector: 'em-volume-control',
-            templateUrl: 'components/volume-control/volume-control.html'
+            selector: 'em-player-controls',
+            templateUrl: 'components/player/player.html',
+            directives: [VolumeControlComponent]
         })];
     }
     
     static get parameters() {
         return [[Players]];
     }
-    
-    volumeChanged() {
-        // TODO this feels super weird.  I know setVolume(...) does a server put, but it feels like I am just
-        // setting the volume to what it already is.
-        this.players.setVolume(this.players.volume);
-    }
 }
 
-export default VolumeControlComponent;
+export default PlayerComponent;

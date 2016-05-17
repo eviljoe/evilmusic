@@ -38,13 +38,11 @@ export class LibraryCalls {
     }
     
     clear() {
-        return this.http.delete('/rest/library')
-            .map((res) => res.json());
+        return this.http.delete('/rest/library');
     }
     
     rebuild() {
-        return this.http.post('/rest/library')
-            .map((res) => res.json());
+        return this.http.post('/rest/library');
     }
 }
 

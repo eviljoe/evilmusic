@@ -18,13 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div><h2>Player Controls</h2></div>
 <div>
-    <button class="btn btn-xs btn-default" ng-click="ctrl.players.playPrevious()" title="previous song">
+    <button class="btn btn-xs btn-default" (click)="players.playPrevious()" title="previous song">
         <i class="fa fa-fast-backward"></i>
     </button>
-    <button class="btn btn-xs btn-default" ng-click="ctrl.players.togglePlayback()">
+    <button class="btn btn-xs btn-default" (click)="players.togglePlayback()">
         <i class="fa fa-play"></i> play/pause
     </button>
-    <button class="btn btn-xs btn-default" ng-click="ctrl.players.playNext()" title="next song">
+    <button class="btn btn-xs btn-default" (click)="players.playNext()" title="next song">
         <i class="fa fa-fast-forward"></i>
     </button>
     <eq-button></eq-button>

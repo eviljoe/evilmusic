@@ -19,10 +19,13 @@
 import {Component} from '@angular/core';
 import {HTTP_PROVIDERS} from '@angular/http';
 
+import {LibraryComponent} from 'components/library/LibraryComponent';
+import {PlayerComponent} from 'components/player/PlayerComponent';
+import {QueueComponent} from 'components/queue/QueueComponent';
+
 import {EMUtils} from 'services/EMUtils';
 import {EqualizerCalls} from 'services/server-calls/EqualizerCalls';
 import {Equalizers} from 'services/Equalizers';
-import {LibraryComponent} from 'components/library/LibraryComponent';
 import {Libraries} from 'services/Libraries';
 import {LibraryCalls} from 'services/server-calls/LibraryCalls';
 import {Players} from 'services/Players';
@@ -47,7 +50,11 @@ export class EvilMusicComponent {
                 Queues,
                 VolumeCalls
             ],
-            directives: [LibraryComponent]
+            directives: [
+                LibraryComponent,
+                PlayerComponent,
+                QueueComponent
+            ]
         })];
     }
 }

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <h2>Queue</h2>
 </div>
 <div class="em-top-table-controls-container">
-    <button type="button" class="btn btn-xs btn-default" ng-click="ctrl.clear()" title="clear queue">
+    <button type="button" class="btn btn-xs btn-default" (click)="clear()" title="clear queue">
         <i class="fa fa-ban"></i> clear
     </button>
 </div>
@@ -32,16 +32,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <th>Title</th>
         <th>Controls</th>
     </tr>
-    <tr ng-repeat="elem in ctrl.getQueue().elements" ng-class="{'info': elem.playIndex === 0}">
+    <tr *ngFor="let elem of getQueueElements()" [class]="{info: isElementPlaying(elem)}">
         <td>{{elem.playIndex}}</td>
         <td>{{elem.queueIndex}}</td>
         <td>{{elem.song.id}}</td>
         <td>{{elem.song.title}}</td>
         <td>
-            <button type="button" class="btn btn-xs btn-default" ng-click="ctrl.play(elem.queueIndex)" title="play">
+            <button type="button" class="btn btn-xs btn-default" (click)="play(elem.queueIndex)" title="play">
                 <i class="fa fa-play"></i>
             </button>
-            <button type="button" class="btn btn-xs btn-default" ng-click="ctrl.remove(elem.queueIndex)"
+            <button type="button" class="btn btn-xs btn-default" (click)="remove(elem.queueIndex)"
                     title="remove from queue">
                 <i class="fa fa-times"></i>
             </button>

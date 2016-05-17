@@ -67,7 +67,7 @@ export class Queues {
      */
     addLast(songID) {
         this.queueCalls.addLast(this.q.id, songID).subscribe(
-            null,
+            (data) => this.q = data,
             (err) => console.log('Failed to enqueue last.', err)
         );
     }
@@ -81,7 +81,7 @@ export class Queues {
      */
     remove(queueIndex) {
         this.queueCalls.remove(this.q.id, queueIndex).subscribe(
-            null,
+            (data) => this.q = data,
             (err) => console.log(`Failed to remove from queue (${queueIndex})`, err)
         );
     }
@@ -91,8 +91,8 @@ export class Queues {
      * reloaded.
      */
     clear() {
-        this.queueCalls.clear().subscribe(
-            null,
+        this.queueCalls.clear(this.q.id).subscribe(
+            (data) => this.q = data,
             (err) => console.log('Clear queue failed.', err)
         );
     }
@@ -140,7 +140,7 @@ export class Queues {
     
     setPlayIndex(playIndex) {
         this.queueCalls.setPlayIndex(this.q.id, playIndex).subscribe(
-            null,
+            (data) => this.q = data,
             (err) => console.log('Failed to set the play index.', err)
         );
     }

@@ -19,8 +19,6 @@
 import {Http} from '@angular/http';
 import {Injectable} from '@angular/core';
 
-import {Observable} from 'rxjs';
-
 export class QueueCalls {
     constructor(http) {
         this.http = http;
@@ -39,8 +37,19 @@ export class QueueCalls {
             .map((res) => res.json());
     }
     
-    addLast(id) {
-        return this.http.put(`/rest/queue/${id}/last`)
+    addLast(id, ...songIDs) {
+        let queryParams = [];
+        let queryParamsStr = '';
+        
+        if(songIDs) {
+            for(let songID of songIDs) {
+                queryParams.push(`songIDs=${songID}`);
+            }
+            
+            queryParamsStr = queryParams.join('&');
+        }
+        
+        return this.http.put(`/rest/queue/${id}/last?${queryParamsStr}`)
             .map((res) => res.json());
     }
     

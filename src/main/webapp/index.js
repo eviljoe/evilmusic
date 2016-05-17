@@ -14,6 +14,7 @@
 
 import 'zone.js';
 import 'reflect-metadata';
+import 'rxjs';
 import {bootstrap} from '@angular/platform-browser-dynamic';
 import angular from 'angular';
 

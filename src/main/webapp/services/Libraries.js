@@ -54,7 +54,10 @@ export class Libraries {
     /** Loads the contents of the library using a REST call. */
     load() {
         this.libraryCalls.get().subscribe(
-            (library) => this.rebuildCache(library),
+            (library) => {
+                this.library = library;
+                this.rebuildCache(library);
+            },
             (err) => console.log('Could not get library.', err)
         );
     }
@@ -173,6 +176,7 @@ export class Libraries {
     clear() {
         this.libraryCalls.clear().subscribe(
             (data) => {
+                console.log('library cleared', data); // JOE o
                 this.load();
                 this.queues.load(true);
             },
