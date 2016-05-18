@@ -17,14 +17,12 @@
  */
 
 import AV from 'av';
-import {Injectable} from '@angular/core';
+import {Injectable, EventEmitter} from '@angular/core';
 
 import {EMUtils} from './EMUtils';
 import {Equalizers} from './Equalizers';
 import {Queues} from './Queues';
 import {VolumeCalls} from './server-calls/VolumeCalls';
-
-export const PLAYER_PROGRESS_CHANGED_EVENT_NAME = 'emPlayerProgressChanged';
 
 export class Players {
     constructor(emUtils, equalizers, queues, volumeCalls) {
@@ -40,6 +38,7 @@ export class Players {
         this.avPlayer = null;
         this.currentSong = null;
         this.playerProgress = null;
+        this.playerProgressChanges = new EventEmitter();
         this.volume = this.MAX_VOLUME;
         
         this.loadVolume();
@@ -110,9 +109,7 @@ export class Players {
     
     playerProgressChanged(song, progress) {
         this.playerProgress = progress / song.millis * 100;  // eslint-disable-line no-magic-numbers
-        
-        // JOE todo figure out how to fire global events
-        // this.$rootScope.$broadcast(PLAYER_PROGRESS_CHANGED_EVENT_NAME);
+        this.playerProgressChanges.emit(this.playerProgress);
     }
     
     playerSongEnded() {

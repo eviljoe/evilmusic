@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <th>Title</th>
         <th>Controls</th>
     </tr>
-    <tr *ngFor="let elem of getQueueElements()" [class]="{info: isElementPlaying(elem)}">
+    <tr *ngFor="let elem of getQueueElements()" [ngClass]="{info: isElementPlaying(elem)}">
         <td>{{elem.playIndex}}</td>
         <td>{{elem.queueIndex}}</td>
         <td>{{elem.song.id}}</td>

@@ -21,6 +21,7 @@ import {HTTP_PROVIDERS} from '@angular/http';
 
 import {LibraryComponent} from 'components/library/LibraryComponent';
 import {PlayerComponent} from 'components/player/PlayerComponent';
+import {ProgressBarComponent} from 'components/progress-bar/ProgressBarComponent';
 import {QueueComponent} from 'components/queue/QueueComponent';
 
 import {EMUtils} from 'services/EMUtils';
@@ -53,6 +54,7 @@ export class EvilMusicComponent {
             directives: [
                 LibraryComponent,
                 PlayerComponent,
+                ProgressBarComponent,
                 QueueComponent
             ]
         })];
