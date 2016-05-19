@@ -18,7 +18,7 @@
 
 import QueueResourceFactory from 'components/resources/QueueResourceFactory';
 
-describe(QueueResourceFactory.name, () => {
+xdescribe(QueueResourceFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

@@ -18,7 +18,7 @@
 
 import EQController from 'components/eq/EQController';
 
-describe(EQController.name, () => {
+xdescribe(EQController.name, () => {
     let ctrl = null;
     let _equalizers = null;
     

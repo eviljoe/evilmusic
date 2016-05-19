@@ -18,7 +18,7 @@
 
 import ProgressBarDirectiveFactory from 'components/progress-bar/ProgressBarDirectiveFactory';
 
-describe(ProgressBarDirectiveFactory.name, () => {
+xdescribe(ProgressBarDirectiveFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

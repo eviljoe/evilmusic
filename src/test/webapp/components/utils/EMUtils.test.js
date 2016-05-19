@@ -18,7 +18,7 @@
 
 import EMUtils from 'components/utils/EMUtils';
 
-describe('emUtils', () => {
+xdescribe('emUtils', () => {
     let emUtils = null;
 
     beforeEach(() => {

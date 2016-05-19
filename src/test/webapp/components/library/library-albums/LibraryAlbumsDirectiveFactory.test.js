@@ -18,7 +18,7 @@
 
 import LibraryArtistsDirectiveFactory from 'components/library/library-artists/LibraryArtistsDirectiveFactory';
 
-describe(LibraryArtistsDirectiveFactory.name, () => {
+xdescribe(LibraryArtistsDirectiveFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

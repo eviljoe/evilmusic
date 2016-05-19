@@ -18,7 +18,7 @@
 
 import LibraryDirectiveFactory from 'components/library/LibraryDirectiveFactory';
 
-describe(LibraryDirectiveFactory.name, () => {
+xdescribe(LibraryDirectiveFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

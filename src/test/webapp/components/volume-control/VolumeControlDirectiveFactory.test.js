@@ -18,7 +18,7 @@
 
 import VolumeControlDirectiveFactory from 'components/volume-control/VolumeControlDirectiveFactory';
 
-describe(VolumeControlDirectiveFactory.name, () => {
+xdescribe(VolumeControlDirectiveFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

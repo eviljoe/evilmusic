@@ -18,7 +18,7 @@
 
 import HertzFilterFactory from 'components/eq/HertzFilterFactory';
 
-describe(HertzFilterFactory.name, () => {
+xdescribe(HertzFilterFactory.name, () => {
     let factory = null;
     let _emUtils = null;
     

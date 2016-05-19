@@ -18,7 +18,7 @@
 
 import QueueController from 'components/queue/QueueController';
 
-describe(QueueController.name, () => {
+xdescribe(QueueController.name, () => {
     let ctrl = null;
     let _queues = null;
     let _players = null;
@@ -27,6 +27,7 @@ describe(QueueController.name, () => {
         _queues = {
             q: {},
             clear() {},
+
             remove() {}
         };
         _players = {

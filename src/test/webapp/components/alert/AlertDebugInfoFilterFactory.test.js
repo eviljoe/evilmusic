@@ -18,7 +18,7 @@
 
 import AlertDebugInfoFilterFactory from 'components/alert/AlertDebugInfoFilterFactory';
 
-describe(AlertDebugInfoFilterFactory.name, () => {
+xdescribe(AlertDebugInfoFilterFactory.name, () => {
     let factory = null;
     let _window = null;
     

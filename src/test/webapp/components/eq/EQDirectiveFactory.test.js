@@ -18,7 +18,7 @@
 
 import EQDirectiveFactory from 'components/eq/EQDirectiveFactory';
 
-describe(EQDirectiveFactory.name, () => {
+xdescribe(EQDirectiveFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

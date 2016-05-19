@@ -18,7 +18,7 @@
 
 import EqualizerResourceFactory from 'components/resources/EqualizerResourceFactory';
 
-describe(EqualizerResourceFactory.name, () => {
+xdescribe(EqualizerResourceFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

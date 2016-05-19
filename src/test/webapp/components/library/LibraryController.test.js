@@ -18,7 +18,7 @@
 
 import LibraryController from 'components/library/LibraryController';
 
-describe(LibraryController.name, () => {
+xdescribe(LibraryController.name, () => {
     let ctrl = null;
     let _libraries = null;
     let _queues = null;

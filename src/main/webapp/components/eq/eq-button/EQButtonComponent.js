@@ -16,13 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import PlayerController from './PlayerController';
-import PlayerDirectiveFactory from './PlayerDirectiveFactory';
-import Players from './Players';
+import $ from 'jquery';
+import {Component} from '@angular/core';
 
-export default function(emApp) {
-    return emApp
-        .directive(PlayerDirectiveFactory)
-        .controller(PlayerController)
-        .service(Players);
+export class EQButtonComponent {
+    constructor($modal) {
+        this.$modal = $modal;
+    }
+    
+    static get annotations() {
+        return [new Component({
+            selector: 'em-eq-button',
+            templateUrl: 'components/eq/eq-button/eq-button.html'
+        })];
+    }
+    
+    static get parameters() {
+        return [];
+    }
+    
+    openEQ() {
+        console.log('$', $); // JOE o
+        console.log('$("#myModal")', $('#myModal')); // JOE o
+        console.log('$("#myModal").modal', $('#myModal').modal); // JOE o
+        // $('#myModal').modal();
+    }
 }
+
+export default EQButtonComponent;

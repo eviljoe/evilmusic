@@ -18,7 +18,7 @@
 
 import LibraryResourceFactory from 'components/resources/LibraryResourceFactory';
 
-describe(LibraryResourceFactory.name, () => {
+xdescribe(LibraryResourceFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

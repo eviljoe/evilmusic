@@ -19,7 +19,7 @@
 import AlertButton from 'components/alert/AlertButton';
 import Alerts from 'components/alert/Alerts';
 
-describe(Alerts.name, () => {
+xdescribe(Alerts.name, () => {
     let alerts = null;
     let _modal = null;
     

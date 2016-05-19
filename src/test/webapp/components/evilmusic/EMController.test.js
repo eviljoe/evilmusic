@@ -18,7 +18,7 @@
 
 import EMController from 'components/evilmusic/EMController';
 
-describe(EMController.name, () => {
+xdescribe(EMController.name, () => {
     describe('injectID', () => {
         it('defines an injection ID', () => {
             expect(EMController.injectID).toEqual(jasmine.any(String));

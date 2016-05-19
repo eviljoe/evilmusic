@@ -18,7 +18,7 @@
 
 import EQButtonDirectiveFactory from 'components/eq/eq-button/EQButtonDirectiveFactory';
 
-describe(EQButtonDirectiveFactory.name, () => {
+xdescribe(EQButtonDirectiveFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

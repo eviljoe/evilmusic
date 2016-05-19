@@ -18,7 +18,7 @@
 
 import EMDirectiveFactory from 'components/evilmusic/EMDirectiveFactory';
 
-describe(EMDirectiveFactory.name, () => {
+xdescribe(EMDirectiveFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

@@ -18,7 +18,7 @@
 
 import ProgressBarController from 'components/progress-bar/ProgressBarController';
 
-describe(ProgressBarController.name, () => {
+xdescribe(ProgressBarController.name, () => {
     let ctrl = null;
     let _rootScope = null;
     let _scope = null;

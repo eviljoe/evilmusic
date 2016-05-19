@@ -18,7 +18,7 @@
 
 import QueueDirectiveFactory from 'components/queue/QueueDirectiveFactory';
 
-describe(QueueDirectiveFactory.name, () => {
+xdescribe(QueueDirectiveFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

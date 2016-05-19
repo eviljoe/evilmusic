@@ -18,7 +18,7 @@
 
 import PlayerDirectiveFactory from 'components/player/PlayerDirectiveFactory';
 
-describe(PlayerDirectiveFactory.name, () => {
+xdescribe(PlayerDirectiveFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

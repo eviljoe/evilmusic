@@ -18,7 +18,7 @@
 
 import VolumeControlController from 'components/volume-control/VolumeControlController';
 
-describe(VolumeControlController.name, () => {
+xdescribe(VolumeControlController.name, () => {
     let ctrl = null;
     let _players = null;
     

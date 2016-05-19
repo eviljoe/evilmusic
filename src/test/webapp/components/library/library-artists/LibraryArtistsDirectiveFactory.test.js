@@ -18,7 +18,7 @@
 
 import LibraryAlbumsDirectiveFactory from 'components/library/library-albums/LibraryAlbumsDirectiveFactory';
 
-describe(LibraryAlbumsDirectiveFactory.name, () => {
+xdescribe(LibraryAlbumsDirectiveFactory.name, () => {
     let factory = null;
     
     beforeEach(() => {

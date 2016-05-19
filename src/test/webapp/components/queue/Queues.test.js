@@ -19,7 +19,7 @@
 import angular from 'angular';
 import Queues from 'components/queue/Queues';
 
-describe(Queues.name, () => {
+xdescribe(Queues.name, () => {
     let queues = null;
     let _alerts = null;
     let _emUtils = null;

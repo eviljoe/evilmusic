@@ -19,7 +19,7 @@
 import angular from 'angular';
 import EQDialogController from 'components/eq/eq-dialog/EQDialogController';
 
-describe(EQDialogController.name, () => {
+xdescribe(EQDialogController.name, () => {
     let ctrl = null;
     let _modalInstance = null;
     let _equalizers = null;
@@ -32,10 +32,12 @@ describe(EQDialogController.name, () => {
         
         _modalInstance = {
             close() {},
+
             dismiss() {}
         };
         _equalizers = {
             reset() {},
+
             save() {}
         };
         

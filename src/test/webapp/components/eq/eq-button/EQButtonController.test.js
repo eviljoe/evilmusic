@@ -18,7 +18,7 @@
 
 import EQButtonController from 'components/eq/eq-button/EQButtonController';
 
-describe(EQButtonController.name, () => {
+xdescribe(EQButtonController.name, () => {
     let ctrl = null;
     let _modal = null;
     

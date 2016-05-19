@@ -19,7 +19,7 @@
 import angular from 'angular';
 import Players from 'components/player/Players';
 
-describe(Players.name, () => {
+xdescribe(Players.name, () => {
     let players = null;
     let _http = null;
     let _rootScope = null;
@@ -52,9 +52,13 @@ describe(Players.name, () => {
         _queues = {
             q: {},
             load() {},
+
             getNextSongQueueIndex() {},
+
             getPreviousSongQueueIndex() {},
+
             getSong() {},
+
             setPlayIndex() {}
         };
         _equalizers = {
@@ -67,9 +71,13 @@ describe(Players.name, () => {
         };
         _avPlayer = {
             on() {},
+
             play() {},
+
             seek() {},
+
             stop() {},
+
             togglePlayback() {}
         };
         

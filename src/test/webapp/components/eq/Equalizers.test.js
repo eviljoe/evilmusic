@@ -20,7 +20,7 @@ import angular from 'angular';
 import Equalizers from 'components/eq/Equalizers';
 import _ from 'lodash';
 
-describe(Equalizers.name, () => {
+xdescribe(Equalizers.name, () => {
     let equalizers = null;
     let _alerts = null;
     let _Equalizer = null;

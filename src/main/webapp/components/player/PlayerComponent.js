@@ -20,6 +20,7 @@ import {Component} from '@angular/core';
 
 import {Players} from 'services/Players';
 import {VolumeControlComponent} from 'components/volume-control/VolumeControlComponent';
+import {EQButtonComponent} from 'components/eq/eq-button/EQButtonComponent';
 
 // TODO rename this to match the selector (which I think is better)...
 //   * directory: player-controls
@@ -34,7 +35,7 @@ export class PlayerComponent {
         return [new Component({
             selector: 'em-player-controls',
             templateUrl: 'components/player/player.html',
-            directives: [VolumeControlComponent]
+            directives: [VolumeControlComponent, EQButtonComponent]
         })];
     }
     

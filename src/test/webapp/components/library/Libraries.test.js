@@ -19,7 +19,7 @@
 import angular from 'angular';
 import Libraries from 'components/library/Libraries';
 
-describe(Libraries.name, () => {
+xdescribe(Libraries.name, () => {
     let libraries = null;
     let _alerts = null;
     let _queues = null;

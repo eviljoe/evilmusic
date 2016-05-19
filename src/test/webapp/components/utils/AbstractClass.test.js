@@ -18,7 +18,7 @@
 
 import AbstractClass from 'components/utils/AbstractClass';
 
-describe(AbstractClass.name, () => {
+xdescribe(AbstractClass.name, () => {
     let abstractClass = null;
     
     beforeEach(() => {

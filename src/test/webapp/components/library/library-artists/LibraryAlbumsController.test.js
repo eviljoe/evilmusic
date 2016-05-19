@@ -18,7 +18,7 @@
 
 import LibraryArtistsController from 'components/library/library-artists/LibraryArtistsController';
 
-describe(LibraryArtistsController.name, () => {
+xdescribe(LibraryArtistsController.name, () => {
     let ctrl = null;
     let _scope = null;
     let _libraries = null;
