@@ -34,14 +34,18 @@ import em.test.rest.config.RESTTestConfig;
  */
 public class LibraryRESTCalls {
     
-    public static void rebuildLibrary() throws IOException {
+    public static Library rebuildLibrary() throws IOException {
         final RequestSpecification req = given();
         final ResponseSpecification res;
+        final Response r;
         
         res = req.then();
-        res.expect().statusCode(204);
+        res.expect().statusCode(200);
+        res.expect().contentType(ContentType.JSON);
         
-        res.post(RESTTestConfig.getInstance().getFullURL("/library"));
+        r = res.post(RESTTestConfig.getInstance().getFullURL("/library"));
+        
+        return toLibrary(r.getBody().asString());
     }
     
     public static Library getLibrary() throws IOException {
@@ -58,14 +62,18 @@ public class LibraryRESTCalls {
         return toLibrary(r.getBody().asString());
     }
     
-    public static void clearLibrary() throws IOException {
+    public static Library clearLibrary() throws IOException {
         final RequestSpecification req = given();
         final ResponseSpecification res;
+        final Response r;
         
         res = req.then();
-        res.expect().statusCode(204);
+        res.expect().statusCode(200);
+        res.expect().contentType(ContentType.JSON);
         
-        res.delete(RESTTestConfig.getInstance().getFullURL("/library"));
+        r = res.delete(RESTTestConfig.getInstance().getFullURL("/library"));
+        
+        return toLibrary(r.getBody().asString());
     }
     
     public static Library toLibrary(String json) throws IOException {

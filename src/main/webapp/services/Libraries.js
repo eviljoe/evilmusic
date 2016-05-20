@@ -20,12 +20,14 @@ import {Injectable} from '@angular/core';
 import _ from 'lodash';
 
 import {LibraryCalls} from './server-calls/LibraryCalls';
+import {Alerts} from './Alerts';
 import {Queues} from './Queues';
 
+const SONG_KEY_HASH_PRIME = 37;
+
 export class Libraries {
-    constructor(libraryCalls, queues) {
-        this.SONG_KEY_HASH_PRIME = 37;
-        
+    constructor(alerts, libraryCalls, queues) {
+        this.alerts = alerts;
         this.libraryCalls = libraryCalls;
         this.library = null;
         this.queues = queues;
@@ -44,7 +46,7 @@ export class Libraries {
     }
     
     static get parameters() {
-        return [[LibraryCalls], [Queues]];
+        return [[Alerts], [LibraryCalls], [Queues]];
     }
     
     init() {
@@ -58,7 +60,7 @@ export class Libraries {
                 this.library = library;
                 this.rebuildCache(library);
             },
-            (err) => console.log('Could not get library.', err)
+            (err) => this.alerts.error('Could not get library.', err)
         );
     }
     
@@ -157,8 +159,8 @@ export class Libraries {
         let albumHash = album ? album.split('').reduce(this.reduceSongKey, 0) : 1;
         let hash = 0;
         
-        hash = this.SONG_KEY_HASH_PRIME * hash + artistHash;
-        hash = this.SONG_KEY_HASH_PRIME * hash + albumHash;
+        hash = SONG_KEY_HASH_PRIME * hash + artistHash;
+        hash = SONG_KEY_HASH_PRIME * hash + albumHash;
         
         return hash;
     }
@@ -179,7 +181,7 @@ export class Libraries {
                 this.load();
                 this.queues.load(true);
             },
-            (err) => console.log('Clear library failed.', err)
+            (err) => this.alerts.error('Clear library failed.', err)
         );
     }
     
@@ -194,7 +196,7 @@ export class Libraries {
                 this.load();
                 this.queues.load(true);
             },
-            (err) => console.log('Library rebuilding failed.', err)
+            (err) => this.alerts.error('Library rebuilding failed.', err)
         );
     }
 }

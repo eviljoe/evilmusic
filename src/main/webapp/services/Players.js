@@ -19,16 +19,18 @@
 import AV from 'av';
 import {Injectable, EventEmitter} from '@angular/core';
 
+import {Alerts} from './Alerts';
 import {EMUtils} from './EMUtils';
 import {Equalizers} from './Equalizers';
 import {Queues} from './Queues';
 import {VolumeCalls} from './server-calls/VolumeCalls';
 
+const MIN_VOLUME = 0;
+const MAX_VOLUME = 100;
+
 export class Players {
-    constructor(emUtils, equalizers, queues, volumeCalls) {
-        this.MIN_VOLUME = 0;
-        this.MAX_VOLUME = 100;
-        
+    constructor(alerts, emUtils, equalizers, queues, volumeCalls) {
+        this.alerts = alerts;
         this.emUtils = emUtils;
         this.equalizers = equalizers;
         this.queues = queues;
@@ -39,7 +41,7 @@ export class Players {
         this.currentSong = null;
         this.playerProgress = null;
         this.playerProgressChanges = new EventEmitter();
-        this.volume = this.MAX_VOLUME;
+        this.volume = MAX_VOLUME;
         
         this.loadVolume();
     }
@@ -49,7 +51,7 @@ export class Players {
     }
     
     static get parameters() {
-        return [[EMUtils], [Equalizers], [Queues], [VolumeCalls]];
+        return [[Alerts], [EMUtils], [Equalizers], [Queues], [VolumeCalls]];
     }
     
     play(qIndex) {
@@ -154,8 +156,8 @@ export class Players {
 
     setVolume(volume) {
         if(this.emUtils.isNumber(volume)) {
-            volume = Math.max(this.MIN_VOLUME, volume);
-            volume = Math.min(this.MAX_VOLUME, volume);
+            volume = Math.max(MIN_VOLUME, volume);
+            volume = Math.min(MAX_VOLUME, volume);
 
             if(this.avPlayer) {
                 this.avPlayer.volume = volume;
@@ -169,14 +171,14 @@ export class Players {
     putVolume(volume) {
         this.volumeCalls.save(this.volume).subscribe(
             null,
-            (err) => console.log('Could not update volume.', err)
+            (err) => this.alerts.error('Could not update volume.', err)
         );
     }
     
     loadVolume() {
         this.volumeCalls.get().subscribe(
             (data) => this.volume = data,
-            (err) => console.log('Could not load volume.', err)
+            (err) => this.alerts.error('Could not load volume.', err)
         );
     }
 }

@@ -19,11 +19,13 @@
 import {Injectable} from '@angular/core';
 import _ from 'lodash';
 
+import {Alerts} from './Alerts';
 import {EMUtils} from './EMUtils';
 import {QueueCalls} from './server-calls/QueueCalls';
 
 export class Queues {
-    constructor(emUtils, queueCalls) {
+    constructor(alerts, emUtils, queueCalls) {
+        this.alerts = alerts;
         this.emUtils = emUtils;
         this.queueCalls = queueCalls;
         this.q = null;
@@ -36,7 +38,7 @@ export class Queues {
     }
     
     static get parameters() {
-        return [[EMUtils], [QueueCalls]];
+        return [[Alerts], [EMUtils], [QueueCalls]];
     }
     
     init() {
@@ -54,7 +56,7 @@ export class Queues {
         
         this.queueCalls.get(id).subscribe(
             (data) => this.q = data,
-            (err) => console.log('Could not get queue.', err)
+            (err) => this.alerts.error('Could not get queue.', err)
         );
     }
 
@@ -68,7 +70,7 @@ export class Queues {
     addLast(songID) {
         this.queueCalls.addLast(this.q.id, songID).subscribe(
             (data) => this.q = data,
-            (err) => console.log('Failed to enqueue last.', err)
+            (err) => this.alerts.error('Failed to enqueue last.', err)
         );
     }
     
@@ -82,7 +84,7 @@ export class Queues {
     remove(queueIndex) {
         this.queueCalls.remove(this.q.id, queueIndex).subscribe(
             (data) => this.q = data,
-            (err) => console.log(`Failed to remove from queue (${queueIndex})`, err)
+            (err) => this.alerts.error(`Failed to remove from queue (${queueIndex})`, err)
         );
     }
 
@@ -93,7 +95,7 @@ export class Queues {
     clear() {
         this.queueCalls.clear(this.q.id).subscribe(
             (data) => this.q = data,
-            (err) => console.log('Clear queue failed.', err)
+            (err) => this.alerts.error('Clear queue failed.', err)
         );
     }
     
@@ -141,7 +143,7 @@ export class Queues {
     setPlayIndex(playIndex) {
         this.queueCalls.setPlayIndex(this.q.id, playIndex).subscribe(
             (data) => this.q = data,
-            (err) => console.log('Failed to set the play index.', err)
+            (err) => this.alerts.error('Failed to set the play index.', err)
         );
     }
 }

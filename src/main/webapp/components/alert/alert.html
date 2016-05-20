@@ -16,19 +16,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div class="modal-header">
-    <h4 class="modal-title">{{ctrl.title}}</h4>
-</div>
-<div class="modal-body">
-    <p>{{ctrl.message}}</p>
-    <div ng-if="ctrl.debugInfo" class="debug-info-container">
-        <div>Debug Information</div>
-        <textarea disabled rows="8" class="form-control debug-info">{{ctrl.debugInfo | alertDebugInfo}}</textarea>
+<div class="modal fade" [id]="elemID" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{title}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{message}}</p>
+                <div [hidden]="!debugInfo" class="debug-info-container">
+                    <div>Debug Information</div>
+                    <textarea disabled rows="8" class="form-control debug-info">{{debugInfo | json}}</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button *ngFor="let b of buttons" class="btn" [ngClass]="{'btn-primary': b.primary, 'btn-default': !b.primary}"
+                    (click)="close()">
+                    <span class="{{b.icon}}"></span> {{b.text}}
+                </button>
+            </div>
+        </div>
     </div>
-</div>
-<div class="modal-footer">
-    <button ng-repeat="b in ctrl.buttons" class="btn" ng-class="{'btn-primary': b.primary, 'btn-default': !b.primary}"
-        ng-click="ctrl.buttonClicked(b)">
-        <span class="{{b.icon}}"></span> {{b.text}}
-    </button>
 </div>

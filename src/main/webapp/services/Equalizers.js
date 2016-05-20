@@ -19,10 +19,12 @@
 import {Injectable} from '@angular/core';
 import _ from 'lodash';
 
+import {Alerts} from './Alerts';
 import {EqualizerCalls} from './server-calls/EqualizerCalls';
 
 export class Equalizers {
-    constructor(equalizerCalls) {
+    constructor(alerts, equalizerCalls) {
+        this.alerts = alerts;
         this.equalizerCalls = equalizerCalls;
         this.webAudioNodes = {};
         this.eq = null;
@@ -35,7 +37,7 @@ export class Equalizers {
     }
     
     static get parameters() {
-        return [[EqualizerCalls]];
+        return [[Alerts], [EqualizerCalls]];
     }
     
     init() {
@@ -54,7 +56,7 @@ export class Equalizers {
         
         this.equalizerCalls.get(id).subscribe(
             (eq) => this.eq = eq,
-            (err) => console.log('Could not get equalizer.', err)
+            (err) => this.alerts.error('Could not get equalizer.', err)
         );
     }
     
@@ -132,7 +134,7 @@ export class Equalizers {
     save() {
         return this.equalizerCalls.save().subscribe(
             null,
-            (err) => console.log('An error occurred, and the equalizer could not be saved.', err)
+            (err) => this.alerts.error('An error occurred, and the equalizer could not be saved.', err)
         );
     }
     

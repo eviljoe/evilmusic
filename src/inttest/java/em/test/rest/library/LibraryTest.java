@@ -95,6 +95,12 @@ public class LibraryTest {
         assertThat(songs, is(not(empty())));
     }
     
+    /** Tests to ensure that rebuilding the library will return the library as it exists on the server. */
+    @Test
+    public void testRebuildLibrary_ReturnsLibrary() throws IOException {
+        assertThat(LibraryRESTCalls.rebuildLibrary(), is(not(nullValue())));
+    }
+    
     /* ************* */
     /* Clear Tests */
     /* ************* */
@@ -104,5 +110,11 @@ public class LibraryTest {
     public void testClearLibrary() throws IOException {
         LibraryRESTCalls.clearLibrary();
         assertThat(LibraryRESTCalls.getLibrary().getSongs(), is(empty()));
+    }
+    
+    /** Tests to ensure that clearing the library will return the libaray as it exists on the server. */
+    @Test
+    public void testClearLibrary_ReturnsLibrary() throws IOException {
+        assertThat(LibraryRESTCalls.clearLibrary(), is(not(nullValue())));
     }
 }

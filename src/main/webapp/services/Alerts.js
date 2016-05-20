@@ -16,42 +16,68 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AlertButton from './AlertButton';
-import AlertController from './AlertController';
+import {Injectable} from '@angular/core';
+import {ALERT_DIALOG_ELEMENT_ID} from 'components/alert/AlertComponent';
+import {Modals} from 'services/Modals';
 
-export default class Alerts {
-    constructor($modal) {
-        this.$modal = $modal;
+export class Alerts {
+    constructor(modals) {
+        this.modals = modals;
     }
     
-    static get $inject() {
-        return ['$modal'];
+    static get annotations() {
+        return [new Injectable()];
     }
     
-    static get injectID() {
-        return 'alerts';
+    static get parameters() {
+        return [[Modals]];
     }
     
-    open(msg, title, debugInfo, size, buttons) {
-        return this.$modal.open({
-            templateUrl: 'components/alert/alert.html',
-            controller: AlertController.injectID,
-            controllerAs: 'ctrl',
-            size,
-            resolve: {
-                buttons: () => buttons,
-                debugInfo: () => debugInfo,
-                message: () => msg,
-                title: () => title
-            }
-        });
+    getAlertInfo() {
+        return this.alertInfo;
     }
     
     error(msg, data) {
-        return this.open(msg, 'Error', data, 'md', [this.okButton()]);
+        this.alertInfo = new AlertInfo('Error', msg, data, [this.okButton()]);
+        this.modals.show(ALERT_DIALOG_ELEMENT_ID);
     }
     
     okButton(primary=true, resolve=true) {
         return new AlertButton('ok', 'OK', null, primary, resolve);
     }
 }
+
+class AlertInfo {
+    constructor(title, message, debugInfo, buttons) {
+        this.title = title;
+        this.message = message;
+        this.debugInfo = debugInfo;
+        this.buttons = buttons;
+    }
+}
+
+class AlertButton {
+    
+    /**
+     * Creates a new alert button.
+     *
+     * @param {string} id If this button is clicked, this string will be returned as the promise data when the modal
+     *        promise is reslved.
+     * @param {string} text The text to be displayed within the buttons
+     * @param {string} icon The CSS classes necessary to add an icon to the button.  This should be a single string
+     *        containing each CSS class delimited by a space (just how you would specify them in an HTML class
+     *        attribute).
+     * @param {boolean} primary Whether or not the button is the primary button on the modal.
+     * @param {string} resolve If true, clicking the button will resolve the modal's result promise.  If false,
+     *        clicking the button will reject the modal's result promise.
+     */
+    constructor(id, text, icon, primary, resolve) {
+        this.id = id;
+        this.text = text;
+        this.icon = icon;
+        this.primary = primary;
+        this.resolve = resolve;
+    }
+}
+
+export default Alerts;

@@ -19,11 +19,13 @@
 import {Component} from '@angular/core';
 import {HTTP_PROVIDERS} from '@angular/http';
 
+import {AlertComponent} from 'components/alert/AlertComponent';
 import {LibraryComponent} from 'components/library/LibraryComponent';
 import {PlayerComponent} from 'components/player/PlayerComponent';
 import {ProgressBarComponent} from 'components/progress-bar/ProgressBarComponent';
 import {QueueComponent} from 'components/queue/QueueComponent';
 
+import {Alerts} from 'services/Alerts';
 import {EMUtils} from 'services/EMUtils';
 import {EqualizerCalls} from 'services/server-calls/EqualizerCalls';
 import {Equalizers} from 'services/Equalizers';
@@ -42,6 +44,7 @@ export class EvilMusicComponent {
             templateUrl: 'components/evilmusic/evilmusic.html',
             providers: [HTTP_PROVIDERS],
             viewProviders: [
+                Alerts,
                 EMUtils,
                 EqualizerCalls,
                 Equalizers,
@@ -54,6 +57,7 @@ export class EvilMusicComponent {
                 VolumeCalls
             ],
             directives: [
+                AlertComponent,
                 LibraryComponent,
                 PlayerComponent,
                 ProgressBarComponent,
