@@ -18,7 +18,7 @@
 
 import _ from 'lodash';
 
-export default class AbstractClass {
+export class AbstractClass {
     constructor(abstractFunctionNames) {
         this._initAbstractClass(abstractFunctionNames);
     }
@@ -41,3 +41,5 @@ export default class AbstractClass {
         _.forEach(abstractFunctionNames, (name) => this._checkForAbstractFunction(name));
     }
 }
+
+export default AbstractClass;

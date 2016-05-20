@@ -47,7 +47,7 @@ export class Alerts {
     }
 }
 
-class AlertInfo {
+export class AlertInfo {
     constructor(title, message, debugInfo, buttons) {
         this.title = title;
         this.message = message;
@@ -56,7 +56,7 @@ class AlertInfo {
     }
 }
 
-class AlertButton {
+export class AlertButton {
     
     /**
      * Creates a new alert button.

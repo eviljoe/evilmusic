@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// jshint -W132
+/* eslint-disable no-undef, strict, no-var, prefer-template */
 
 module.exports = function(config) {
     'use strict';
 
-    var webSrcDir = 'src/main/webapp';
-    var webTestDir = 'src/test/webapp';
+    var WEB_SRC_DIR = 'src/main/webapp';
+    var WEB_TEST_DIR = 'src/test/webapp';
 
     config.set({
         basePath: '',
@@ -30,37 +30,20 @@ module.exports = function(config) {
             // Necessary for Babel to be able to convert some things (like the new ES6 data structures)
             'node_modules/babel-polyfill/dist/polyfill.js',
             
-            // Third party libraries
-            webSrcDir + '/assets/libs/aurora.js',
-            webSrcDir + '/assets/libs/flac.js',
-            'node_modules/jquery/dist/jquery.js', // Needs to be before Angular
-            'node_modules/angular/angular.js',
-            'node_modules/angular-resource/angular-resource.js', // Needs to be after Angular
-            'node_modules/angular-bootstrap/ui-bootstrap.js', // Needs to be after Angular
-            'node_modules/angular-bootstrap/ui-bootstrap-tpls.js', // Needs to be after Angular
-            'node_modules/angular-mocks/angular-mocks.js',
-            'node_modules/lodash/index.js',
-
-            // Root level HTML & JavaScript files
-            webSrcDir + '/index.js',
-            webSrcDir + '/index.html',
-
-            // EvilMusic JavaScript files
-            webSrcDir + '/components/**/*',
-
-            // Unit Tests
-            webTestDir + '/**/*'
+            // WEB_SRC_DIR + '/index.js',
+            // WEB_SRC_DIR + '/components/**/*.js',
+            `${WEB_TEST_DIR}/**/*.js`
         ],
         browsers: ['PhantomJS'],
         frameworks: ['jasmine', 'browserify'],
         preprocessors: {
-            'src/main/webapp/components/**/*.js': ['browserify'],
-            'src/main/webapp/index.js': ['browserify'],
+            // 'src/main/webapp/components/**/*.js': ['browserify'],
+            // 'src/main/webapp/index.js': ['browserify'],
             'src/test/webapp/**/*.js': ['browserify']
         },
         browserify: {
             debug: true,
-            paths: [webSrcDir],
+            paths: [WEB_SRC_DIR],
             transform: ['babelify']
         },
         autoWatch: true,
