@@ -176,7 +176,6 @@ export class Libraries {
     clear() {
         this.libraryCalls.clear().subscribe(
             (data) => {
-                console.log('library cleared', data); // JOE o
                 this.load();
                 this.queues.load(true);
             },

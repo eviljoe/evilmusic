@@ -98,6 +98,7 @@ const THIRD_PARTY_FONT_FILES = [
 const WATCH_DIRS = [
     `${WEB_SRC_DIR}/assets/**/*`,
     `${WEB_SRC_DIR}/components/**/*`,
+    `${WEB_SRC_DIR}/pipes/**/*`,
     `${WEB_SRC_DIR}/services/**/*`,
     `${WEB_SRC_DIR}/index.html`,
     `${WEB_SRC_DIR}/index.js`

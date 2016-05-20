@@ -29,6 +29,7 @@ import {EqualizerCalls} from 'services/server-calls/EqualizerCalls';
 import {Equalizers} from 'services/Equalizers';
 import {Libraries} from 'services/Libraries';
 import {LibraryCalls} from 'services/server-calls/LibraryCalls';
+import {Modals} from 'services/Modals';
 import {Players} from 'services/Players';
 import {QueueCalls} from 'services/server-calls/QueueCalls';
 import {Queues} from 'services/Queues';
@@ -46,6 +47,7 @@ export class EvilMusicComponent {
                 Equalizers,
                 Libraries,
                 LibraryCalls,
+                Modals,
                 Players,
                 QueueCalls,
                 Queues,

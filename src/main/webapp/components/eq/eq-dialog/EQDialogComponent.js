@@ -16,18 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class EQDialogController {
-    constructor($modalInstance, equalizers) {
-        this.$modalInstance = $modalInstance;
+import {Component} from '@angular/core';
+import {EQComponent} from 'components/eq/EQComponent';
+import {Equalizers} from 'services/Equalizers';
+import {Modals} from 'services/Modals';
+
+export const EQ_DIALOG_ELEMENT_ID = 'em-eq-dialog';
+
+export class EQDialogComponent {
+    constructor(equalizers, modals) {
         this.equalizers = equalizers;
+        this.modals = modals;
+        this.elemID = EQ_DIALOG_ELEMENT_ID;
     }
     
-    static get $inject() {
-        return ['$modalInstance', 'equalizers'];
+    static get annotations() {
+        return [new Component({
+            selector: 'em-eq-dialog',
+            templateUrl: 'components/eq/eq-dialog/eq-dialog.html',
+            directives: [EQComponent]
+        })];
     }
     
-    static get injectID() {
-        return EQDialogController.name;
+    static get parameters() {
+        return [[Equalizers], [Modals]];
     }
     
     save() {
@@ -41,6 +53,8 @@ export default class EQDialogController {
     }
     
     close() {
-        this.$modalInstance.dismiss('close');
+        this.modals.hide(EQ_DIALOG_ELEMENT_ID);
     }
 }
+
+export default EQDialogComponent;

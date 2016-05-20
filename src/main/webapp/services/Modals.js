@@ -16,21 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import EQButtonController from './eq-button/EQButtonController';
-import EQButtonDirectiveFactory from './eq-button/EQButtonDirectiveFactory';
-import EQController from './EQController';
-import EQDialogController from './eq-dialog/EQDialogController';
-import EQDirectiveFactory from './EQDirectiveFactory';
-import Equalizers from './Equalizers';
-import HertzFilterFactory from './HertzFilterFactory';
+import {Injectable} from '@angular/core';
+import $ from 'jquery';
 
-export default (emApp) => { // eslint-disable-line arrow-body-style
-    return emApp
-    .controller(EQButtonController)
-    .directive(EQButtonDirectiveFactory)
-    .controller(EQController)
-    .controller(EQDialogController)
-    .directive(EQDirectiveFactory)
-    .service(Equalizers)
-    .filter(HertzFilterFactory);
-};
+export class Modals {
+    static get annotations() {
+        return [new Injectable()];
+    }
+    
+    show(elemID) {
+        $(`#${elemID}`).modal('show');
+    }
+    
+    hide(elemID) {
+        $(`#${elemID}`).modal('hide');
+    }
+}
+
+export default Modals;

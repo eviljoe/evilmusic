@@ -16,22 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import DirectiveFactory from 'components/utils/DirectiveFactory';
-import EQButtonController from './EQButtonController.js';
+import {Pipe} from '@angular/core';
+import {EMUtils} from 'services/EMUtils';
 
-export default class EQButtonDirectiveFactory extends DirectiveFactory {
-    constructor() {
-        super();
-        this.directive.injectID = 'eqButton';
+export class MinutesPipe {
+    constructor(emUtils) {
+        this.emUtils = emUtils;
     }
     
-    directive() {
-        return {
-            restrict: 'E',
-            scope: {},
-            controller: EQButtonController.injectID,
-            controllerAs: 'ctrl',
-            templateUrl: 'components/eq/eq-button/eq-button.html'
-        };
+    static get annotations() {
+        return [new Pipe({
+            name: 'minutes'
+        })];
+    }
+    
+    static get parameters() {
+        return [[EMUtils]];
+    }
+    
+    transform(hertz, ...args) {
+        return this.emUtils.millisecondsToString(hertz);
     }
 }
+
+export default MinutesPipe;

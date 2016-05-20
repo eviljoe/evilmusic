@@ -16,20 +16,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div class="modal-header">
-    <h4 class="modal-title">Equalizer</h4>
-</div>
-<div class="modal-body">
-    <em-eq></em-eq>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-primary" ng-click="ctrl.save()">
-        <span class="fa fa-floppy-o"></span> Save
-    </button>
-    <button class="btn btn-default" ng-click="ctrl.reset()">
-        <span class="fa fa-minus"></span> Reset
-    </button>
-    <button class="btn btn-default" ng-click="ctrl.close()">
-        <span class="fa fa-times"></span> Close
-    </button>
+
+<div class="modal fade eq-dialog" [id]="elemID" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Equalizer</h4>
+            </div>
+            <div class="modal-body">
+                <em-eq></em-eq>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" (click)="reset()">
+                    <span class="fa fa-minus"></span> Reset
+                </button>
+                <button class="btn btn-default" (click)="close()">
+                    <span class="fa fa-times"></span> Close
+                </button>
+                <button class="btn btn-primary" (click)="save()">
+                    <span class="fa fa-floppy-o"></span> Save
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

@@ -16,22 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import EQController from './EQController';
-import DirectiveFactory from 'components/utils/DirectiveFactory';
+import {Pipe} from '@angular/core';
+import {EMUtils} from 'services/EMUtils';
 
-export default class EQDirectiveFactory extends DirectiveFactory {
-    constructor() {
-        super();
-        this.directive.injectID = 'emEq';
+export class HertzPipe {
+    constructor(emUtils) {
+        this.emUtils = emUtils;
     }
     
-    directive() {
-        return {
-            restrict: 'E',
-            scope: {},
-            controller: EQController.injectID,
-            controllerAs: 'ctrl',
-            templateUrl: 'components/eq/eq.html'
-        };
+    static get annotations() {
+        return [new Pipe({
+            name: 'hertz'
+        })];
+    }
+    
+    static get parameters() {
+        return [[EMUtils]];
+    }
+    
+    transform(hertz, ...args) {
+        return this.emUtils.hertzToString(hertz);
     }
 }
+
+export default HertzPipe;

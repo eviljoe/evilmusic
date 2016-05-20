@@ -16,24 +16,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class EQController {
+import {Component} from '@angular/core';
+import {HertzPipe} from 'pipes/HertzPipe';
+import {Equalizers} from 'services/Equalizers';
+
+export class EQComponent {
     constructor(equalizers) {
         this.equalizers = equalizers;
     }
     
-    static get $inject() {
-        return ['equalizers'];
+    static get annotations() {
+        return [new Component({
+            selector: 'em-eq',
+            templateUrl: 'components/eq/eq.html',
+            pipes: [HertzPipe]
+        })];
     }
     
-    static get injectID() {
-        return 'EQController';
+    static get parameters() {
+        return [Equalizers];
     }
     
-    getEQ() {
-        return this.equalizers.eq;
+    getEQNodes() {
+        let nodes = null;
+        
+        if(this.equalizers && this.equalizers.eq && this.equalizers.eq.nodes) {
+            nodes = this.equalizers.eq.nodes;
+            nodes.sort((a, b) => a.frequency - b.frequency);
+        }
+        
+        return nodes;
     }
     
     nodeChanged(node) {
         this.equalizers.updateNodeGain(node);
     }
 }
+
+export default EQComponent;

@@ -16,30 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from 'jquery';
 import {Component} from '@angular/core';
+import {EQDialogComponent, EQ_DIALOG_ELEMENT_ID} from 'components/eq/eq-dialog/EQDialogComponent';
+import {Modals} from 'services/Modals';
 
 export class EQButtonComponent {
-    constructor($modal) {
-        this.$modal = $modal;
+    constructor(modals) {
+        this.modals = modals;
     }
     
     static get annotations() {
         return [new Component({
             selector: 'em-eq-button',
-            templateUrl: 'components/eq/eq-button/eq-button.html'
+            templateUrl: 'components/eq/eq-button/eq-button.html',
+            directives: [EQDialogComponent]
         })];
     }
     
     static get parameters() {
-        return [];
+        return [[Modals]];
     }
     
     openEQ() {
-        console.log('$', $); // JOE o
-        console.log('$("#myModal")', $('#myModal')); // JOE o
-        console.log('$("#myModal").modal', $('#myModal').modal); // JOE o
-        // $('#myModal').modal();
+        this.modals.show(EQ_DIALOG_ELEMENT_ID);
     }
 }
 

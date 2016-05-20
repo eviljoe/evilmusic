@@ -19,17 +19,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <form class="form-inline">
     <table class="container">
         <tbody>
-            <td class="eq-slider-container" ng-repeat="node in ctrl.getEQ().nodes | orderBy: 'frequency'">
+            <td class="eq-slider-container" *ngFor="let node of getEQNodes()">
                 <div class="text-center">
                     {{node.frequency | hertz}}
                 </div>
                 <div class="text-center">
                     <input class="eq-slider" type="range" min="-40" max="10" step="0.1" orient="vertical"
-                        ng-model="node.gain" ng-change="ctrl.nodeChanged(node)"/>
+                        [(ngModel)]="node.gain" (change)="nodeChanged(node)"/>
                 </div>
                 <div class="text-center">
                     <input class="eq-slider-text-field" type="number" min="-40" max="10" step="0.1"
-                        ng-model="node.gain" ng-change="ctrl.nodeChanged(node)"/>
+                        [(ngModel)]="node.gain" (change)="nodeChanged(node)"/>
                 </div>
             </td>
         </tbody>

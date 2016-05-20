@@ -16,7 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// console.log('$', $); // JOE o
+// HACK This is to make sure that bootstrap has access to jQuery.  This is only necessary until ng2-bootstrap adds
+// support for modals.  I can use ng2-bootstrap's modals, remove this.\
+window.jQuery = require('jquery'); // eslint-disable-line
+require('bootstrap/dist/js/bootstrap'); // eslint-disable-line
 
 import 'zone.js';
 import 'reflect-metadata';
