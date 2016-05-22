@@ -18,54 +18,52 @@
 
 import {LibraryArtistsComponent} from 'components/library/library-artists/LibraryArtistsComponent';
 
-xdescribe(LibraryArtistsComponent.name, () => {
-    let ctrl = null;
-    let _scope = null;
+describe(LibraryArtistsComponent.name, () => {
+    let comp = null;
     let _libraries = null;
     
     beforeEach(() => {
-        _scope = {};
         _libraries = {
             getArtists() {}
         };
         
-        ctrl = new LibraryArtistsController(_scope, _libraries);
+        comp = new LibraryArtistsComponent(_libraries);
     });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(LibraryArtistsController.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(LibraryArtistsComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(LibraryArtistsController.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(LibraryArtistsComponent.parameters).toEqual(jasmine.any(Array));
         });
     });
     
     describe('getArtists', () => {
         beforeEach(() => {
-            spyOn(_libraries, 'getArtists').and.stub();
+            spyOn(_libraries, 'getArtists').and.returnValue(['c', 'b', 'a']);
         });
         
-        it('gets the artists', () => {
-            _scope.artist = 'artist_1';
-            ctrl.getArtists();
-            expect(_libraries.getArtists).toHaveBeenCalled();
+        it('returns the artists from the library', () => {
+            expect(comp.getArtists()).toContain('c', 'b', 'a');
         });
         
-        it('returns the artists', () => {
-            _libraries.getArtists.and.returnValue(['a', 'b']);
-            expect(ctrl.getArtists()).toEqual(['a', 'b']);
+        it('sorts the artists when they exist', () => {
+            expect(comp.getArtists()).toEqual(['a', 'b', 'c']);
         });
     });
     
-    describe('artistChanged', () => {
-        it('sets the given artist as the scope\'s artist', () => {
-            _scope.artist = null;
-            ctrl.artistChanged('new_artist');
-            expect(_scope.artist).toEqual('new_artist');
+    describe('artistClicked', () => {
+        beforeEach(() => {
+            comp.artistChanged = jasmine.createSpyObj('artistChanged', ['emit']);
+        });
+        
+        it('emits an artist change event', () => {
+            comp.artistClicked('foo');
+            expect(comp.artistChanged.emit).toHaveBeenCalledWith('foo');
         });
     });
 });

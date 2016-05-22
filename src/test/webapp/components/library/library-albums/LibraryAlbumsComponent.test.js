@@ -18,54 +18,52 @@
 
 import {LibraryAlbumsComponent} from 'components/library/library-albums/LibraryAlbumsComponent';
 
-xdescribe(LibraryAlbumsComponent.name, () => {
-    let ctrl = null;
-    let _scope = null;
+describe(LibraryAlbumsComponent.name, () => {
+    let comp = null;
     let _libraries = null;
     
     beforeEach(() => {
-        _scope = {};
         _libraries = {
             getAlbumsForArtist() {}
         };
         
-        ctrl = new LibraryAlbumsController(_scope, _libraries);
+        comp = new LibraryAlbumsComponent(_libraries);
     });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(LibraryAlbumsController.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(LibraryAlbumsComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(LibraryAlbumsController.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(LibraryAlbumsComponent.parameters).toEqual(jasmine.any(Array));
         });
     });
     
     describe('getAlbums', () => {
         beforeEach(() => {
-            spyOn(_libraries, 'getAlbumsForArtist').and.stub();
+            spyOn(_libraries, 'getAlbumsForArtist').and.returnValue(['c', 'b', 'a']);
         });
         
-        it('gets the albums for the scope\'s current artist', () => {
-            _scope.artist = 'artist_1';
-            ctrl.getAlbums();
-            expect(_libraries.getAlbumsForArtist).toHaveBeenCalledWith(_scope.artist);
+        it('returns the albums from the library', () => {
+            expect(comp.getAlbums()).toContain('c', 'b', 'a');
         });
         
-        it('returns the albums', () => {
-            _libraries.getAlbumsForArtist.and.returnValue(['a', 'b']);
-            expect(ctrl.getAlbums()).toEqual(['a', 'b']);
+        it('sorts the albums when they exist', () => {
+            expect(comp.getAlbums()).toEqual(['a', 'b', 'c']);
         });
     });
     
-    describe('albumChanged', () => {
-        it('sets the given album as the scope\'s album', () => {
-            _scope.album = null;
-            ctrl.albumChanged('new_album');
-            expect(_scope.album).toEqual('new_album');
+    describe('albumClicked', () => {
+        beforeEach(() => {
+            comp.albumChanged = jasmine.createSpyObj('albumChanged', ['emit']);
+        });
+        
+        it('emits an album change event', () => {
+            comp.albumClicked('foo');
+            expect(comp.albumChanged.emit).toHaveBeenCalledWith('foo');
         });
     });
 });

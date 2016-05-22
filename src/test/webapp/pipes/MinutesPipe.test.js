@@ -16,40 +16,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HertzPipe} from 'pipes/HertzPipe';
+import {MinutesPipe} from 'pipes/MinutesPipe';
 
-describe(HertzPipe.name, () => {
+describe(MinutesPipe.name, () => {
     let pipe = null;
     let _emUtils = null;
     
     beforeEach(() => {
         _emUtils = {
-            hertzToString() {}
+            millisecondsToString() {}
         };
         
-        pipe = new HertzPipe(_emUtils);
+        pipe = new MinutesPipe(_emUtils);
     });
     
     describe('annotations', () => {
         it('returns an array', () => {
-            expect(HertzPipe.annotations).toEqual(jasmine.any(Array));
+            expect(MinutesPipe.annotations).toEqual(jasmine.any(Array));
         });
     });
     
     describe('parameters', () => {
         it('returns an array', () => {
-            expect(HertzPipe.parameters).toEqual(jasmine.any(Array));
+            expect(MinutesPipe.parameters).toEqual(jasmine.any(Array));
         });
     });
     
     describe('transform', () => {
         beforeEach(() => {
-            spyOn(_emUtils, 'hertzToString').and.returnValue('converted');
+            spyOn(_emUtils, 'millisecondsToString').and.returnValue('converted');
         });
         
         it('forwards the conversion call to a service', () => {
             pipe.transform(123);
-            expect(_emUtils.hertzToString).toHaveBeenCalledWith(123);
+            expect(_emUtils.millisecondsToString).toHaveBeenCalledWith(123);
         });
             
         it('returns the converted value', () => {

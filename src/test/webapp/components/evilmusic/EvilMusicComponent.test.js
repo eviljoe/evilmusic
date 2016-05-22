@@ -18,10 +18,10 @@
 
 import {EvilMusicComponent} from 'components/evilmusic/EvilMusicComponent';
 
-xdescribe(EvilMusicComponent.name, () => {
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(EMController.injectID).toEqual(jasmine.any(String));
+describe(EvilMusicComponent.name, () => {
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(EvilMusicComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
 });

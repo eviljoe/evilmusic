@@ -32,11 +32,13 @@ export class VolumeCalls {
         return [[Http]];
     }
     
+    // TODO ju
     get() {
         return this.http.get('/rest/config/volume')
             .map((res) => res.json());
     }
     
+    // TODO ju
     save(volume) {
         return this.http.put(`/rest/config/volume/${volume}`)
             .map((res) => res.json());

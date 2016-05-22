@@ -39,6 +39,7 @@ export class LibraryArtistsComponent {
         return [[Libraries]];
     }
     
+    // TODO instead of sorting here, try using a pipe to sort this stuff on the view.
     getArtists() {
         let artists = this.libraries.getArtists();
         

@@ -16,29 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
-import {NG2Examples} from './NG2Examples';
-import {NG2ChildExampleComponent} from '../ng2-child-example/NG2ChildExampleComponent';
+import {VolumeCalls} from 'services/server-calls/VolumeCalls';
 
-export class NG2ExampleComponent {
-    constructor(ng2Examples) {
-        this.text = ng2Examples.getText();
-        this.tfp = 'this is the text from the parent';
-    }
+describe(VolumeCalls.name, () => {
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(VolumeCalls.annotations).toEqual(jasmine.any(Array));
+        });
+    });
     
-    static get annotations() {
-        return [new Component({
-            selector: 'ng2-example',
-            templateUrl: 'components/ng2-example/ng2-example.html',
-            viewProviders: [NG2Examples],
-            directives: [NG2ChildExampleComponent]
-        })];
-    }
-    
-    static get parameters() {
-        return [[NG2Examples]];
-    }
-    
-}
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(VolumeCalls.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+});
 
-export default NG2ExampleComponent;

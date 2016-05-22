@@ -16,51 +16,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Observable} from 'rxjs';
 import {Equalizers} from 'services/Equalizers';
-import _ from 'lodash';
 
-xdescribe(Equalizers.name, () => {
+describe(Equalizers.name, () => {
     let equalizers = null;
     let _alerts = null;
-    let _Equalizer = null;
+    let _equalizerCalls = null;
     
     beforeEach(() => {
         _alerts = {
             error() {}
         };
-        _Equalizer = {
-            get: () => { // eslint-disable-line arrow-body-style
-                return {$promise: $q.defer().promise};
-            }
+        _equalizerCalls = {
+            get() {
+                return Observable.create((observer) => {
+                    observer.next({});
+                    observer.complete();
+                });
+            },
+
+            save() {}
         };
         
-        equalizers = new Equalizers(_alerts, _Equalizer);
+        equalizers = new Equalizers(_alerts, _equalizerCalls);
     });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(Equalizers.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(Equalizers.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(Equalizers.injectID).toEqual(jasmine.any(String));
-        });
-    });
-    
-    describe('getInstance', () => {
-        it('returns an the instance', () => {
-            let inst = {a: 'A'};
-            
-            Equalizers.instance = inst;
-            expect(Equalizers.getInstance()).toBe(inst);
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(Equalizers.parameters).toEqual(jasmine.any(Array));
         });
     });
     
     describe('init', () => {
         beforeEach(() => {
             spyOn(equalizers, 'load').and.stub();
+        });
+        
+        it('sets the equalizers instance', () => {
+            Equalizers.instance = null;
+            equalizers.init();
+            expect(Equalizers.instance).toEqual(equalizers);
         });
         
         it('loads a new equalizer', () => {
@@ -70,38 +72,44 @@ xdescribe(Equalizers.name, () => {
     });
     
     describe('load', () => {
-        let eqDefer = null;
+        let getObserver;
         
         beforeEach(() => {
-            eqDefer = $q.defer();
-            spyOn(_Equalizer, 'get').and.returnValue({
-                $promise: eqDefer.promise
-            });
+            spyOn(_equalizerCalls, 'get').and.returnValue(Observable.create((observer) => getObserver = observer));
             spyOn(_alerts, 'error').and.stub();
         });
         
-        it('loads the default queue when given true', () => {
+        it('loads the default equalizer when given true', () => {
             equalizers.load(true);
-            expect(_Equalizer.get).toHaveBeenCalledWith({id: 'default'});
+            expect(_equalizerCalls.get).toHaveBeenCalledWith('default');
         });
         
-        it('reloads the current queue given false', () => {
+        it('reloads the current equalizer given false', () => {
             equalizers.eq.id = 7;
             equalizers.load(false);
-            expect(_Equalizer.get).toHaveBeenCalledWith({id: 7});
+            expect(_equalizerCalls.get).toHaveBeenCalledWith(7);
         });
         
-        it('reloads the current queue given nothing', () => {
+        it('reloads the current equalizer given nothing', () => {
             equalizers.eq.id = 13;
             equalizers.load();
-            expect(_Equalizer.get).toHaveBeenCalledWith({id: 13});
+            expect(_equalizerCalls.get).toHaveBeenCalledWith(13);
         });
         
-        it('displays an error message if the queue fails to loads', () => {
+        it('sets the equalizer if it loads successfully', () => {
+            equalizers.eq = null;
+            equalizers.load(true);
+            
+            getObserver.next({a: 'A'});
+            getObserver.complete();
+            
+            expect(equalizers.eq).toEqual({a: 'A'});
+        });
+        
+        it('displays an error message if the equalizer fails to loads', () => {
             equalizers.load();
             
-            eqDefer.reject();
-            $rootScope.$apply();
+            getObserver.error();
             
             expect(_alerts.error).toHaveBeenCalled();
         });
@@ -109,18 +117,13 @@ xdescribe(Equalizers.name, () => {
     
     describe('createEQNodes', () => {
         beforeEach(() => {
+            Equalizers.instance = equalizers;
             equalizers.eq = {nodes: []};
-            spyOn(Equalizers, 'getInstance').and.returnValue(equalizers);
             spyOn(equalizers, 'createEQNode').and.stub();
         });
         
         afterEach(() => {
-            Equalizers.getInstance.and.callThrough();
-        });
-        
-        it('loads the singleton instance of the class', () => {
-            equalizers.createEQNodes({});
-            expect(Equalizers.getInstance).toHaveBeenCalled();
+            Equalizers.instance = null;
         });
         
         it('creates an web audio node for each EQ node', () => {
@@ -231,6 +234,36 @@ xdescribe(Equalizers.name, () => {
         });
     });
     
+    describe('save', () => {
+        let saveObserver;
+        
+        beforeEach(() => {
+            spyOn(_equalizerCalls, 'save').and.returnValue(Observable.create((observer) => saveObserver = observer));
+            spyOn(_alerts, 'error').and.stub();
+        });
+        
+        it('saves the equalizer', () => {
+            equalizers.eq = {id: 17};
+            equalizers.save();
+            expect(_equalizerCalls.save).toHaveBeenCalledWith(17, equalizers.eq);
+        });
+        
+        it('sets the equalizer to the one returned by the server if successful', () => {
+            equalizers.save();
+            
+            saveObserver.next({foo: 'bar'});
+            saveObserver.complete();
+            
+            expect(equalizers.eq).toEqual({foo: 'bar'});
+        });
+        
+        it('displays an error message if not successful', () => {
+            equalizers.save();
+            saveObserver.error();
+            expect(_alerts.error).toHaveBeenCalled();
+        });
+    });
+    
     describe('reset', () => {
         beforeEach(() => {
             spyOn(equalizers, 'updateNodeGain').and.stub();
@@ -241,14 +274,14 @@ xdescribe(Equalizers.name, () => {
         
         it('sets each of the nodes in the equalizer to have a gain of 0', () => {
             equalizers.reset();
-            _.forEach(equalizers.eq.nodes, (node) => {
+            equalizers.eq.nodes.forEach((node) => {
                 expect(node.gain).toEqual(0);
             });
         });
         
         it('updates the gain of the web audio node for each of the equalizer nodes', () => {
             equalizers.reset();
-            _.forEach(equalizers.eq.nodes, (node) => {
+            equalizers.eq.nodes.forEach((node) => {
                 expect(equalizers.updateNodeGain).toHaveBeenCalledWith(node);
             });
         });

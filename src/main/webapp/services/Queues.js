@@ -55,7 +55,7 @@ export class Queues {
         let id = loadNew ? 'default' : this.q.id;
         
         this.queueCalls.get(id).subscribe(
-            (data) => this.q = data,
+            (queue) => this.q = queue,
             (err) => this.alerts.error('Could not get queue.', err)
         );
     }
@@ -69,7 +69,7 @@ export class Queues {
      */
     addLast(songID) {
         this.queueCalls.addLast(this.q.id, songID).subscribe(
-            (data) => this.q = data,
+            (queue) => this.q = queue,
             (err) => this.alerts.error('Failed to enqueue last.', err)
         );
     }
@@ -83,7 +83,7 @@ export class Queues {
      */
     remove(queueIndex) {
         this.queueCalls.remove(this.q.id, queueIndex).subscribe(
-            (data) => this.q = data,
+            (queue) => this.q = queue,
             (err) => this.alerts.error(`Failed to remove from queue (${queueIndex})`, err)
         );
     }
@@ -94,7 +94,7 @@ export class Queues {
      */
     clear() {
         this.queueCalls.clear(this.q.id).subscribe(
-            (data) => this.q = data,
+            (queue) => this.q = queue,
             (err) => this.alerts.error('Clear queue failed.', err)
         );
     }
@@ -142,7 +142,7 @@ export class Queues {
     
     setPlayIndex(playIndex) {
         this.queueCalls.setPlayIndex(this.q.id, playIndex).subscribe(
-            (data) => this.q = data,
+            (queue) => this.q = queue,
             (err) => this.alerts.error('Failed to set the play index.', err)
         );
     }

@@ -16,39 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// import angular from 'angular';
+import {Observable} from 'rxjs';
 import {Players} from 'services/Players';
 
-xdescribe(Players.name, () => {
-    let players = null;
-    let _http = null;
-    let _rootScope = null;
-    let _alerts = null;
-    let _emUtils = null;
-    let _queues = null;
-    let _equalizers = null;
-    let _AV = null;
-    let _avPlayer = null;
-    let $q = null;
-    let $rootScope = null;
+describe(Players.name, () => {
+    let players;
+    let _alerts;
+    let _emUtils;
+    let _equalizers;
+    let _queues;
+    let _volumeCalls;
+    let _AV;
+    let _avPlayer;
     
-    beforeEach(angular.mock.inject((_$q_, _$rootScope_) => {
-        $q = _$q_;
-        $rootScope = _$rootScope_;
-        
-        _http = {
-            get: () => $q.defer().promise,
-            put: () => {}
-        };
-        _rootScope = {
-            $broadcast() {}
-        };
+    beforeEach(() => {
         _alerts = {
             error() {}
         };
+        
         _emUtils = {
             isNumber() {}
         };
+        
+        _equalizers = {
+            createEQNodes() {}
+        };
+        
         _queues = {
             q: {},
             load() {},
@@ -61,14 +54,24 @@ xdescribe(Players.name, () => {
 
             setPlayIndex() {}
         };
-        _equalizers = {
-            createEQNodes() {}
+        
+        _volumeCalls = {
+            get() {
+                return Observable.create((observer) => {
+                    observer.next();
+                    observer.complete();
+                });
+            },
+
+            save() {}
         };
+        
         _AV = {
             Player: {
                 fromURL() {}
             }
         };
+        
         _avPlayer = {
             on() {},
 
@@ -81,20 +84,20 @@ xdescribe(Players.name, () => {
             togglePlayback() {}
         };
         
-        players = new Players(_http, _rootScope, _alerts, _emUtils, _queues, _equalizers);
+        players = new Players(_alerts, _emUtils, _equalizers, _queues, _volumeCalls);
         players.AV = _AV;
         players.avPlayer = _avPlayer;
-    }));
+    });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(Players.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(Players.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(Players.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(Players.parameters).toEqual(jasmine.any(Array));
         });
     });
     
@@ -263,15 +266,21 @@ xdescribe(Players.name, () => {
     });
     
     describe('playerProgressChanged', () => {
+        let _playerProgressChanges;
+        
+        beforeEach(() => {
+            _playerProgressChanges = jasmine.createSpyObj('playerProgressChanges', ['emit']);
+            players.playerProgressChanges = _playerProgressChanges;
+        });
+        
         it('updates the player progress percent', () => {
             players.playerProgressChanged({millis: 1000}, 75);
             expect(players.playerProgress).toEqual(7.5);
         });
         
         it('fires a player progress changed event', () => {
-            spyOn(_rootScope, '$broadcast').and.stub();
             players.playerProgressChanged({millis: 100}, 75);
-            expect(_rootScope.$broadcast).toHaveBeenCalledWith(players.playerProgressChangedEventName);
+            expect(_playerProgressChanges.emit).toHaveBeenCalledWith(75);
         });
     });
     
@@ -426,58 +435,48 @@ xdescribe(Players.name, () => {
     });
     
     describe('putVolume', () => {
-        let volumeDefer = null;
+        let saveObserver;
         
         beforeEach(() => {
-            volumeDefer = $q.defer();
-            spyOn(_http, 'put').and.returnValue(volumeDefer.promise);
+            spyOn(_volumeCalls, 'save').and.returnValue(Observable.create((observer) => saveObserver = observer));
             spyOn(_alerts, 'error').and.stub();
         });
         
-        it('makes an HTTP put request to set the volume', () => {
-            players.putVolume();
-            expect(_http.put).toHaveBeenCalled();
+        it('saves the volume', () => {
+            players.putVolume(17);
+            expect(_volumeCalls.save).toHaveBeenCalledWith(17);
         });
         
-        it('displays an error message when the volume fails to load', () => {
-            players.putVolume();
-            
-            volumeDefer.reject();
-            $rootScope.$apply();
-            
+        it('displays an error message when the volume save fails', () => {
+            players.putVolume(19);
+            saveObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
     describe('loadVolume', () => {
-        let volumeDefer = null;
+        let getObserver;
         
         beforeEach(() => {
-            volumeDefer = $q.defer();
-            spyOn(_http, 'get').and.returnValue(volumeDefer.promise);
+            spyOn(_volumeCalls, 'get').and.returnValue(Observable.create((observer) => getObserver = observer));
             spyOn(_alerts, 'error').and.stub();
         });
         
-        it('makes an HTTP get request to get the volume', () => {
+        it('gets the volume', () => {
             players.loadVolume();
-            expect(_http.get).toHaveBeenCalled();
+            expect(_volumeCalls.get).toHaveBeenCalled();
         });
         
         it('sets the volume when it is loaded successfully', () => {
             players.loadVolume();
-            
-            volumeDefer.resolve({data: 123});
-            $rootScope.$apply();
-            
+            getObserver.next(123);
+            getObserver.complete();
             expect(players.volume).toEqual(123);
         });
         
         it('displays an error message when the volume fails to load', () => {
             players.loadVolume();
-            
-            volumeDefer.reject();
-            $rootScope.$apply();
-            
+            getObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
         });
     });

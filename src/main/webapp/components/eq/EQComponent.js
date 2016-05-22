@@ -40,7 +40,7 @@ export class EQComponent {
     getEQNodes() {
         let nodes = null;
         
-        if(this.equalizers && this.equalizers.eq && this.equalizers.eq.nodes) {
+        if(this.equalizers.eq && this.equalizers.eq.nodes) {
             nodes = this.equalizers.eq.nodes;
             nodes.sort((a, b) => a.frequency - b.frequency);
         }

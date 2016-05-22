@@ -18,37 +18,104 @@
 
 import {LibraryComponent} from 'components/library/LibraryComponent';
 
-xdescribe(LibraryComponent.name, () => {
-    let ctrl = null;
+describe(LibraryComponent.name, () => {
+    let comp = null;
+    let _emUtils = null;
     let _libraries = null;
     let _queues = null;
-    let _emUtils = null;
     
     beforeEach(() => {
-        _libraries = {};
+        _libraries = {
+            getSongsForAlbum() {}
+        };
         _queues = {addLast: () => {}};
         _emUtils = {};
         
-        ctrl = new LibraryController(_libraries, _queues, _emUtils);
+        comp = new LibraryComponent(_emUtils, _libraries, _queues);
     });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(LibraryController.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(LibraryComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(LibraryController.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(LibraryComponent.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+    
+    describe('backToArtists', () => {
+        beforeEach(() => {
+            comp.artist = 'foo';
+            comp.album = 'bar';
+        });
+        
+        it('sets the artist to null', () => {
+            comp.backToArtists();
+            expect(comp.artist).toBeNull();
+        });
+        
+        it('sets the album to null', () => {
+            comp.backToArtists();
+            expect(comp.album).toBeNull();
+        });
+    });
+    
+    describe('backToAlbums', () => {
+        beforeEach(() => {
+            comp.album = 'bar';
+        });
+        
+        it('sets the album to null', () => {
+            comp.backToAlbums();
+            expect(comp.album).toBeNull();
         });
     });
     
     describe('addLast', () => {
         it('adds the song with the given ID to the end of the queue', () => {
             spyOn(_queues, 'addLast');
-            ctrl.addLast(17);
+            comp.addLast(17);
             expect(_queues.addLast).toHaveBeenCalledWith(17);
+        });
+    });
+    
+    describe('getSongs', () => {
+        let song1;
+        let song2;
+        let song3;
+        
+        beforeEach(() => {
+            song1 = {trackNumber: 1};
+            song2 = {trackNumber: 2};
+            song3 = {trackNumber: 3};
+            spyOn(_libraries, 'getSongsForAlbum').and.returnValue([song3, song2, song1]);
+        });
+        
+        it('returns the songs from the library', () => {
+            expect(comp.getSongs()).toContain(song3, song2, song1);
+        });
+        
+        it('sorts the songs when they exist', () => {
+            expect(comp.getSongs()).toEqual([song1, song2, song3]);
+        });
+    });
+    
+    describe('artistChanged', () => {
+        it('sets the artist', () => {
+            comp.artist = null;
+            comp.artistChanged('foo');
+            expect(comp.artist).toEqual('foo');
+        });
+    });
+    
+    describe('albumChanged', () => {
+        it('sets the album', () => {
+            comp.album = null;
+            comp.albumChanged('foo');
+            expect(comp.album).toEqual('foo');
         });
     });
 });

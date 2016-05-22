@@ -132,8 +132,8 @@ export class Equalizers {
     }
     
     save() {
-        return this.equalizerCalls.save().subscribe(
-            null,
+        return this.equalizerCalls.save(this.eq.id, this.eq).subscribe(
+            (eq) => this.eq = eq,
             (err) => this.alerts.error('An error occurred, and the equalizer could not be saved.', err)
         );
     }

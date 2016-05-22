@@ -55,7 +55,7 @@ export class QueueComponent {
     }
     
     isElementPlaying(elem) {
-        return elem && elem.playIndex === 0;
+        return !!elem && elem.playIndex === 0;
     }
 }
 

@@ -115,7 +115,7 @@
         "no-catch-shadow": ["error"],
         "no-delete-var": ["error"],
         "no-label-var": ["error"],
-        "no-restricted-globals": ["warn", "window", "document"],
+        "no-restricted-globals": ["warn", "document"],
         "no-shadow": ["warn"],
         "no-shadow-restricted-names": ["error"],
         "no-undef": ["error"],

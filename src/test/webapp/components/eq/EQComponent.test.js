@@ -18,8 +18,8 @@
 
 import {EQComponent} from 'components/eq/EQComponent';
 
-xdescribe(EQComponent.name, () => {
-    let ctrl = null;
+describe(EQComponent.name, () => {
+    let comp = null;
     let _equalizers = null;
     
     beforeEach(() => {
@@ -27,25 +27,46 @@ xdescribe(EQComponent.name, () => {
             updateNodeGain() {}
         };
         
-        ctrl = new EQController(_equalizers);
+        comp = new EQComponent(_equalizers);
     });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(EQController.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(EQComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(EQController.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(EQComponent.parameters).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('getEQ', () => {
-        it('returns the EQ', () => {
-            _equalizers.eq = {};
-            expect(ctrl.getEQ()).toBe(_equalizers.eq);
+    describe('getEQNodes', () => {
+        let node1;
+        let node2;
+        let node3;
+        
+        beforeEach(() => {
+            node1 = {frequency: 1};
+            node2 = {frequency: 2};
+            node3 = {frequency: 3};
+            _equalizers.eq = {
+                nodes: [node3, node2, node1]
+            };
+        });
+        
+        it('returns null when the EQ services does not have an EQ', () => {
+            _equalizers.eq = null;
+            expect(comp.getEQNodes()).toBeNull();
+        });
+        
+        it('returns the EQ nodes when they exist', () => {
+            expect(comp.getEQNodes()).toContain(node3, node2, node1);
+        });
+        
+        it('sorts the eq nodes by frequency', () => {
+            expect(comp.getEQNodes()).toEqual([node1, node2, node3]);
         });
     });
     
@@ -54,9 +75,9 @@ xdescribe(EQComponent.name, () => {
             spyOn(_equalizers, 'updateNodeGain').and.stub();
         });
         
-        it('updates the node\'s gain', () => {
+        it("updates the node's gain", () => {
             let node = {n: 'N'};
-            ctrl.nodeChanged(node);
+            comp.nodeChanged(node);
             expect(_equalizers.updateNodeGain).toHaveBeenCalledWith(node);
         });
     });

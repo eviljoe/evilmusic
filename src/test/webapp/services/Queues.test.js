@@ -16,49 +16,55 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// import angular from 'angular';
+import {Observable} from 'rxjs';
 import {Queues} from 'services/Queues';
 
-xdescribe(Queues.name, () => {
-    let queues = null;
-    let _alerts = null;
-    let _emUtils = null;
-    let _Queue = null;
-    let $q = null;
-    let $rootScope = null;
+describe(Queues.name, () => {
+    let queues;
+    let _alerts;
+    let _emUtils;
+    let _queueCalls;
     
-    beforeEach(angular.mock.inject((_$q_, _$rootScope_) => {
-        $q = _$q_;
-        $rootScope = _$rootScope_;
-        
+    beforeEach(() => {
         _alerts = {
             error() {}
         };
+
         _emUtils = {
             isNumber() {}
         };
-        _Queue = {
+
+        _queueCalls = {
             q: {},
+            
             get() {
-                return {
-                    $promise: $q.defer().promise,
-                    $setPlayIndex() {}
-                };
-            }
+                return Observable.create((observer) => {
+                    observer.next();
+                    observer.complete();
+                });
+            },
+
+            addLast() {},
+
+            remove() {},
+
+            clear() {},
+            
+            setPlayIndex() {}
         };
         
-        queues = new Queues(_alerts, _emUtils, _Queue);
-    }));
+        queues = new Queues(_alerts, _emUtils, _queueCalls);
+    });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(Queues.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(Queues.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(Queues.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(Queues.parameters).toEqual(jasmine.any(Array));
         });
     });
     
@@ -74,183 +80,133 @@ xdescribe(Queues.name, () => {
     });
     
     describe('load', () => {
-        let qDefer = null;
+        let getObserver;
         
         beforeEach(() => {
-            qDefer = $q.defer();
-            spyOn(_Queue, 'get').and.returnValue({
-                $promise: qDefer.promise
-            });
+            queues.q = {};
+            spyOn(_queueCalls, 'get').and.returnValue(Observable.create((observer) => getObserver = observer));
             spyOn(_alerts, 'error').and.stub();
         });
         
         it('loads a new queue when given true', () => {
             queues.load(true);
-            expect(_Queue.get).toHaveBeenCalledWith({id: 'default'});
+            expect(_queueCalls.get).toHaveBeenCalledWith('default');
         });
         
-        it('reloads the existing queu when given false', () => {
+        it('reloads the existing queue when given false', () => {
             queues.q.id = 7;
             queues.load(false);
-            expect(_Queue.get).toHaveBeenCalledWith({id: 7});
+            expect(_queueCalls.get).toHaveBeenCalledWith(7);
         });
         
-        it('reloads the existing queu when given undefined', () => {
+        it('reloads the existing queue when given undefined', () => {
             queues.q.id = 7;
             queues.load();
-            expect(_Queue.get).toHaveBeenCalledWith({id: 7});
+            expect(_queueCalls.get).toHaveBeenCalledWith(7);
+        });
+        
+        it('sets the queue when it loads successfully', () => {
+            queues.load(true);
+            
+            getObserver.next({foo: 'bar'});
+            getObserver.complete();
+            
+            expect(queues.q).toEqual({foo: 'bar'});
         });
         
         it('displays an error message if the queue failed to load', () => {
             queues.load(true);
-            qDefer.reject();
-            $rootScope.$apply();
+            getObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
     describe('addLast', () => {
-        let qDefer = null;
+        let addLastObserver;
         
         beforeEach(() => {
-            qDefer = $q.defer();
-            queues.q = {$promise: qDefer.promise};
-            spyOn(queues, 'addLastNow').and.stub();
-        });
-        
-        it('adds the song with the given ID once the queue has been resolved', () => {
-            queues.addLast(7);
-            qDefer.resolve();
-            $rootScope.$apply();
-            expect(queues.addLastNow).toHaveBeenCalledWith(7);
-        });
-    });
-    
-    describe('addLastNow', () => {
-        let qDefer = null;
-        
-        beforeEach(() => {
-            qDefer = $q.defer();
-            queues.q = {
-                $addLast() {}
-            };
-            spyOn(queues.q, '$addLast').and.returnValue(qDefer.promise);
+            queues.q = {id: 7};
+            spyOn(_queueCalls, 'addLast').and.returnValue(Observable.create((observer) => addLastObserver = observer));
             spyOn(_alerts, 'error').and.stub();
         });
         
-        it('adds the song with the given ID to the end of the queue', () => {
-            queues.q.id = 13;
-            queues.addLastNow(7);
-            
-            qDefer.resolve();
-            $rootScope.$apply();
-            
-            expect(queues.q.$addLast).toHaveBeenCalledWith({id: 13, songIDs: 7});
+        it('adds the song with the given ID to the queue', () => {
+            queues.addLast(123);
+            expect(_queueCalls.addLast).toHaveBeenCalledWith(7, 123);
         });
         
-        it('displays an error message if the song could not be added to the queue', () => {
-            queues.addLastNow(7);
+        it('sets the queue when the song is added successfully', () => {
+            queues.addLast(123);
             
-            qDefer.reject();
-            $rootScope.$apply();
+            addLastObserver.next({foo: 'bar'});
+            addLastObserver.complete();
             
+            expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('displays an error message if the add failed', () => {
+            queues.addLast(123);
+            addLastObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
     describe('remove', () => {
-        let qDefer = null;
+        let removeObserver;
         
         beforeEach(() => {
-            qDefer = $q.defer();
-            queues.q = {$promise: qDefer.promise};
-            spyOn(queues, 'removeNow').and.stub();
-        });
-        
-        it('removes the song with at the given queue index once the queue has been resolved', () => {
-            queues.remove(7);
-            qDefer.resolve();
-            $rootScope.$apply();
-            expect(queues.removeNow).toHaveBeenCalledWith(7);
-        });
-    });
-    
-    describe('removeNow', () => {
-        let qDefer = null;
-        
-        beforeEach(() => {
-            qDefer = $q.defer();
-            queues.q = {
-                $remove() {}
-            };
-            spyOn(queues.q, '$remove').and.returnValue(qDefer.promise);
+            queues.q = {id: 7};
+            spyOn(_queueCalls, 'remove').and.returnValue(Observable.create((observer) => removeObserver = observer));
             spyOn(_alerts, 'error').and.stub();
         });
         
-        it('removes the song at the given queue index', () => {
-            queues.q.id = 13;
-            queues.removeNow(7);
-            
-            qDefer.resolve();
-            $rootScope.$apply();
-            
-            expect(queues.q.$remove).toHaveBeenCalledWith({id: 13, qIndex: 7});
+        it('removes the song with the given ID from the queue', () => {
+            queues.remove(123);
+            expect(_queueCalls.remove).toHaveBeenCalledWith(7, 123);
         });
         
-        it('displays an error message if the song could not be removed from the queue', () => {
-            queues.removeNow(7);
+        it('sets the queue when the song is removed successfully', () => {
+            queues.remove(123);
             
-            qDefer.reject();
-            $rootScope.$apply();
+            removeObserver.next({foo: 'bar'});
+            removeObserver.complete();
             
+            expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('displays an error message if the remove failed', () => {
+            queues.remove(123);
+            removeObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
     describe('clear', () => {
-        let qDefer = null;
+        let clearObserver;
         
         beforeEach(() => {
-            qDefer = $q.defer();
-            queues.q = {$promise: qDefer.promise};
-            spyOn(queues, 'clearNow').and.stub();
-        });
-        
-        it('clears the queue once it has been resolved', () => {
-            queues.clear();
-            qDefer.resolve();
-            $rootScope.$apply();
-            expect(queues.clearNow).toHaveBeenCalled();
-        });
-    });
-    
-    describe('clearNow', () => {
-        let qDefer = null;
-        
-        beforeEach(() => {
-            qDefer = $q.defer();
-            queues.q = {
-                $clear() {}
-            };
-            spyOn(queues.q, '$clear').and.returnValue(qDefer.promise);
+            queues.q = {id: 7};
+            spyOn(_queueCalls, 'clear').and.returnValue(Observable.create((observer) => clearObserver = observer));
             spyOn(_alerts, 'error').and.stub();
         });
         
         it('clears the queue', () => {
-            queues.clearNow();
-            
-            qDefer.resolve();
-            $rootScope.$apply();
-            
-            expect(queues.q.$clear).toHaveBeenCalled();
+            queues.clear();
+            expect(_queueCalls.clear).toHaveBeenCalledWith(7);
         });
         
-        it('displays an error message if the queue could not be cleared', () => {
-            queues.clearNow();
+        it('sets the queue when the it is cleared successfully', () => {
+            queues.clear();
             
-            qDefer.reject();
-            $rootScope.$apply();
+            clearObserver.next({foo: 'bar'});
+            clearObserver.complete();
             
+            expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('displays an error message if the clear failed', () => {
+            queues.clear();
+            clearObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
         });
     });
@@ -308,8 +264,10 @@ xdescribe(Queues.name, () => {
     
     describe('getNextSongQueueIndex', () => {
         beforeEach(() => {
-            queues.q.playIndex = 1;
-            queues.q.elements = [{}, {}, {}];
+            queues.q = {
+                playIndex: 1,
+                elements: [{}, {}, {}]
+            };
         });
         
         it('returns the queues play index + 1', () => {
@@ -324,8 +282,10 @@ xdescribe(Queues.name, () => {
     
     describe('getPreviousSongQueueIndex', () => {
         beforeEach(() => {
-            queues.q.playIndex = 1;
-            queues.q.elements = [{}, {}, {}];
+            queues.q = {
+                playIndex: 1,
+                elements: [{}, {}, {}]
+            };
         });
         
         it('returns the queues play index - 1', () => {
@@ -339,26 +299,33 @@ xdescribe(Queues.name, () => {
     });
     
     describe('setPlayIndex', () => {
-        let piDefer = null;
+        let setPlayIndexObserver;
         
         beforeEach(() => {
-            piDefer = $q.defer();
-            spyOn(queues.q, '$setPlayIndex').and.returnValue(piDefer.promise);
+            queues.q = {id: 7};
+            spyOn(_queueCalls, 'setPlayIndex').and.returnValue(Observable.create((observer) => {
+                setPlayIndexObserver = observer;
+            }));
             spyOn(_alerts, 'error').and.stub();
         });
         
-        it('sets the play index on the queue', () => {
-            queues.q.id = 7;
-            queues.setPlayIndex(13);
-            expect(queues.q.$setPlayIndex).toHaveBeenCalledWith({id: 7, playIndex: 13});
+        it('sets play index on the queue', () => {
+            queues.setPlayIndex(123);
+            expect(_queueCalls.setPlayIndex).toHaveBeenCalledWith(7, 123);
         });
         
-        it('displays an error message if the play index cannot be set', () => {
-            queues.setPlayIndex(13);
+        it('sets the queue when the play index is set successfully', () => {
+            queues.setPlayIndex(123);
             
-            piDefer.reject();
-            $rootScope.$apply();
+            setPlayIndexObserver.next({foo: 'bar'});
+            setPlayIndexObserver.complete();
             
+            expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('displays an error message if the play index change failed', () => {
+            queues.setPlayIndex(123);
+            setPlayIndexObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
         });
     });

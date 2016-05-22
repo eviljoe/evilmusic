@@ -56,12 +56,14 @@ export class Libraries {
     /** Loads the contents of the library using a REST call. */
     load() {
         this.libraryCalls.get().subscribe(
-            (library) => {
-                this.library = library;
-                this.rebuildCache(library);
-            },
+            (library) => this._loaded(library),
             (err) => this.alerts.error('Could not get library.', err)
         );
+    }
+    
+    _loaded(library) {
+        this.library = library;
+        this.rebuildCache(library);
     }
     
     rebuildCache(lib) {
@@ -177,12 +179,14 @@ export class Libraries {
     */
     clear() {
         this.libraryCalls.clear().subscribe(
-            (data) => {
-                this.load();
-                this.queues.load(true);
-            },
+            (library) => this._cleared(library),
             (err) => this.alerts.error('Clear library failed.', err)
         );
+    }
+    
+    _cleared(library) {
+        this.library = library;
+        this.queues.load(true);
     }
     
     /**
@@ -192,12 +196,14 @@ export class Libraries {
     */
     rebuild() {
         this.libraryCalls.rebuild().subscribe(
-            (data) => {
-                this.load();
-                this.queues.load(true);
-            },
+            (library) => this._rebuilt(library),
             (err) => this.alerts.error('Library rebuilding failed.', err)
         );
+    }
+    
+    _rebuilt(library) {
+        this.library = library;
+        this.queues.load(true);
     }
 }
 

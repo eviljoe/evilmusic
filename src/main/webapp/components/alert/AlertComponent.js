@@ -18,12 +18,14 @@
 
 import {Component} from '@angular/core';
 import {Alerts} from 'services/Alerts';
+import {Modals} from 'services/Modals';
 
 export const ALERT_DIALOG_ELEMENT_ID = 'em-alert-dialog';
 
 export class AlertComponent {
-    constructor(alerts) {
+    constructor(alerts, modals) {
         this.alerts = alerts;
+        this.modals = modals;
         this.elemID = ALERT_DIALOG_ELEMENT_ID;
     }
     
@@ -35,7 +37,7 @@ export class AlertComponent {
     }
     
     static get parameters() {
-        return [Alerts];
+        return [Alerts, Modals];
     }
     
     get title() {

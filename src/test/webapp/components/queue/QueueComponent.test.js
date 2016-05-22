@@ -18,8 +18,8 @@
 
 import {QueueComponent} from 'components/queue/QueueComponent';
 
-xdescribe(QueueComponent.name, () => {
-    let ctrl = null;
+describe(QueueComponent.name, () => {
+    let comp = null;
     let _queues = null;
     let _players = null;
     
@@ -30,27 +30,23 @@ xdescribe(QueueComponent.name, () => {
 
             remove() {}
         };
+        
         _players = {
             play() {}
         };
-        ctrl = new QueueController(_queues, _players);
+        
+        comp = new QueueComponent(_players, _queues);
     });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(QueueController.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(QueueComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(QueueController.injectID).toEqual(jasmine.any(String));
-        });
-    });
-    
-    describe('getQueue', () => {
-        it('returns the queue', () => {
-            expect(ctrl.getQueue()).toBe(_queues.q);
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(QueueComponent.parameters).toEqual(jasmine.any(Array));
         });
     });
     
@@ -60,7 +56,7 @@ xdescribe(QueueComponent.name, () => {
         });
         
         it('clears the queue', () => {
-            ctrl.clear();
+            comp.clear();
             expect(_queues.clear).toHaveBeenCalled();
         });
     });
@@ -71,7 +67,7 @@ xdescribe(QueueComponent.name, () => {
         });
         
         it('plays the song at the given index', () => {
-            ctrl.play(7);
+            comp.play(7);
             expect(_players.play).toHaveBeenCalledWith(7);
         });
     });
@@ -82,8 +78,36 @@ xdescribe(QueueComponent.name, () => {
         });
         
         it('removes the song at the given index in the queue', () => {
-            ctrl.remove(7);
+            comp.remove(7);
             expect(_queues.remove).toHaveBeenCalledWith(7);
+        });
+    });
+    
+    describe('getQueueElements', () => {
+        it('returns null if the queue service has no queue', () => {
+            _queues.q = null;
+            expect(comp.getQueueElements()).toEqual(null);
+        });
+        
+        it("returns the queue's elements if the queue service has a queue", () => {
+            _queues.q = {
+                elements: ['foo', 'bar']
+            };
+            expect(comp.getQueueElements()).toEqual(['foo', 'bar']);
+        });
+    });
+    
+    describe('isElementPlaying', () => {
+        it('returns false if the given element is falsy', () => {
+            expect(comp.isElementPlaying()).toEqual(false);
+        });
+        
+        it("returns false if the given element's play index is not zero", () => {
+            expect(comp.isElementPlaying({playIndex: 1})).toEqual(false);
+        });
+        
+        it("returns true if the given element's play index is zero", () => {
+            expect(comp.isElementPlaying({playIndex: 0})).toEqual(true);
         });
     });
 });

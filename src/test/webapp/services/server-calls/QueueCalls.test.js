@@ -18,37 +18,17 @@
 
 import {QueueCalls} from 'services/server-calls/QueueCalls';
 
-xdescribe(QueueCalls.name, () => {
-    let factory = null;
-    
-    beforeEach(() => {
-        factory = new QueueResourceFactory();
-    });
-    
-    describe('resource', () => {
-        let _resource = null;
-        
-        beforeEach(() => {
-            _resource = jasmine.createSpy('$resource');
-        });
-        
-        it('defines injections', () => {
-            expect(factory.resource.$inject).toEqual(jasmine.any(Array));
-        });
-        
-        it('defines an injection ID', () => {
-            expect(factory.resource.injectID).toEqual(jasmine.any(String));
-        });
-        
-        it('creates a resource', () => {
-            factory.resource(_resource);
-            expect(_resource).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(Object), jasmine.any(Object));
+describe(QueueCalls.name, () => {
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(QueueCalls.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('emptyRequest', () => {
-        it('returns undefined', () => {
-            expect(QueueResourceFactory.emptyRequest()).toEqual(undefined);
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(QueueCalls.parameters).toEqual(jasmine.any(Array));
         });
     });
 });
+

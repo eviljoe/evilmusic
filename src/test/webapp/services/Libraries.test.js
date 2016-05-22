@@ -16,45 +16,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// import angular from 'angular';
+import {Observable} from 'rxjs';
 import {Libraries} from 'services/Libraries';
 
-xdescribe(Libraries.name, () => {
-    let libraries = null;
-    let _alerts = null;
-    let _queues = null;
-    let _Library = null;
-    let $q = null;
-    let $rootScope = null;
+describe(Libraries.name, () => {
+    let libraries;
+    let _alerts;
+    let _queues;
+    let _libraryCalls;
     
-    beforeEach(angular.mock.inject((_$q_, _$rootScope_) => {
-        $q = _$q_;
-        $rootScope = _$rootScope_;
-        
+    beforeEach(() => {
         _alerts = {
             error() {}
         };
+        
         _queues = {
             load() {}
         };
-        _Library = {
-            get: () => { // eslint-disable-line arrow-body-style
-                return {$promise: $q.defer().promise};
-            }
+        
+        _libraryCalls = {
+            get: () => {
+                return Observable.create((observer) => {
+                    observer.next({});
+                    observer.complete();
+                });
+            },
+            
+            clear() {},
+
+            rebuild() {}
         };
         
-        libraries = new Libraries(_alerts, _queues, _Library);
-    }));
+        libraries = new Libraries(_alerts, _libraryCalls, _queues);
+    });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(Libraries.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(Libraries.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(Libraries.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(Libraries.parameters).toEqual(jasmine.any(Array));
         });
     });
     
@@ -70,173 +74,146 @@ xdescribe(Libraries.name, () => {
     });
     
     describe('load', () => {
-        let libDefer = null;
+        let getObserver = null;
         
         beforeEach(() => {
-            libDefer = $q.defer();
-            spyOn(_Library, 'get').and.returnValue({
-                $promise: libDefer.promise
-            });
-            spyOn(libraries, 'rebuildCache').and.stub();
-        });
-        
-        it('creates and sets a library', () => {
-            libraries.library = null;
-            libraries.load();
-            expect(libraries.library).toBeDefined();
-            expect(libraries.library).not.toBeNull();
-        });
-        
-        it('rebuilds the cache when the library is successfully loaded', () => {
+            spyOn(_libraryCalls, 'get').and.returnValue(Observable.create((observer) => getObserver = observer));
+            spyOn(libraries, '_loaded').and.stub();
             spyOn(_alerts, 'error').and.stub();
-            
+        });
+        
+        it('loads the library', () => {
             libraries.load();
-            libDefer.resolve();
-            $rootScope.$apply();
+            expect(_libraryCalls.get).toHaveBeenCalled();
+        });
+        
+        it('updates the library if the load is successful', () => {
+            libraries.load();
             
-            expect(libraries.rebuildCache).toHaveBeenCalled();
+            getObserver.next({foo: 'bar'});
+            getObserver.complete();
+            
+            expect(libraries._loaded).toHaveBeenCalledWith({foo: 'bar'});
         });
         
         it('displays an error message if the library fails to load', () => {
-            spyOn(_alerts, 'error').and.stub();
-            
             libraries.load();
-            libDefer.reject();
-            $rootScope.$apply();
-            
+            getObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_loaded', () => {
+        beforeEach(() => {
+            spyOn(libraries, 'rebuildCache').and.stub();
+        });
+        
+        it('sets the library', () => {
+            libraries.library = null;
+            libraries._loaded({foo: 'bar'});
+            expect(libraries.library).toEqual({foo: 'bar'});
+        });
+        
+        it('rebuilds the cache', () => {
+            libraries.library = null;
+            libraries._loaded({foo: 'bar'});
+            expect(libraries.rebuildCache).toHaveBeenCalledWith({foo: 'bar'});
         });
     });
     
     describe('clear', () => {
-        let libDefer = null;
+        let clearObserver;
         
         beforeEach(() => {
-            libDefer = $q.defer();
-            libraries.library = {$promise: libDefer.promise};
-            spyOn(libraries, 'clearNow').and.stub();
+            spyOn(_alerts, 'error').and.stub();
+            spyOn(_libraryCalls, 'clear').and.returnValue(Observable.create((observer) => clearObserver = observer));
+            spyOn(libraries, '_cleared').and.stub();
         });
         
-        it('clears the library after it has been loaded', () => {
+        it('clears the library', () => {
             libraries.clear();
-            libDefer.resolve();
-            $rootScope.$apply();
-            expect(libraries.clearNow).toHaveBeenCalled();
+            expect(_libraryCalls.clear).toHaveBeenCalled();
+        });
+        
+        it('updates the library after it has been cleared', () => {
+            libraries.clear();
+            
+            clearObserver.next({foo: 'bar'});
+            clearObserver.complete();
+            
+            expect(libraries._cleared).toHaveBeenCalledWith({foo: 'bar'});
+        });
+        
+        it('displays an error message if the clear fails', () => {
+            libraries.clear();
+            clearObserver.error();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
-    describe('clearNow', () => {
-        let libDefer = null;
-        let _library = null;
-        
+    describe('_cleared', () => {
         beforeEach(() => {
-            libDefer = $q.defer();
-            _library = {$delete: () => {}};
-            
-            spyOn(_library, '$delete').and.returnValue(libDefer.promise);
-            spyOn(libraries, 'load').and.stub();
             spyOn(_queues, 'load').and.stub();
-            spyOn(_alerts, 'error').and.stub();
-            
-            libraries.library = _library;
         });
         
-        it('makes a call to delete the library', () => {
-            libraries.clearNow();
-            expect(_library.$delete).toHaveBeenCalled();
+        it('sets the library', () => {
+            libraries.library = null;
+            libraries._cleared({foo: 'bar'});
+            expect(libraries.library).toEqual({foo: 'bar'});
         });
         
-        it('reloads the library if the library was successfully cleared', () => {
-            libraries.clearNow();
-            
-            libDefer.resolve();
-            $rootScope.$apply();
-            
-            expect(libraries.load).toHaveBeenCalled();
-        });
-        
-        it('reloads the queue if the library was successfully cleared', () => {
-            libraries.clearNow();
-            
-            libDefer.resolve();
-            $rootScope.$apply();
-            
-            expect(_queues.load).toHaveBeenCalledWith(true);
-        });
-        
-        it('displays an error message if the library failed to clear', () => {
-            libraries.clearNow();
-            
-            libDefer.reject();
-            $rootScope.$apply();
-            
-            expect(_alerts.error).toHaveBeenCalled();
+        it('reloads the queue', () => {
+            libraries._cleared({foo: 'bar'});
+            expect(_queues.load).toHaveBeenCalled();
         });
     });
     
     describe('rebuild', () => {
-        let libDefer = null;
+        let rebuildObserver;
         
         beforeEach(() => {
-            libDefer = $q.defer();
-            libraries.library = {$promise: libDefer.promise};
-            spyOn(libraries, 'rebuildNow').and.stub();
+            spyOn(_alerts, 'error').and.stub();
+            spyOn(_libraryCalls, 'rebuild').and.returnValue(Observable.create((observer) => {
+                rebuildObserver = observer;
+            }));
+            spyOn(libraries, '_rebuilt').and.stub();
         });
         
-        it('rebuilds the library after it has been loaded', () => {
+        it('rebuilds the library', () => {
             libraries.rebuild();
-            libDefer.resolve();
-            $rootScope.$apply();
-            expect(libraries.rebuildNow).toHaveBeenCalled();
+            expect(_libraryCalls.rebuild).toHaveBeenCalled();
+        });
+        
+        it('updates the library after it has been rebuilt', () => {
+            libraries.rebuild();
+            
+            rebuildObserver.next({foo: 'bar'});
+            rebuildObserver.complete();
+            
+            expect(libraries._rebuilt).toHaveBeenCalledWith({foo: 'bar'});
+        });
+        
+        it('displays an error message if the rebuild fails', () => {
+            libraries.rebuild();
+            rebuildObserver.error();
+            expect(_alerts.error).toHaveBeenCalled();
         });
     });
     
-    describe('rebuildNow', () => {
-        let libDefer = null;
-        let _library = null;
-        
+    describe('_rebuilt', () => {
         beforeEach(() => {
-            libDefer = $q.defer();
-            _library = {$rebuild: () => {}};
-            
-            spyOn(_library, '$rebuild').and.returnValue(libDefer.promise);
-            spyOn(libraries, 'load').and.stub();
             spyOn(_queues, 'load').and.stub();
-            spyOn(_alerts, 'error').and.stub();
-            
-            libraries.library = _library;
         });
         
-        it('makes a call to rebuild the library', () => {
-            libraries.rebuildNow();
-            expect(_library.$rebuild).toHaveBeenCalled();
+        it('sets the library', () => {
+            libraries.library = null;
+            libraries._rebuilt({foo: 'bar'});
+            expect(libraries.library).toEqual({foo: 'bar'});
         });
         
-        it('reloads the library if the library was successfully rebuilt', () => {
-            libraries.rebuildNow();
-            
-            libDefer.resolve();
-            $rootScope.$apply();
-            
-            expect(libraries.load).toHaveBeenCalled();
-        });
-        
-        it('reloads the queue if the library was successfully rebuilt', () => {
-            libraries.rebuildNow();
-            
-            libDefer.resolve();
-            $rootScope.$apply();
-            
-            expect(_queues.load).toHaveBeenCalledWith(true);
-        });
-        
-        it('displays an error message if the library failed to rebuild', () => {
-            libraries.rebuildNow();
-            
-            libDefer.reject();
-            $rootScope.$apply();
-            
-            expect(_alerts.error).toHaveBeenCalled();
+        it('reloads the queue', () => {
+            libraries._rebuilt({foo: 'bar'});
+            expect(_queues.load).toHaveBeenCalled();
         });
     });
     

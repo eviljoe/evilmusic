@@ -16,47 +16,105 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AlertComponent} from 'components/alert/AlertComponent';
+import {AlertComponent, ALERT_DIALOG_ELEMENT_ID} from 'components/alert/AlertComponent';
 
-xdescribe(AlertComponent.name, () => {
-    let ctrl = null;
-    let _modalInstance = null;
+describe(AlertComponent.name, () => {
+    let comp;
+    let _alerts;
+    let _modals;
     
     beforeEach(() => {
-        _modalInstance = {
-            close() {},
-
-            dismiss() {}
+        _alerts = {
+            getAlertInfo() {}
         };
-        ctrl = new AlertController(_modalInstance);
+        
+        _modals = {
+            hide() {}
+        };
+        
+        comp = new AlertComponent(_alerts, _modals);
     });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(AlertController.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(AlertComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(AlertController.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(AlertComponent.parameters).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('buttonClicked', () => {
+    describe('title', () => {
         beforeEach(() => {
-            spyOn(_modalInstance, 'close').and.stub();
-            spyOn(_modalInstance, 'dismiss').and.stub();
+            spyOn(_alerts, 'getAlertInfo').and.returnValue({title: 'foo'});
         });
         
-        it('closes the modal with the given button\'s ID when given a button that gets resolved', () => {
-            ctrl.buttonClicked({id: 'closeme', resolve: true});
-            expect(_modalInstance.close).toHaveBeenCalledWith('closeme');
+        it('returns null when there is no alert info', () => {
+            _alerts.getAlertInfo.and.returnValue(null);
+            expect(comp.title).toEqual(null);
         });
         
-        it('dismisses the modal with the given button\'s ID when given a button that does not get resolved', () => {
-            ctrl.buttonClicked({id: 'dismissme', resolve: false});
-            expect(_modalInstance.dismiss).toHaveBeenCalledWith('dismissme');
+        it("returns the alert info's title", () => {
+            expect(comp.title).toEqual('foo');
+        });
+    });
+    
+    describe('message', () => {
+        beforeEach(() => {
+            spyOn(_alerts, 'getAlertInfo').and.returnValue({message: 'bar'});
+        });
+        
+        it('returns null when there is no alert info', () => {
+            _alerts.getAlertInfo.and.returnValue(null);
+            expect(comp.message).toEqual(null);
+        });
+        
+        it("returns the alert info's message", () => {
+            expect(comp.message).toEqual('bar');
+        });
+    });
+    
+    describe('debugInfo', () => {
+        beforeEach(() => {
+            spyOn(_alerts, 'getAlertInfo').and.returnValue({debugInfo: 'abc'});
+        });
+        
+        it('returns null when there is no alert info', () => {
+            _alerts.getAlertInfo.and.returnValue(null);
+            expect(comp.debugInfo).toEqual(null);
+        });
+        
+        it("returns the alert info's debug info", () => {
+            expect(comp.debugInfo).toEqual('abc');
+        });
+    });
+    
+    describe('buttons', () => {
+        beforeEach(() => {
+            spyOn(_alerts, 'getAlertInfo').and.returnValue({buttons: 'xyz'});
+        });
+        
+        it('returns null when there is no alert info', () => {
+            _alerts.getAlertInfo.and.returnValue(null);
+            expect(comp.buttons).toEqual(null);
+        });
+        
+        it("returns the alert info's buttons", () => {
+            expect(comp.buttons).toEqual('xyz');
+        });
+    });
+    
+    describe('close', () => {
+        beforeEach(() => {
+            spyOn(_modals, 'hide').and.stub();
+        });
+        
+        it('hides the dialog', () => {
+            comp.close();
+            expect(_modals.hide).toHaveBeenCalledWith(ALERT_DIALOG_ELEMENT_ID);
         });
     });
 });

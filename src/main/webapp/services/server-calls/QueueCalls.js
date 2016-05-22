@@ -32,11 +32,13 @@ export class QueueCalls {
         return [[Http]];
     }
     
+    // TODO ju
     get(id) {
         return this.http.get(`/rest/queue/${id}`)
             .map((res) => res.json());
     }
     
+    // TODO ju
     addLast(id, ...songIDs) {
         let queryParams = [];
         let queryParamsStr = '';
@@ -53,16 +55,19 @@ export class QueueCalls {
             .map((res) => res.json());
     }
     
+    // TODO ju
     remove(id, qIndex) {
         return this.http.delete(`/rest/queue/${id}/queueindex/${qIndex}`)
             .map((res) => res.json());
     }
     
+    // TODO ju
     clear(id) {
         return this.http.delete(`/rest/queue/${id}/elements`)
             .map((res) => res.json());
     }
     
+    // TODO ju
     setPlayIndex(id, playIndex) {
         return this.http.put(`/rest/queue/${id}/playindex/${playIndex}`)
             .map((res) => res.json());

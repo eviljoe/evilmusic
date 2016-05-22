@@ -62,6 +62,7 @@ export class LibraryComponent {
         this.queues.addLast(songID);
     }
     
+    // TODO instead of sorting here, try using a pipe to sort this stuff on the view.
     getSongs() {
         let songs = this.libraries.getSongsForAlbum(this.artist, this.album);
         

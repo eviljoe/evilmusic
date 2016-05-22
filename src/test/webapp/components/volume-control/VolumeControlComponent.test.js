@@ -18,7 +18,7 @@
 
 import {VolumeControlComponent} from 'components/volume-control/VolumeControlComponent';
 
-xdescribe(VolumeControlComponent.name, () => {
+describe(VolumeControlComponent.name, () => {
     let ctrl = null;
     let _players = null;
     
@@ -27,18 +27,18 @@ xdescribe(VolumeControlComponent.name, () => {
             setVolume() {}
         };
         
-        ctrl = new VolumeControlController(_players);
+        ctrl = new VolumeControlComponent(_players);
     });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(VolumeControlController.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(VolumeControlComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(VolumeControlController.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(VolumeControlComponent.parameters).toEqual(jasmine.any(Array));
         });
     });
     
@@ -47,7 +47,7 @@ xdescribe(VolumeControlComponent.name, () => {
             spyOn(_players, 'setVolume').and.stub();
         });
         
-        it('sets to volume to the player\'s volume', () => {
+        it("sets to volume to the player's volume", () => {
             _players.volume = 7;
             ctrl.volumeChanged();
             expect(_players.setVolume).toHaveBeenCalledWith(7);

@@ -42,6 +42,7 @@ export class EQDialogComponent {
         return [[Equalizers], [Modals]];
     }
     
+    // TODO this doesn't actually work
     save() {
         this.equalizers.save().then(() => {
             this.$modalInstance.close('save');

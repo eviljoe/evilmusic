@@ -17,39 +17,40 @@
  */
 
 import {EQButtonComponent} from 'components/eq/eq-button/EQButtonComponent';
+import {EQ_DIALOG_ELEMENT_ID} from 'components/eq/eq-dialog/EQDialogComponent';
 
-xdescribe(EQButtonComponent.name, () => {
-    let ctrl = null;
-    let _modal = null;
+describe(EQButtonComponent.name, () => {
+    let comp = null;
+    let _modals = null;
     
     beforeEach(() => {
-        _modal = {
-            open() {}
+        _modals = {
+            show() {}
         };
         
-        ctrl = new EQButtonController(_modal);
+        comp = new EQButtonComponent(_modals);
     });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(EQButtonController.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(EQButtonComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(EQButtonController.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(EQButtonComponent.parameters).toEqual(jasmine.any(Array));
         });
     });
     
     describe('openEQ', () => {
         beforeEach(() => {
-            spyOn(_modal, 'open').and.stub();
+            spyOn(_modals, 'show').and.stub();
         });
         
-        it('opens the modal dialog', () => {
-            ctrl.openEQ();
-            expect(_modal.open).toHaveBeenCalled();
+        it('shows the modal dialog', () => {
+            comp.openEQ();
+            expect(_modals.show).toHaveBeenCalledWith(EQ_DIALOG_ELEMENT_ID);
         });
     });
 });

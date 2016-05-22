@@ -68,16 +68,12 @@ export class ProgressBarComponent {
         return p;
     }
     
-    getCanvas() {
-        return this.canvas;
-    }
-    
     getContainerWidth() {
         return this.canvasContainer ? this.canvasContainer.clientWidth : 0;
     }
     
     draw() {
-        let canvas = this.getCanvas();
+        let canvas = this.canvas;
         let ctx = canvas.getContext('2d');
         let barWidth = Math.ceil(
             this.getPlayerProgress() / 100.0 * canvas.width); // eslint-disable-line no-magic-numbers

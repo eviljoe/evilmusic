@@ -32,15 +32,18 @@ export class LibraryCalls {
         return [[Http]];
     }
     
+    // TODO ju
     get() {
         return this.http.get('/rest/library')
             .map((res) => res.json());
     }
     
+    // TODO ju
     clear() {
         return this.http.delete('/rest/library');
     }
     
+    // TODO ju
     rebuild() {
         return this.http.post('/rest/library');
     }

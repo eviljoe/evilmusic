@@ -16,77 +16,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// import angular from 'angular';
-import {EQDialogComponent} from 'components/eq/eq-dialog/EQDialogComponent';
+import {EQDialogComponent, EQ_DIALOG_ELEMENT_ID} from 'components/eq/eq-dialog/EQDialogComponent';
 
-xdescribe(EQDialogComponent.name, () => {
-    let ctrl = null;
-    let _modalInstance = null;
+describe(EQDialogComponent.name, () => {
+    let comp = null;
     let _equalizers = null;
-    let $q = null;
-    let $rootScope = null;
+    let _modals = null;
     
-    beforeEach(angular.mock.inject((_$q_, _$rootScope_) => {
-        $q = _$q_;
-        $rootScope = _$rootScope_;
-        
-        _modalInstance = {
-            close() {},
-
-            dismiss() {}
-        };
+    beforeEach(() => {
         _equalizers = {
             reset() {},
 
             save() {}
         };
         
-        ctrl = new EQDialogController(_modalInstance, _equalizers);
-    }));
+        _modals = {
+            hide() {}
+        };
+        
+        comp = new EQDialogComponent(_equalizers, _modals);
+    });
     
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(EQDialogController.$inject).toEqual(jasmine.any(Array));
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(EQDialogComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(EQDialogController.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(EQDialogComponent.parameters).toEqual(jasmine.any(Array));
         });
     });
     
     describe('save', () => {
-        let saveDefer = null;
-        
-        beforeEach(() => {
-            saveDefer = $q.defer();
-            spyOn(_equalizers, 'save').and.returnValue(saveDefer.promise);
-            spyOn(_modalInstance, 'close').and.stub();
-        });
-        
-        it('saves the equalizer', () => {
-            ctrl.save();
-            expect(_equalizers.save).toHaveBeenCalled();
-        });
-        
-        it('closes the dialog if the save finishes successfully', () => {
-            ctrl.save();
-            
-            saveDefer.resolve();
-            $rootScope.$apply();
-            
-            expect(_modalInstance.close).toHaveBeenCalled();
-        });
-        
-        it('does not close the dialog if the save fails', () => {
-            ctrl.save();
-            
-            saveDefer.reject();
-            $rootScope.$apply();
-            
-            expect(_modalInstance.close).not.toHaveBeenCalled();
-        });
+        // TODO
     });
     
     describe('reset', () => {
@@ -95,19 +59,19 @@ xdescribe(EQDialogComponent.name, () => {
         });
         
         it('resets the equalizer', () => {
-            ctrl.reset();
+            comp.reset();
             expect(_equalizers.reset).toHaveBeenCalled();
         });
     });
     
     describe('close', () => {
         beforeEach(() => {
-            spyOn(_modalInstance, 'dismiss').and.stub();
+            spyOn(_modals, 'hide').and.stub();
         });
         
-        it('dismisses the dialog', () => {
-            ctrl.close();
-            expect(_modalInstance.dismiss).toHaveBeenCalledWith('close');
+        it('hides the dialog', () => {
+            comp.close();
+            expect(_modals.hide).toHaveBeenCalledWith(EQ_DIALOG_ELEMENT_ID);
         });
     });
 });

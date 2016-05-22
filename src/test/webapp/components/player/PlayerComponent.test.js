@@ -18,16 +18,16 @@
 
 import {PlayerComponent} from 'components/player/PlayerComponent';
 
-xdescribe(PlayerComponent.name, () => {
-    describe('$inject', () => {
-        it('defines injections', () => {
-            expect(PlayerController.$inject).toEqual(jasmine.any(Array));
+describe(PlayerComponent.name, () => {
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(PlayerComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
-    describe('injectID', () => {
-        it('defines an injection ID', () => {
-            expect(PlayerController.injectID).toEqual(jasmine.any(String));
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(PlayerComponent.parameters).toEqual(jasmine.any(Array));
         });
     });
 });
