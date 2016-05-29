@@ -16,15 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// HACK This is to make sure that bootstrap has access to jQuery.  This is only necessary until ng2-bootstrap adds
-// support for modals.  I can use ng2-bootstrap's modals, remove this.\
-window.jQuery = require('jquery'); // eslint-disable-line
-require('bootstrap/dist/js/bootstrap'); // eslint-disable-line
+import {Pipe} from '@angular/core';
+import {EMUtils} from 'services/emutils';
 
-import 'zone.js';
-import 'reflect-metadata';
-import 'rxjs';
-import {bootstrap} from '@angular/platform-browser-dynamic';
-import {EvilMusicComponent} from 'components/evilmusic/evilmusic.component';
+export class MinutesPipe {
+    constructor(emUtils) {
+        this.emUtils = emUtils;
+    }
+    
+    static get annotations() {
+        return [new Pipe({
+            name: 'minutes'
+        })];
+    }
+    
+    static get parameters() {
+        return [[EMUtils]];
+    }
+    
+    transform(hertz, ...args) {
+        return this.emUtils.millisecondsToString(hertz);
+    }
+}
 
-bootstrap(EvilMusicComponent);
+export default MinutesPipe;

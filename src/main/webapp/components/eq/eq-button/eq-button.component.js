@@ -16,15 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// HACK This is to make sure that bootstrap has access to jQuery.  This is only necessary until ng2-bootstrap adds
-// support for modals.  I can use ng2-bootstrap's modals, remove this.\
-window.jQuery = require('jquery'); // eslint-disable-line
-require('bootstrap/dist/js/bootstrap'); // eslint-disable-line
+import {Component} from '@angular/core';
+import {EQDialogComponent, EQ_DIALOG_ELEMENT_ID} from 'components/eq/eq-dialog/eq-dialog.component';
+import {Modals} from 'services/modals';
 
-import 'zone.js';
-import 'reflect-metadata';
-import 'rxjs';
-import {bootstrap} from '@angular/platform-browser-dynamic';
-import {EvilMusicComponent} from 'components/evilmusic/evilmusic.component';
+export class EQButtonComponent {
+    constructor(modals) {
+        this.modals = modals;
+    }
+    
+    static get annotations() {
+        return [new Component({
+            selector: 'em-eq-button',
+            templateUrl: 'components/eq/eq-button/eq-button.html',
+            directives: [EQDialogComponent]
+        })];
+    }
+    
+    static get parameters() {
+        return [[Modals]];
+    }
+    
+    openEQ() {
+        this.modals.show(EQ_DIALOG_ELEMENT_ID);
+    }
+}
 
-bootstrap(EvilMusicComponent);
+export default EQButtonComponent;

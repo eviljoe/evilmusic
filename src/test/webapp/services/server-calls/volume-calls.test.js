@@ -16,15 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// HACK This is to make sure that bootstrap has access to jQuery.  This is only necessary until ng2-bootstrap adds
-// support for modals.  I can use ng2-bootstrap's modals, remove this.\
-window.jQuery = require('jquery'); // eslint-disable-line
-require('bootstrap/dist/js/bootstrap'); // eslint-disable-line
+import {VolumeCalls} from 'services/server-calls/volume-calls';
 
-import 'zone.js';
-import 'reflect-metadata';
-import 'rxjs';
-import {bootstrap} from '@angular/platform-browser-dynamic';
-import {EvilMusicComponent} from 'components/evilmusic/evilmusic.component';
+describe(VolumeCalls.name, () => {
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(VolumeCalls.annotations).toEqual(jasmine.any(Array));
+        });
+    });
+    
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(VolumeCalls.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+});
 
-bootstrap(EvilMusicComponent);
