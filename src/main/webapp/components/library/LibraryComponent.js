@@ -22,6 +22,7 @@ import {EMUtils} from 'services/EMUtils';
 import {Libraries} from 'services/Libraries';
 import {LibraryAlbumsComponent} from './library-albums/LibraryAlbumsComponent';
 import {LibraryArtistsComponent} from './library-artists/LibraryArtistsComponent';
+import {LibraryBreadcrumbComponent} from './library-breadcrumb/LibraryBreadcrumbComponent';
 import {HertzPipe} from 'pipes/HertzPipe';
 import {MinutesPipe} from 'pipes/MinutesPipe';
 import {Queues} from 'services/Queues';
@@ -40,7 +41,7 @@ export class LibraryComponent {
         return [new Component({
             selector: 'em-library',
             templateUrl: 'components/library/library.html',
-            directives: [LibraryAlbumsComponent, LibraryArtistsComponent],
+            directives: [LibraryAlbumsComponent, LibraryArtistsComponent, LibraryBreadcrumbComponent],
             pipes: [HertzPipe, MinutesPipe]
         })];
     }

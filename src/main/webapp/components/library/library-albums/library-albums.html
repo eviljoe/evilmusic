@@ -16,4 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div *ngFor="let a of getAlbums()" (click)="albumClicked(a)">{{a}}</div>
+<div *ngFor="let a of getAlbums()">
+    <a (click)="albumClicked(a)" href="javascript:void(0)">{{a}}</a>
+</div>

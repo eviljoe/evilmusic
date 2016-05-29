@@ -25,17 +25,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <i class="fa fa-cubes"></i> rebuild
     </button>
 </div>
+<div>
+    <em-library-breadcrumb [artist]="artist" [album]="album"
+            (artistCleared)="backToArtists()" (albumCleared)="backToAlbums()"></em-library-breadcrumb>
+</div>
 <div [hidden]="artist">
     <library-artists [artist]="artist" (artistChanged)="artistChanged($event)"></library-artists>
 </div>
 <div [hidden]="!artist || album">
-    <!-- TODO replace this with a breadcrumb bar -->
-    <button class="btn btn-default btn-xs" (click)="backToArtists()">&lt; back</button>
     <library-albums [artist]="artist" [album]="album" (albumChanged)="albumChanged($event)"></library-albums>
 </div>
 <div [hidden]="!album">
-    <!-- TODO replace this with a breadcrumb bar -->
-    <button class="btn btn-default btn-xs" (click)="backToAlbums()">&lt; back</button>
     <table class="table table-striped table-condensed table-hover">
         <tr>
             <th align="right">ID</th>

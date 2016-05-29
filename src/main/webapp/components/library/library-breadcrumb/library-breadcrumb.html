@@ -16,6 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div *ngFor="let a of getArtists()">
-    <a (click)="artistClicked(a)" href="javascript:void(0)">{{a}}</a>
-</div>
+<ol class="breadcrumb">
+    <li>
+        <a [hidden]="isLibraryActive()" (click)="libraryClicked()" href="javascript:void(0)">Library</a>
+        <span [hidden]="!isLibraryActive()">Library</span>
+    </li>
+    
+    <li *ngIf="isArtistActive() || isAlbumActive()">
+        <a [hidden]="isArtistActive()" (click)="artistClicked()" href="javascript:void(0)">{{artist}}</a>
+        <span [hidden]="!isArtistActive()">{{artist}}</span>
+    </li>
+    
+    <li *ngIf="isAlbumActive()">{{album}}</li>
+</ol>
