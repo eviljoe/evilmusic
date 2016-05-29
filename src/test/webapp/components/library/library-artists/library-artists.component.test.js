@@ -42,20 +42,6 @@ describe(LibraryArtistsComponent.name, () => {
         });
     });
     
-    describe('getArtists', () => {
-        beforeEach(() => {
-            spyOn(_libraries, 'getArtists').and.returnValue(['c', 'b', 'a']);
-        });
-        
-        it('returns the artists from the library', () => {
-            expect(comp.getArtists()).toContain('c', 'b', 'a');
-        });
-        
-        it('sorts the artists when they exist', () => {
-            expect(comp.getArtists()).toEqual(['a', 'b', 'c']);
-        });
-    });
-    
     describe('artistClicked', () => {
         beforeEach(() => {
             comp.artistChanged = jasmine.createSpyObj('artistChanged', ['emit']);

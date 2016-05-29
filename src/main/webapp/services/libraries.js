@@ -98,62 +98,32 @@ export class Libraries {
     }
     
     /**
-     * Returns an array containing each unique artist in the library.  The array is not sorted.
+     * Returns a set containing each unique artist in the library.
      *
-     * HACK: The artists should be a Set instead of an Array, but AngularJS's ngRepeat doesn't seem to work when given a
-     * Set.  The internet seems to think this should work, so I think Babel might be breaking the functionality.  When
-     * EvilMusic is no longer using Babel, try using a Set again.
-     *
-     * @return {Array<string>} An array containing the unique artists in the library.
+     * @return {Set<string>} A set containing the unique artists in the library.
      */
     getArtists() {
-        let artists = [];
-        
-        this.cache.artists.forEach((artist) => artists.push(artist));
-        
-        return artists;
+        return new Set(this.cache.artists);
     }
     
     /**
-     * Returns an array containing each unique album for the given artist in the library.  The array is not sorted.
+     * Returns a set containing each unique album for the given artist in the library.
      *
-     * HACK: The albums should be a Set instead of an Array, but AngularJS's ngRepeat doesn't seem to work when given a
-     * Set.  The internet seems to think this should work, so I think Babel might be breaking the functionality.  When
-     * EvilMusic is no longer using Babel, try using a Set again.
-     *
-     * @return {Array<string>} An array containing the unique albums for the artist.  If the artist cannot be found, or
-     * has no albums, an empty array will be returned.
+     * @return {Set<string>} A set containing the unique albums for the artist.  If the artist cannot be found, or
+     * has no albums, an empty set will be returned.
      */
     getAlbumsForArtist(artist) {
-        let set = this.cache.albumsForArtists.get(artist);
-        let albums = [];
-        
-        if(set) {
-            set.forEach((album) => albums.push(album));
-        }
-        
-        return albums;
+        return new Set(this.cache.albumsForArtists.get(artist));
     }
     
     /**
-     * Returns an array containing each song for the given artist & album in the library.  The array is not sorted.
+     * Returns a set containing each song for the given artist & album in the library.
      *
-     * HACK: The songs should be a Set instead of an Array, but AngularJS's ngRepeat doesn't seem to work when given a
-     * Set.  The internet seems to think this should work, so I think Babel might be breaking the functionality.  When
-     * EvilMusic is no longer using Babel, try using a Set again.
-     *
-     * @return {Array<string>} An array containing the unique songs for the artist & album.  If the artist & album
-     * combination cannot be found, or has no songs, an empty array will be returned.
+     * @return {Set<string>} A set containing the unique songs for the artist & album.  If the artist & album
+     * combination cannot be found, or has no songs, an empty set will be returned.
      */
     getSongsForAlbum(artist, album) {
-        let set = this.cache.songsForAlbum.get(this.getSongKey(artist, album));
-        let songs = [];
-        
-        if(set) {
-            set.forEach((song) => songs.push(song));
-        }
-        
-        return songs;
+        return new Set(this.cache.songsForAlbum.get(this.getSongKey(artist, album)));
     }
     
     getSongKey(artist, album) {

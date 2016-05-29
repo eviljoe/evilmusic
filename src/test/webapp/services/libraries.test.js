@@ -326,9 +326,9 @@ describe(Libraries.name, () => {
     });
     
     describe('getArtists', () => {
-        it('adds each artist to an array', () => {
+        it('adds each artist to a set', () => {
             libraries.cache.artists = new Set(['a', 'b', 'c']);
-            expect(libraries.getArtists()).toEqual(['a', 'b', 'c']);
+            expect(libraries.getArtists()).toEqual(new Set(['a', 'b', 'c']));
         });
     });
     
@@ -339,16 +339,16 @@ describe(Libraries.name, () => {
             libraries.cache.albumsForArtists.set('artist_2', new Set());
         });
         
-        it('returns an empty array when the given artist has no albums', () => {
-            expect(libraries.getAlbumsForArtist('artist_2')).toEqual([]);
+        it('returns an empty set when the given artist has no albums', () => {
+            expect(libraries.getAlbumsForArtist('artist_2')).toEqual(new Set());
         });
         
-        it('returns an empty array when the given artist is not in the cache', () => {
-            expect(libraries.getAlbumsForArtist('asdf')).toEqual([]);
+        it('returns an empty set when the given artist is not in the cache', () => {
+            expect(libraries.getAlbumsForArtist('asdf')).toEqual(new Set());
         });
         
-        it('returns an array of albums for the given artist', () => {
-            expect(libraries.getAlbumsForArtist('artist_1')).toEqual(['a', 'b']);
+        it('returns a set of albums for the given artist', () => {
+            expect(libraries.getAlbumsForArtist('artist_1')).toEqual(new Set(['a', 'b']));
         });
     });
     
@@ -367,16 +367,16 @@ describe(Libraries.name, () => {
             spyOn(libraries, 'getSongKey').and.callFake((artist, album) => `${artist}_${album}`);
         });
         
-        it('returns an empty array when the given artist+album has no songs', () => {
-            expect(libraries.getSongsForAlbum('artist2', 'album2')).toEqual([]);
+        it('returns an empty Set() when the given artist+album has no songs', () => {
+            expect(libraries.getSongsForAlbum('artist2', 'album2')).toEqual(new Set());
         });
         
-        it('returns an empty array when the given artist+album is not in the cache', () => {
-            expect(libraries.getSongsForAlbum('asdf', 'jkl')).toEqual([]);
+        it('returns an empty Set() when the given artist+album is not in the cache', () => {
+            expect(libraries.getSongsForAlbum('asdf', 'jkl')).toEqual(new Set());
         });
         
-        it('returns an array of albums for the given artist+album', () => {
-            expect(libraries.getSongsForAlbum('artist1', 'album1')).toEqual([song1, song2]);
+        it('returns a set of albums for the given artist+album', () => {
+            expect(libraries.getSongsForAlbum('artist1', 'album1')).toEqual(new Set([song1, song2]));
         });
     });
     

@@ -19,6 +19,7 @@
 import {Component, EventEmitter} from '@angular/core';
 
 import {Libraries} from 'services/libraries';
+import {SortPipe} from 'pipes/sort.pipe';
 
 export class LibraryArtistsComponent {
     constructor(libraries) {
@@ -30,6 +31,7 @@ export class LibraryArtistsComponent {
         return [new Component({
             selector: 'library-artists',
             templateUrl: 'components/library/library-artists/library-artists.html',
+            pipes: [SortPipe],
             inputs: ['artist'],
             outputs: ['artistChanged']
         })];
@@ -37,17 +39,6 @@ export class LibraryArtistsComponent {
     
     static get parameters() {
         return [[Libraries]];
-    }
-    
-    // TODO instead of sorting here, try using a pipe to sort this stuff on the view.
-    getArtists() {
-        let artists = this.libraries.getArtists();
-        
-        if(artists) {
-            artists.sort();
-        }
-        
-        return artists;
     }
     
     artistClicked(artist) {

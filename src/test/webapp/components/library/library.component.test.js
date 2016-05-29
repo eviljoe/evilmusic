@@ -97,10 +97,6 @@ describe(LibraryComponent.name, () => {
         it('returns the songs from the library', () => {
             expect(comp.getSongs()).toContain(song3, song2, song1);
         });
-        
-        it('sorts the songs when they exist', () => {
-            expect(comp.getSongs()).toEqual([song1, song2, song3]);
-        });
     });
     
     describe('artistChanged', () => {

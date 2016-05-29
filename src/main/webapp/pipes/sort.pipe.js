@@ -16,38 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter} from '@angular/core';
+import _ from 'lodash';
+import {Pipe} from '@angular/core';
 
-import {Libraries} from 'services/libraries';
-import {SortPipe} from 'pipes/sort.pipe';
-
-export class LibraryAlbumsComponent {
-    constructor(libraries) {
-        this.libraries = libraries;
-        this.albumChanged = new EventEmitter();
-    }
-    
+export class SortPipe {
     static get annotations() {
-        return [new Component({
-            selector: 'library-albums',
-            templateUrl: 'components/library/library-albums/library-albums.html',
-            pipes: [SortPipe],
-            inputs: ['artist', 'album'],
-            outputs: ['albumChanged']
+        return [new Pipe({
+            name: 'sort'
         })];
     }
-    
+ 
     static get parameters() {
-        return [[Libraries]];
+        return [];
     }
-    
-    getAlbums() {
-        return this.libraries.getAlbumsForArtist(this.artist);
-    }
-    
-    albumClicked(album) {
-        this.albumChanged.emit(album);
+ 
+    transform(collection, key) {
+        if(collection && !Array.isArray(collection)) {
+            collection = Array.from(collection);
+        }
+        
+        return _.sortBy(collection, key);
     }
 }
 
-export default LibraryAlbumsComponent;
+export default SortPipe;

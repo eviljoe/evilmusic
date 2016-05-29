@@ -50,10 +50,6 @@ describe(LibraryAlbumsComponent.name, () => {
         it('returns the albums from the library', () => {
             expect(comp.getAlbums()).toContain('c', 'b', 'a');
         });
-        
-        it('sorts the albums when they exist', () => {
-            expect(comp.getAlbums()).toEqual(['a', 'b', 'c']);
-        });
     });
     
     describe('albumClicked', () => {

@@ -24,6 +24,7 @@ import {LibraryBreadcrumbComponent} from './library-breadcrumb/library-breadcrum
 
 import {HertzPipe} from 'pipes/hertz.pipe';
 import {MinutesPipe} from 'pipes/minutes.pipe';
+import {SortPipe} from 'pipes/sort.pipe';
 
 import {EMUtils} from 'services/emutils';
 import {Libraries} from 'services/libraries';
@@ -44,7 +45,7 @@ export class LibraryComponent {
             selector: 'em-library',
             templateUrl: 'components/library/library.html',
             directives: [LibraryAlbumsComponent, LibraryArtistsComponent, LibraryBreadcrumbComponent],
-            pipes: [HertzPipe, MinutesPipe]
+            pipes: [HertzPipe, MinutesPipe, SortPipe]
         })];
     }
     
@@ -65,15 +66,8 @@ export class LibraryComponent {
         this.queues.addLast(songID);
     }
     
-    // TODO instead of sorting here, try using a pipe to sort this stuff on the view.
     getSongs() {
-        let songs = this.libraries.getSongsForAlbum(this.artist, this.album);
-        
-        if(songs) {
-            songs.sort((a, b) => a.trackNumber - b.trackNumber);
-        }
-        
-        return songs;
+        return this.libraries.getSongsForAlbum(this.artist, this.album);
     }
     
     artistChanged(newArtist) {

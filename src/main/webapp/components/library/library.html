@@ -48,7 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <th align="right">Sample Count</th>
             <th align="left">Controls</th>
         </tr>
-        <tr *ngFor="let s of getSongs()">
+        <tr *ngFor="let s of getSongs() | sort : 'trackNumber'">
             <td align="right">{{s.id}}</td>
             <td align="left">{{s.artist}}</td>
             <td align="left">{{s.album}}</td>
