@@ -202,6 +202,7 @@ describe(Libraries.name, () => {
     
     describe('_rebuilt', () => {
         beforeEach(() => {
+            spyOn(libraries, 'rebuildCache').and.stub();
             spyOn(_queues, 'load').and.stub();
         });
         
@@ -214,6 +215,11 @@ describe(Libraries.name, () => {
         it('reloads the queue', () => {
             libraries._rebuilt({foo: 'bar'});
             expect(_queues.load).toHaveBeenCalled();
+        });
+        
+        it('rebuilds the library cache', () => {
+            libraries._rebuilt({foo: 'bar'});
+            expect(libraries.rebuildCache).toHaveBeenCalled();
         });
     });
     

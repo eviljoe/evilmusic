@@ -40,12 +40,14 @@ export class LibraryCalls {
     
     // TODO ju
     clear() {
-        return this.http.delete('/rest/library');
+        return this.http.delete('/rest/library')
+            .map((res) => res.json());
     }
     
     // TODO ju
     rebuild() {
-        return this.http.post('/rest/library');
+        return this.http.post('/rest/library')
+            .map((res) => res.json());
     }
 }
 

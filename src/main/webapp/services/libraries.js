@@ -174,6 +174,7 @@ export class Libraries {
     _rebuilt(library) {
         this.library = library;
         this.queues.load(true);
+        this.rebuildCache(this.library);
     }
 }
 
