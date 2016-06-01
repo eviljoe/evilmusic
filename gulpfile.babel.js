@@ -62,7 +62,6 @@ const THIRD_PARTY_LIBS = [
     'babelify',
     'bootstrap',
     'es6-shim',
-    'jquery',
     'lodash',
     'ng2-bootstrap',
     'reflect-metadata',

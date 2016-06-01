@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {Component, ViewContainerRef} from '@angular/core';
 import {HTTP_PROVIDERS} from '@angular/http';
+import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {AlertComponent} from 'components/alert/alert.component';
 import {LibraryComponent} from 'components/library/library.component';
@@ -29,7 +30,6 @@ import {Alerts} from 'services/alerts';
 import {EMUtils} from 'services/emutils';
 import {Equalizers} from 'services/equalizers';
 import {Libraries} from 'services/libraries';
-import {Modals} from 'services/modals';
 import {Players} from 'services/players';
 import {Queues} from 'services/queues';
 
@@ -39,25 +39,30 @@ import {QueueCalls} from 'services/server-calls/queue-calls';
 import {VolumeCalls} from 'services/server-calls/volume-calls';
 
 export class EvilMusicComponent {
+    constructor(viewContainerRef) {
+        this.viewContainerRef = viewContainerRef; // This is necessary for ng2-bootstrap modals.
+    }
+    
     static get annotations() {
         return [new Component({
             selector: 'evil-music',
             templateUrl: 'components/evilmusic/evilmusic.html',
             providers: [HTTP_PROVIDERS],
             viewProviders: [
+                BS_VIEW_PROVIDERS,
                 Alerts,
                 EMUtils,
                 EqualizerCalls,
                 Equalizers,
                 Libraries,
                 LibraryCalls,
-                Modals,
                 Players,
                 QueueCalls,
                 Queues,
                 VolumeCalls
             ],
             directives: [
+                MODAL_DIRECTVES,
                 AlertComponent,
                 LibraryComponent,
                 PlayerComponent,
@@ -65,6 +70,10 @@ export class EvilMusicComponent {
                 QueueComponent
             ]
         })];
+    }
+    
+    static get parameters() {
+        return [[ViewContainerRef]];
     }
 }
 

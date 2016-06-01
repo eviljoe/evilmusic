@@ -16,29 +16,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
-import {EQDialogComponent, EQ_DIALOG_ELEMENT_ID} from 'components/eq/eq-dialog/eq-dialog.component';
-import {Modals} from 'services/modals';
+import {Component, ViewChild} from '@angular/core';
+import {MODAL_DIRECTVES} from 'ng2-bootstrap/ng2-bootstrap';
+
+import {EQComponent} from 'components/eq/eq.component';
+
+import {Equalizers} from 'services/equalizers';
 
 export class EQButtonComponent {
-    constructor(modals) {
-        this.modals = modals;
+    constructor(equalizers) {
+        this.equalizers = equalizers;
     }
     
     static get annotations() {
         return [new Component({
             selector: 'em-eq-button',
             templateUrl: 'components/eq/eq-button/eq-button.html',
-            directives: [EQDialogComponent]
+            directives: [MODAL_DIRECTVES, EQComponent],
+            queries: {
+                eqDialog: new ViewChild('eqDialog')
+            }
         })];
     }
     
     static get parameters() {
-        return [[Modals]];
+        return [[Equalizers]];
     }
     
-    openEQ() {
-        this.modals.show(EQ_DIALOG_ELEMENT_ID);
+    open() {
+        this.eqDialog.show();
+    }
+    
+    close() {
+        this.eqDialog.hide();
+    }
+    
+    save() { // JOE ju
+        this.equalizers.save().subscribe(() => this.close());
+    }
+    
+    reset() {
+        this.equalizers.reset();
     }
 }
 

@@ -132,10 +132,14 @@ export class Equalizers {
     }
     
     save() {
-        return this.equalizerCalls.save(this.eq.id, this.eq).subscribe(
+        let ob = this.equalizerCalls.save(this.eq.id, this.eq);
+        
+        ob.subscribe(
             (eq) => this.eq = eq,
             (err) => this.alerts.error('An error occurred, and the equalizer could not be saved.', err)
         );
+        
+        return ob;
     }
     
     reset() {

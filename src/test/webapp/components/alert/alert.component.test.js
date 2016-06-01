@@ -16,23 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AlertComponent, ALERT_DIALOG_ELEMENT_ID} from 'components/alert/alert.component';
+import {AlertComponent} from 'components/alert/alert.component';
 
 describe(AlertComponent.name, () => {
     let comp;
     let _alerts;
-    let _modals;
     
     beforeEach(() => {
         _alerts = {
-            getAlertInfo() {}
-        };
-        
-        _modals = {
+            getAlertInfo() {},
+
             hide() {}
         };
         
-        comp = new AlertComponent(_alerts, _modals);
+        comp = new AlertComponent(_alerts);
     });
     
     describe('annotations', () => {
@@ -44,6 +41,14 @@ describe(AlertComponent.name, () => {
     describe('parameters', () => {
         it('returns an array', () => {
             expect(AlertComponent.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+    
+    describe('ngAfterViewInit', () => {
+        it('sets the modal element on the alerts service', () => {
+            comp.alertDialog = {foo: 'bar'};
+            comp.ngAfterViewInit();
+            expect(_alerts.modalElement).toEqual({foo: 'bar'});
         });
     });
     
@@ -109,12 +114,12 @@ describe(AlertComponent.name, () => {
     
     describe('close', () => {
         beforeEach(() => {
-            spyOn(_modals, 'hide').and.stub();
+            spyOn(_alerts, 'hide').and.stub();
         });
         
-        it('hides the dialog', () => {
+        it('hides the alert', () => {
             comp.close();
-            expect(_modals.hide).toHaveBeenCalledWith(ALERT_DIALOG_ELEMENT_ID);
+            expect(_alerts.hide).toHaveBeenCalled();
         });
     });
 });

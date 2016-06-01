@@ -24,4 +24,10 @@ describe(EvilMusicComponent.name, () => {
             expect(EvilMusicComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
+    
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(EvilMusicComponent.parameters).toEqual(jasmine.any(Array));
+        });
+    });
 });

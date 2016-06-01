@@ -17,12 +17,10 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ALERT_DIALOG_ELEMENT_ID} from 'components/alert/alert.component';
-import {Modals} from './modals';
 
 export class Alerts {
-    constructor(modals) {
-        this.modals = modals;
+    constructor() {
+        this.modalElement = null;
     }
     
     static get annotations() {
@@ -30,16 +28,24 @@ export class Alerts {
     }
     
     static get parameters() {
-        return [[Modals]];
+        return [];
     }
     
     getAlertInfo() {
         return this.alertInfo;
     }
     
+    _show() { // JOE ju
+        this.modalElement.show();
+    }
+    
+    hide() { // JOE ju
+        this.modalElement.hide();
+    }
+    
     error(msg, data) {
         this.alertInfo = new AlertInfo('Error', msg, data, [this.okButton()]);
-        this.modals.show(ALERT_DIALOG_ELEMENT_ID);
+        this._show(); // JOE ju
     }
     
     okButton(primary=true, resolve=true) {

@@ -20,14 +20,9 @@ import {Alerts, AlertButton} from 'services/alerts';
 
 describe(Alerts.name, () => {
     let alerts = null;
-    let _modals = null;
     
     beforeEach(() => {
-        _modals = {
-            show() {}
-        };
-        
-        alerts = new Alerts(_modals);
+        alerts = new Alerts();
     });
     
     describe('annotations', () => {
@@ -42,10 +37,38 @@ describe(Alerts.name, () => {
         });
     });
     
+    describe('_show', () => {
+        let _modalElement;
+        
+        beforeEach(() => {
+            _modalElement = jasmine.createSpyObj('modalElement', ['show']);
+            alerts.modalElement = _modalElement;
+        });
+        
+        it('shows the alert dialog', () => {
+            alerts._show();
+            expect(_modalElement.show).toHaveBeenCalled();
+        });
+    });
+    
+    describe('hide', () => {
+        let _modalElement;
+        
+        beforeEach(() => {
+            _modalElement = jasmine.createSpyObj('modalElement', ['hide']);
+            alerts.modalElement = _modalElement;
+        });
+        
+        it('hides the alert dialog', () => {
+            alerts.hide();
+            expect(_modalElement.hide).toHaveBeenCalled();
+        });
+    });
+    
     describe('error', () => {
         beforeEach(() => {
             spyOn(alerts, 'okButton').and.stub();
-            spyOn(_modals, 'show').and.stub();
+            spyOn(alerts, '_show').and.stub();
         });
         
         it('sets the alert info', () => {
@@ -59,9 +82,9 @@ describe(Alerts.name, () => {
             expect(alerts.okButton).toHaveBeenCalled();
         });
         
-        it('opens a modal dialog', () => {
+        it('shows the error dialog', () => {
             alerts.error();
-            expect(_modals.show).toHaveBeenCalled();
+            expect(alerts._show).toHaveBeenCalled();
         });
     });
     

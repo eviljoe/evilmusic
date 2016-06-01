@@ -16,28 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
-import {Alerts} from 'services/alerts';
-import {Modals} from 'services/modals';
+import {Component, ViewChild} from '@angular/core';
+import {MODAL_DIRECTVES} from 'ng2-bootstrap/ng2-bootstrap';
 
-export const ALERT_DIALOG_ELEMENT_ID = 'em-alert-dialog';
+import {Alerts} from 'services/alerts';
 
 export class AlertComponent {
-    constructor(alerts, modals) {
+    constructor(alerts) {
         this.alerts = alerts;
-        this.modals = modals;
-        this.elemID = ALERT_DIALOG_ELEMENT_ID;
     }
     
     static get annotations() {
         return [new Component({
             selector: 'em-alert',
-            templateUrl: 'components/alert/alert.html'
+            templateUrl: 'components/alert/alert.html',
+            directives: [MODAL_DIRECTVES],
+            queries: {
+                alertDialog: new ViewChild('alertDialog')
+            }
         })];
     }
     
     static get parameters() {
-        return [Alerts, Modals];
+        return [Alerts];
+    }
+    
+    ngAfterViewInit() {
+        this.alerts.modalElement = this.alertDialog;
     }
     
     get title() {
@@ -65,7 +70,7 @@ export class AlertComponent {
     }
     
     close() {
-        this.modals.hide(ALERT_DIALOG_ELEMENT_ID);
+        this.alerts.hide();
     }
 }
 
