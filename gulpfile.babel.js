@@ -276,8 +276,6 @@ function verifyFilesExist(files) {
 }
 
 function failOnESLintWarning(results) {
-    console.log('asdf');
-    
     if(STRICT_LINT && results.warningCount > 0) {
         throw new Error(`ESLintWarning: Failed with ${results.warningCount} warning`);
     }
