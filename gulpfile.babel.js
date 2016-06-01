@@ -30,7 +30,7 @@ import runSeq from 'run-sequence';
 import source from 'vinyl-source-stream';
 
 /* ********* */
-/* Variables */
+/* Constants */
 /* ********* */
 
 const WEB_SRC_DIR = './src/main/webapp';
@@ -42,7 +42,6 @@ const FONTS_DEST_DIR = `${DEST_DIR}/fonts`;
 const JS_FILES_TO_LINT = [
     `${WEB_SRC_DIR}/**/*.js`,
     `${WEB_TEST_SRC_DIR}/**/*.js`,
-    '.package.json',
     'gulpfile*.js',
     `!${WEB_SRC_DIR}/assets/**`,
     `!${WEB_SRC_DIR}/dist/**`
@@ -103,6 +102,12 @@ const WATCH_DIRS = [
     `${WEB_SRC_DIR}/index.js`
 ];
 
+/* ******************** */
+/* Command Line Options */
+/* ******************** */
+
+const STRICT_LINT = process.argv.indexOf('--strict-lint') > -1; // eslint-disable-line no-undef
+
 /* ******** */
 /* Cleaning */
 /* ******** */
@@ -119,7 +124,8 @@ gulp.task('lint-js-eslint', () => {
     return gulp.src(JS_FILES_TO_LINT)
     .pipe(eslint())
     .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
+    .pipe(eslint.failAfterError())
+    .pipe(eslint.results(failOnESLintWarning));
 });
 
 gulp.task('lint-js-jscs', () => {
@@ -255,9 +261,9 @@ gulp.task('test', () => {
 
 gulp.task('default', ['build']);
 
-/* ********* */
-/* Functions */
-/* ********* */
+/* ***************** */
+/* Utility Functions */
+/* ***************** */
 
 function verifyFilesExist(files) {
     _.forEach(files, (file) => {
@@ -267,4 +273,12 @@ function verifyFilesExist(files) {
             }
         });
     });
+}
+
+function failOnESLintWarning(results) {
+    console.log('asdf');
+    
+    if(STRICT_LINT && results.warningCount > 0) {
+        throw new Error(`ESLintWarning: Failed with ${results.warningCount} warning`);
+    }
 }
