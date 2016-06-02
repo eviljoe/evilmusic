@@ -16,15 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 
 import {Players} from 'services/players';
 import {Queues} from 'services/queues';
 
 export class QueueComponent {
-    constructor(players, queues) {
+    constructor(changeDetector, players, queues) {
+        this.changeDetector = changeDetector;
         this.players = players;
         this.queues = queues;
+        
+        this.init();
     }
     
     static get annotations() {
@@ -35,7 +38,13 @@ export class QueueComponent {
     }
     
     static get parameters() {
-        return [[Players], [Queues]];
+        return [[ChangeDetectorRef], [Players], [Queues]];
+    }
+    
+    init() {
+        this.queues.playIndexChanges.subscribe(() => {
+            this.changeDetector.detectChanges();
+        });
     }
     
     clear() {

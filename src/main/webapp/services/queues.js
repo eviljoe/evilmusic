@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import _ from 'lodash';
 
 import {Alerts} from './alerts';
@@ -29,6 +29,8 @@ export class Queues {
         this.emUtils = emUtils;
         this.queueCalls = queueCalls;
         this.q = null;
+        
+        this.playIndexChanges = new EventEmitter();
         
         this.init();
     }
@@ -142,9 +144,14 @@ export class Queues {
     
     setPlayIndex(playIndex) {
         this.queueCalls.setPlayIndex(this.q.id, playIndex).subscribe(
-            (queue) => this.q = queue,
+            (queue) => this._playIndexChanged(playIndex, queue),
             (err) => this.alerts.error('Failed to set the play index.', err)
         );
+    }
+    
+    _playIndexChanged(playIndex, queue) {
+        this.q = queue;
+        this.playIndexChanges.emit(playIndex);
     }
 }
 

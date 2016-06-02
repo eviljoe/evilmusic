@@ -16,16 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Observable} from 'rxjs';
+
 import {QueueComponent} from 'components/queue/queue.component';
 
 describe(QueueComponent.name, () => {
-    let comp = null;
-    let _queues = null;
-    let _players = null;
+    let comp;
+    let _changeDetector;
+    let _queues;
+    let _players;
     
     beforeEach(() => {
+        _changeDetector = {
+            detectChanges() {}
+        };
+        
         _queues = {
+            playIndexChanges: Observable.create(() => {}),
+            
             q: {},
+            
             clear() {},
 
             remove() {}
@@ -35,7 +45,7 @@ describe(QueueComponent.name, () => {
             play() {}
         };
         
-        comp = new QueueComponent(_players, _queues);
+        comp = new QueueComponent(_changeDetector, _players, _queues);
     });
     
     describe('annotations', () => {
@@ -47,6 +57,24 @@ describe(QueueComponent.name, () => {
     describe('parameters', () => {
         it('returns an array', () => {
             expect(QueueComponent.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+    
+    describe('init', () => {
+        let playIndexObserver;
+        
+        beforeEach(() => {
+            spyOn(_changeDetector, 'detectChanges').and.stub();
+            _queues.playIndexChanges = Observable.create((observer) => playIndexObserver = observer);
+        });
+        
+        it('runs the change detection on play index changes', () => {
+            comp.init();
+            
+            playIndexObserver.next();
+            playIndexObserver.complete();
+            
+            expect(_changeDetector.detectChanges).toHaveBeenCalled();
         });
     });
     

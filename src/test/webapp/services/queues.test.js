@@ -303,6 +303,7 @@ describe(Queues.name, () => {
         
         beforeEach(() => {
             queues.q = {id: 7};
+            spyOn(queues, '_playIndexChanged').and.stub();
             spyOn(_queueCalls, 'setPlayIndex').and.returnValue(Observable.create((observer) => {
                 setPlayIndexObserver = observer;
             }));
@@ -314,19 +315,35 @@ describe(Queues.name, () => {
             expect(_queueCalls.setPlayIndex).toHaveBeenCalledWith(7, 123);
         });
         
-        it('sets the queue when the play index is set successfully', () => {
+        it('updates the queue on success', () => {
             queues.setPlayIndex(123);
             
             setPlayIndexObserver.next({foo: 'bar'});
             setPlayIndexObserver.complete();
             
-            expect(queues.q).toEqual({foo: 'bar'});
+            expect(queues._playIndexChanged).toHaveBeenCalled();
         });
         
         it('displays an error message if the play index change failed', () => {
             queues.setPlayIndex(123);
             setPlayIndexObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_playIndexChanged', () => {
+        beforeEach(() => {
+            queues.playIndexChanges = jasmine.createSpyObj('playIndexChanges', ['emit']);
+        });
+        
+        it('sets the queue', () => {
+            queues._playIndexChanged(123, {foo: 'bar'});
+            expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('emits a play index change event', () => {
+            queues._playIndexChanged(123, {foo: 'bar'});
+            expect(queues.playIndexChanges.emit).toHaveBeenCalled();
         });
     });
 });
