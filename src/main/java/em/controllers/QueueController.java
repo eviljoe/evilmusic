@@ -1,13 +1,13 @@
 /*
  * EvilMusic - Web-Based Music Player Copyright (C) 2015 Joe Falascino
- *
+ * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
- *
+ * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
@@ -138,11 +138,11 @@ public class QueueController {
         return qDAO.save(q);
     }
     
-    // TODO The name of the "songIDs" parameter should be renamed to "songID."  This is because the URL will look like
+    // TODO The name of the "songIDs" parameter should be renamed to "songID." This is because the URL will look like
     // this:
-    //     .../last?songID=123&songID=456&songID=789
+    // .../last?songID=123&songID=456&songID=789
     // It does not look like this:
-    //     .../last?songIDs=123,456,789
+    // .../last?songIDs=123,456,789
     @Transactional
     @RequestMapping(value = "/rest/queue/{queueID}/last", method = RequestMethod.PUT)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -177,10 +177,17 @@ public class QueueController {
         return q;
     }
     
+    private Response getSongStream(HttpServletResponse response, int qID, int qIndex, boolean head) throws IOException {
+        final QueueElement qElem = qDAO.getElement(qID, qIndex);
+        final SongInfo fullSong = songDAO.get(qElem.getSong().getID());
+        
+        LibraryUtils.streamSongToResponse(response, fullSong, head);
+        
+        return Response.ok().build();
+    }
+    
     @Transactional
-    @RequestMapping( //
-            value = "/rest/queue/{qID}/queueindex/{qIndex}/stream", //
-            method = {RequestMethod.GET, RequestMethod.HEAD})
+    @RequestMapping(value = "/rest/queue/{qID}/queueindex/{qIndex}/stream", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getSongStream( //
             @Context HttpServletRequest request, //
@@ -188,12 +195,19 @@ public class QueueController {
             @PathVariable("qID") int qID, //
             @PathVariable("qIndex") int qIndex) throws IOException {
         
-        final QueueElement qElem = qDAO.getElement(qID, qIndex);
-        final SongInfo fullSong = songDAO.get(qElem.getSong().getID());
-        final String reqMethod = request.getMethod();
-        
-        LibraryUtils.streamSongToResponse(response, fullSong, EMUtils.equalsIgnoreCase("head", reqMethod));
-        
-        return Response.ok().build();
+        return getSongStream(response, qID, qIndex, false);
     }
+    
+    @Transactional
+    @RequestMapping(value = "/rest/queue/{qID}/queueindex/{qIndex}/stream", method = RequestMethod.HEAD)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getSongStreamHead( //
+            @Context HttpServletRequest request, //
+            @Context HttpServletResponse response, //
+            @PathVariable("qID") int qID, //
+            @PathVariable("qIndex") int qIndex) throws IOException {
+        
+        return getSongStream(response, qID, qIndex, true);
+    }
+    
 }
