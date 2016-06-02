@@ -16,22 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Observable} from 'rxjs';
+
 import {LibraryComponent} from 'components/library/library.component';
 
 describe(LibraryComponent.name, () => {
-    let comp = null;
-    let _emUtils = null;
-    let _libraries = null;
-    let _queues = null;
+    let comp;
+    let _libraries;
     
     beforeEach(() => {
         _libraries = {
-            getSongsForAlbum() {}
+            libraryChanges: Observable.create(() => {}),
+            
+            getArtists() {},
+            
+            getAlbumsForArtist() {}
         };
-        _queues = {addLast: () => {}};
-        _emUtils = {};
         
-        comp = new LibraryComponent(_emUtils, _libraries, _queues);
+        comp = new LibraryComponent(_libraries);
     });
     
     describe('annotations', () => {
@@ -43,6 +45,99 @@ describe(LibraryComponent.name, () => {
     describe('parameters', () => {
         it('returns an array', () => {
             expect(LibraryComponent.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+    
+    describe('init', () => {
+        let libraryObserver;
+        
+        beforeEach(() => {
+            spyOn(comp, '_libraryChanged').and.stub();
+            _libraries.libraryChanges = Observable.create((observer) => libraryObserver = observer);
+        });
+        
+        it('calls a function when the library changes', () => {
+            comp.init();
+            
+            libraryObserver.next();
+            libraryObserver.complete();
+            
+            expect(comp._libraryChanged).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_libraryChanged', () => {
+        beforeEach(() => {
+            spyOn(comp, 'isArtistInLibrary').and.returnValue(true);
+            spyOn(comp, 'isAlbumInLibrary').and.returnValue(true);
+            spyOn(comp, 'backToAlbums').and.stub();
+            spyOn(comp, 'backToArtists').and.stub();
+        });
+        
+        it('does not go anywhere if the library still contains the artist and album', () => {
+            comp._libraryChanged();
+            expect(comp.backToAlbums).not.toHaveBeenCalled();
+            expect(comp.backToArtists).not.toHaveBeenCalled();
+        });
+        
+        it('goes back to the albums if the library contains the artist but not the album', () => {
+            comp.isAlbumInLibrary.and.returnValue(false);
+            comp._libraryChanged();
+            expect(comp.backToAlbums).toHaveBeenCalled();
+        });
+        
+        it('goes back to the artists if the library does not contain the artist', () => {
+            comp.isArtistInLibrary.and.returnValue(false);
+            comp._libraryChanged();
+            expect(comp.backToArtists).toHaveBeenCalled();
+        });
+    });
+    
+    describe('isArtistInLibrary', () => {
+        beforeEach(() => {
+            comp.artist = 'a';
+            spyOn(_libraries, 'getArtists').and.returnValue(new Set(['a', 'b', 'c']));
+        });
+        
+        it('returns true if the library contains the artist', () => {
+            expect(comp.isArtistInLibrary()).toEqual(true);
+        });
+        
+        it('returns false if the library does not contain the artist', () => {
+            _libraries.getArtists.and.returnValue(new Set(['x', 'y', 'z']));
+            expect(comp.isArtistInLibrary()).toEqual(false);
+        });
+        
+        it('returns false if the artist is falsy', () => {
+            comp.artist = null;
+            expect(comp.isArtistInLibrary()).toEqual(false);
+        });
+    });
+    
+    describe('isAlbumInLibrary', () => {
+        beforeEach(() => {
+            comp.artist = 'foo';
+            comp.album = 'a';
+            spyOn(_libraries, 'getAlbumsForArtist').and.returnValue(new Set(['a', 'b', 'c']));
+        });
+        
+        it('returns true if the library contains the album', () => {
+            expect(comp.isAlbumInLibrary()).toEqual(true);
+        });
+        
+        it('returns false if the library does not contain the album', () => {
+            _libraries.getAlbumsForArtist.and.returnValue(new Set(['x', 'y', 'z']));
+            expect(comp.isAlbumInLibrary()).toEqual(false);
+        });
+        
+        it('returns false if the artist is falsy', () => {
+            comp.artist = null;
+            expect(comp.isAlbumInLibrary()).toEqual(false);
+        });
+        
+        it('returns false if the album is falsy', () => {
+            comp.album = null;
+            expect(comp.isAlbumInLibrary()).toEqual(false);
         });
     });
     
@@ -71,31 +166,6 @@ describe(LibraryComponent.name, () => {
         it('sets the album to null', () => {
             comp.backToAlbums();
             expect(comp.album).toBeNull();
-        });
-    });
-    
-    describe('addLast', () => {
-        it('adds the song with the given ID to the end of the queue', () => {
-            spyOn(_queues, 'addLast');
-            comp.addLast(17);
-            expect(_queues.addLast).toHaveBeenCalledWith(17);
-        });
-    });
-    
-    describe('getSongs', () => {
-        let song1;
-        let song2;
-        let song3;
-        
-        beforeEach(() => {
-            song1 = {trackNumber: 1};
-            song2 = {trackNumber: 2};
-            song3 = {trackNumber: 3};
-            spyOn(_libraries, 'getSongsForAlbum').and.returnValue([song3, song2, song1]);
-        });
-        
-        it('returns the songs from the library', () => {
-            expect(comp.getSongs()).toContain(song3, song2, song1);
         });
     });
     

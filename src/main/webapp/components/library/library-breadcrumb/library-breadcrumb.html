@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <ol class="breadcrumb">
     <li>
-        <a [hidden]="isLibraryActive()" (click)="libraryClicked()" href="javascript:void(0)">Library</a>
-        <span [hidden]="!isLibraryActive()">Library</span>
+        <a [hidden]="isLibraryActive()" (click)="libraryClicked()" href="javascript:void(0)">Artists</a>
+        <span [hidden]="!isLibraryActive()">Artists</span>
     </li>
     
     <li *ngIf="isArtistActive() || isAlbumActive()">

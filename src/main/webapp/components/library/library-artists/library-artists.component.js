@@ -16,20 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter} from '@angular/core';
 
 import {Libraries} from 'services/libraries';
 import {SortPipe} from 'pipes/sort.pipe';
 
 export class LibraryArtistsComponent {
-    constructor(libraries) {
+    constructor(changeDetector, libraries) {
+        this.changeDetector = changeDetector;
         this.libraries = libraries;
         this.artistChanged = new EventEmitter();
+        
+        this.init();
     }
     
     static get annotations() {
         return [new Component({
-            selector: 'library-artists',
+            selector: 'em-library-artists',
             templateUrl: 'components/library/library-artists/library-artists.html',
             pipes: [SortPipe],
             inputs: ['artist'],
@@ -38,7 +41,15 @@ export class LibraryArtistsComponent {
     }
     
     static get parameters() {
-        return [[Libraries]];
+        return [[ChangeDetectorRef], [Libraries]];
+    }
+    
+    init() {
+        this.libraries.libraryChanges.subscribe(() => this._libraryChanged());
+    }
+    
+    _libraryChanged() {
+        this.changeDetector.detectChanges();
     }
     
     artistClicked(artist) {

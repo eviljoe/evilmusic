@@ -35,17 +35,17 @@ export class Alerts {
         return this.alertInfo;
     }
     
-    _show() { // JOE ju
+    _show() {
         this.modalElement.show();
     }
     
-    hide() { // JOE ju
+    hide() {
         this.modalElement.hide();
     }
     
     error(msg, data) {
         this.alertInfo = new AlertInfo('Error', msg, data, [this.okButton()]);
-        this._show(); // JOE ju
+        this._show();
     }
     
     okButton(primary=true, resolve=true) {

@@ -16,18 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Observable} from 'rxjs';
+
 import {LibraryAlbumsComponent} from 'components/library/library-albums/library-albums.component';
 
 describe(LibraryAlbumsComponent.name, () => {
-    let comp = null;
-    let _libraries = null;
+    let comp;
+    let _changeDetector;
+    let _libraries;
     
     beforeEach(() => {
+        _changeDetector = {
+            detectChanges() {}
+        };
+        
         _libraries = {
+            libraryChanges: Observable.create(() => {}),
+            
             getAlbumsForArtist() {}
         };
         
-        comp = new LibraryAlbumsComponent(_libraries);
+        comp = new LibraryAlbumsComponent(_changeDetector, _libraries);
     });
     
     describe('annotations', () => {
@@ -39,6 +48,35 @@ describe(LibraryAlbumsComponent.name, () => {
     describe('parameters', () => {
         it('returns an array', () => {
             expect(LibraryAlbumsComponent.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+    
+    describe('init', () => {
+        let libraryObserver;
+        
+        beforeEach(() => {
+            _libraries.libraryChanges = Observable.create((observer) => libraryObserver = observer);
+            spyOn(comp, '_libraryChanged').and.stub();
+        });
+        
+        it('updates after the library changes', () => {
+            comp.init();
+            
+            libraryObserver.next();
+            libraryObserver.complete();
+            
+            expect(comp._libraryChanged).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_libraryChanged', () => {
+        beforeEach(() => {
+            spyOn(_changeDetector, 'detectChanges').and.stub();
+        });
+        
+        it('runs the change detection', () => {
+            comp._libraryChanged();
+            expect(_changeDetector.detectChanges).toHaveBeenCalled();
         });
     });
     

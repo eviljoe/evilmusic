@@ -51,7 +51,7 @@ export class EQButtonComponent {
         this.eqDialog.hide();
     }
     
-    save() { // JOE ju
+    save() {
         this.equalizers.save().subscribe(() => this.close());
     }
     

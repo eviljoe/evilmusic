@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import _ from 'lodash';
 
 import {LibraryCalls} from './server-calls/library-calls';
@@ -31,6 +31,8 @@ export class Libraries {
         this.libraryCalls = libraryCalls;
         this.library = null;
         this.queues = queues;
+        
+        this.libraryChanges = new EventEmitter();
         
         this.cache = {
             artists: new Set(),
@@ -64,6 +66,7 @@ export class Libraries {
     _loaded(library) {
         this.library = library;
         this.rebuildCache(library);
+        this.libraryChanges.emit();
     }
     
     rebuildCache(lib) {
@@ -157,6 +160,8 @@ export class Libraries {
     _cleared(library) {
         this.library = library;
         this.queues.load(true);
+        this.rebuildCache(this.library);
+        this.libraryChanges.emit();
     }
     
     /**
@@ -175,6 +180,7 @@ export class Libraries {
         this.library = library;
         this.queues.load(true);
         this.rebuildCache(this.library);
+        this.libraryChanges.emit();
     }
 }
 

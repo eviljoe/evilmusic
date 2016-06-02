@@ -1,0 +1,46 @@
+<!--
+EvilMusic - Web-Based Music Player
+Copyright (C) 2015 Joe Falascino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<table class="table table-striped table-condensed table-hover">
+    <tr>
+        <th align="right">ID</th>
+        <th align="left">Artist</th>
+        <th align="left">Album</th>
+        <th align="right">Track #</th>
+        <th align="left">Title</th>
+        <th align="right">Length</th>
+        <th align="right">Sample Rate</th>
+        <th align="right">Sample Count</th>
+        <th align="left">Controls</th>
+    </tr>
+    <tr *ngFor="let s of getSongs() | sort : 'trackNumber'">
+        <td align="right">{{s.id}}</td>
+        <td align="left">{{s.artist}}</td>
+        <td align="left">{{s.album}}</td>
+        <td align="right">{{s.trackNumber}}</td>
+        <td align="left">{{s.title}}</td>
+        <td align="right">{{s.millis | minutes}}</td>
+        <td align="right">{{s.sampleRate | hertz}}</td>
+        <td align="right">{{s.sampleCount}}</td>
+        <td align="left">
+            <button type="button" class="btn btn-xs btn-default" (click)="addLast(s.id)" title="add last">
+                <i class="fa fa-plus"></i>
+            </button>
+        </td>
+    </tr>
+</table>

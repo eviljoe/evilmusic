@@ -16,32 +16,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectorRef, Component, EventEmitter} from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 
+import {EMUtils} from 'services/emutils';
 import {Libraries} from 'services/libraries';
+import {Queues} from 'services/queues';
+
+import {HertzPipe} from 'pipes/hertz.pipe';
+import {MinutesPipe} from 'pipes/minutes.pipe';
 import {SortPipe} from 'pipes/sort.pipe';
 
-export class LibraryAlbumsComponent {
-    constructor(changeDetector, libraries) {
+export class LibrarySongsComponent {
+    constructor(changeDetector, emUtils, libraries, queues) {
         this.changeDetector = changeDetector;
+        this.emUtils = emUtils;
         this.libraries = libraries;
-        this.albumChanged = new EventEmitter();
+        this.queues = queues;
         
         this.init();
     }
     
     static get annotations() {
         return [new Component({
-            selector: 'em-library-albums',
-            templateUrl: 'components/library/library-albums/library-albums.html',
-            pipes: [SortPipe],
-            inputs: ['artist', 'album'],
-            outputs: ['albumChanged']
+            selector: 'em-library-songs',
+            templateUrl: 'components/library/library-songs/library-songs.html',
+            inputs: ['album', 'artist'],
+            pipes: [HertzPipe, MinutesPipe, SortPipe]
         })];
     }
     
     static get parameters() {
-        return [[ChangeDetectorRef], [Libraries]];
+        return [[ChangeDetectorRef], [EMUtils], [Libraries], [Queues]];
     }
     
     init() {
@@ -52,13 +57,11 @@ export class LibraryAlbumsComponent {
         this.changeDetector.detectChanges();
     }
     
-    getAlbums() {
-        return this.libraries.getAlbumsForArtist(this.artist);
+    getSongs() {
+        return this.libraries.getSongsForAlbum(this.artist, this.album);
     }
     
-    albumClicked(album) {
-        this.albumChanged.emit(album);
+    addLast(songID) {
+        this.queues.addLast(songID);
     }
 }
-
-export default LibraryAlbumsComponent;

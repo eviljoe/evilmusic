@@ -21,36 +21,56 @@ import {Component} from '@angular/core';
 import {LibraryAlbumsComponent} from './library-albums/library-albums.component';
 import {LibraryArtistsComponent} from './library-artists/library-artists.component';
 import {LibraryBreadcrumbComponent} from './library-breadcrumb/library-breadcrumb.component';
+import {LibrarySongsComponent} from './library-songs/library-songs.component';
 
-import {HertzPipe} from 'pipes/hertz.pipe';
-import {MinutesPipe} from 'pipes/minutes.pipe';
-import {SortPipe} from 'pipes/sort.pipe';
-
-import {EMUtils} from 'services/emutils';
 import {Libraries} from 'services/libraries';
-import {Queues} from 'services/queues';
 
 export class LibraryComponent {
-    constructor(emUtils, libraries, queues) {
+    constructor(libraries) {
         this.libraries = libraries;
-        this.queues = queues;
-        this.emUtils = emUtils;
-        
         this.artist = null;
         this.album = null;
+        
+        this.init();
     }
     
     static get annotations() {
         return [new Component({
             selector: 'em-library',
             templateUrl: 'components/library/library.html',
-            directives: [LibraryAlbumsComponent, LibraryArtistsComponent, LibraryBreadcrumbComponent],
-            pipes: [HertzPipe, MinutesPipe, SortPipe]
+            directives: [
+                LibraryAlbumsComponent,
+                LibraryArtistsComponent,
+                LibraryBreadcrumbComponent,
+                LibrarySongsComponent
+            ]
         })];
     }
     
     static get parameters() {
-        return [[EMUtils], [Libraries], [Queues]];
+        return [[Libraries]];
+    }
+    
+    init() {
+        this.libraries.libraryChanges.subscribe(() => this._libraryChanged());
+    }
+    
+    _libraryChanged() {
+        if(this.isArtistInLibrary()) {
+            if(!this.isAlbumInLibrary()) {
+                this.backToAlbums();
+            }
+        } else {
+            this.backToArtists();
+        }
+    }
+    
+    isArtistInLibrary() {
+        return !!this.artist && this.libraries.getArtists().has(this.artist);
+    }
+    
+    isAlbumInLibrary() {
+        return !!this.artist && !!this.album && this.libraries.getAlbumsForArtist(this.artist).has(this.album);
     }
     
     backToArtists() {
@@ -60,14 +80,6 @@ export class LibraryComponent {
     
     backToAlbums() {
         this.album = null;
-    }
-    
-    addLast(songID) {
-        this.queues.addLast(songID);
-    }
-    
-    getSongs() {
-        return this.libraries.getSongsForAlbum(this.artist, this.album);
     }
     
     artistChanged(newArtist) {

@@ -105,6 +105,7 @@ describe(Libraries.name, () => {
     
     describe('_loaded', () => {
         beforeEach(() => {
+            libraries.libraryChanges = jasmine.createSpyObj('libraryChanges', ['emit']);
             spyOn(libraries, 'rebuildCache').and.stub();
         });
         
@@ -118,6 +119,11 @@ describe(Libraries.name, () => {
             libraries.library = null;
             libraries._loaded({foo: 'bar'});
             expect(libraries.rebuildCache).toHaveBeenCalledWith({foo: 'bar'});
+        });
+        
+        it('emits a library change event', () => {
+            libraries._loaded({foo: 'bar'});
+            expect(libraries.libraryChanges.emit).toHaveBeenCalled();
         });
     });
     
@@ -153,6 +159,8 @@ describe(Libraries.name, () => {
     
     describe('_cleared', () => {
         beforeEach(() => {
+            libraries.libraryChanges = jasmine.createSpyObj('libraryChanges', ['emit']);
+            spyOn(libraries, 'rebuildCache').and.stub();
             spyOn(_queues, 'load').and.stub();
         });
         
@@ -165,6 +173,16 @@ describe(Libraries.name, () => {
         it('reloads the queue', () => {
             libraries._cleared({foo: 'bar'});
             expect(_queues.load).toHaveBeenCalled();
+        });
+        
+        it('rebuilds the cache', () => {
+            libraries._cleared({foo: 'bar'});
+            expect(libraries.rebuildCache).toHaveBeenCalled();
+        });
+        
+        it('emits a library change event', () => {
+            libraries._cleared({foo: 'bar'});
+            expect(libraries.libraryChanges.emit).toHaveBeenCalled();
         });
     });
     
@@ -202,6 +220,7 @@ describe(Libraries.name, () => {
     
     describe('_rebuilt', () => {
         beforeEach(() => {
+            libraries.libraryChanges = jasmine.createSpyObj('libraryChanges', ['emit']);
             spyOn(libraries, 'rebuildCache').and.stub();
             spyOn(_queues, 'load').and.stub();
         });
@@ -220,6 +239,11 @@ describe(Libraries.name, () => {
         it('rebuilds the library cache', () => {
             libraries._rebuilt({foo: 'bar'});
             expect(libraries.rebuildCache).toHaveBeenCalled();
+        });
+        
+        it('emits a library change event', () => {
+            libraries._rebuilt({foo: 'bar'});
+            expect(libraries.libraryChanges.emit).toHaveBeenCalled();
         });
     });
     

@@ -18,12 +18,14 @@
 
 import {Observable} from 'rxjs';
 
-import {LibraryArtistsComponent} from 'components/library/library-artists/library-artists.component';
+import {LibrarySongsComponent} from 'components/library/library-songs/library-songs.component';
 
-describe(LibraryArtistsComponent.name, () => {
+describe(LibrarySongsComponent.name, () => {
     let comp;
     let _changeDetector;
+    let _emUtils;
     let _libraries;
+    let _queues;
     
     beforeEach(() => {
         _changeDetector = {
@@ -33,21 +35,25 @@ describe(LibraryArtistsComponent.name, () => {
         _libraries = {
             libraryChanges: Observable.create(() => {}),
             
-            getArtists() {}
+            getSongsForAlbum() {}
         };
         
-        comp = new LibraryArtistsComponent(_changeDetector, _libraries);
+        _queues = {addLast: () => {}};
+        
+        _emUtils = {};
+        
+        comp = new LibrarySongsComponent(_changeDetector, _emUtils, _libraries, _queues);
     });
     
     describe('annotations', () => {
         it('returns an array', () => {
-            expect(LibraryArtistsComponent.annotations).toEqual(jasmine.any(Array));
+            expect(LibrarySongsComponent.annotations).toEqual(jasmine.any(Array));
         });
     });
     
     describe('parameters', () => {
         it('returns an array', () => {
-            expect(LibraryArtistsComponent.parameters).toEqual(jasmine.any(Array));
+            expect(LibrarySongsComponent.parameters).toEqual(jasmine.any(Array));
         });
     });
     
@@ -80,14 +86,28 @@ describe(LibraryArtistsComponent.name, () => {
         });
     });
     
-    describe('artistClicked', () => {
+    describe('addLast', () => {
+        it('adds the song with the given ID to the end of the queue', () => {
+            spyOn(_queues, 'addLast');
+            comp.addLast(17);
+            expect(_queues.addLast).toHaveBeenCalledWith(17);
+        });
+    });
+    
+    describe('getSongs', () => {
+        let song1;
+        let song2;
+        let song3;
+        
         beforeEach(() => {
-            comp.artistChanged = jasmine.createSpyObj('artistChanged', ['emit']);
+            song1 = {trackNumber: 1};
+            song2 = {trackNumber: 2};
+            song3 = {trackNumber: 3};
+            spyOn(_libraries, 'getSongsForAlbum').and.returnValue([song3, song2, song1]);
         });
         
-        it('emits an artist change event', () => {
-            comp.artistClicked('foo');
-            expect(comp.artistChanged.emit).toHaveBeenCalledWith('foo');
+        it('returns the songs from the library', () => {
+            expect(comp.getSongs()).toContain(song3, song2, song1);
         });
     });
 });
