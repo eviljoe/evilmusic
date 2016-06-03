@@ -22,6 +22,7 @@ import {LibraryAlbumsComponent} from './library-albums/library-albums.component'
 import {LibraryArtistsComponent} from './library-artists/library-artists.component';
 import {LibraryBreadcrumbComponent} from './library-breadcrumb/library-breadcrumb.component';
 import {LibrarySongsComponent} from './library-songs/library-songs.component';
+import {LoadingOverlayComponent} from 'components/loading-overlay/loading-overlay.component';
 
 import {Libraries} from 'services/libraries';
 
@@ -42,7 +43,8 @@ export class LibraryComponent {
                 LibraryAlbumsComponent,
                 LibraryArtistsComponent,
                 LibraryBreadcrumbComponent,
-                LibrarySongsComponent
+                LibrarySongsComponent,
+                LoadingOverlayComponent
             ]
         })];
     }

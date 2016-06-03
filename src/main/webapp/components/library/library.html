@@ -16,25 +16,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div><h2>Library</h2></div>
-<div class="em-top-table-controls-container">
-    <button type="button" class="btn btn-xs btn-default" (click)="libraries.clear()" title="clear library">
-        <i class="fa fa-ban"></i> clear
-    </button>
-    <button type="button" class="btn btn-xs btn-default" (click)="libraries.rebuild()" title="rebuild library">
-        <i class="fa fa-cubes"></i> rebuild
-    </button>
-</div>
-<div>
-    <em-library-breadcrumb [artist]="artist" [album]="album"
-            (artistCleared)="backToArtists()" (albumCleared)="backToAlbums()"></em-library-breadcrumb>
-</div>
-<div [hidden]="artist">
-    <em-library-artists [artist]="artist" (artistChanged)="artistChanged($event)"></em-library-artists>
-</div>
-<div [hidden]="!artist || album">
-    <em-library-albums [artist]="artist" [album]="album" (albumChanged)="albumChanged($event)"></em-library-albums>
-</div>
-<div [hidden]="!album">
-    <em-library-songs [artist]="artist" [album]="album"></em-library-songs>
-</div>
+<em-loading-overlay>
+    <div><h2>Library</h2></div>
+    <div class="em-top-table-controls-container">
+        <button type="button" class="btn btn-xs btn-default" (click)="libraries.clear()" title="clear library">
+            <i class="fa fa-ban"></i> clear
+        </button>
+        <button type="button" class="btn btn-xs btn-default" (click)="libraries.rebuild()" title="rebuild library">
+            <i class="fa fa-cubes"></i> rebuild
+        </button>
+    </div>
+    <div>
+        <em-library-breadcrumb [artist]="artist" [album]="album"
+                (artistCleared)="backToArtists()" (albumCleared)="backToAlbums()"></em-library-breadcrumb>
+    </div>
+    <div [hidden]="artist">
+        <em-library-artists [artist]="artist" (artistChanged)="artistChanged($event)"></em-library-artists>
+    </div>
+    <div [hidden]="!artist || album">
+        <em-library-albums [artist]="artist" [album]="album" (albumChanged)="albumChanged($event)"></em-library-albums>
+    </div>
+    <div [hidden]="!album">
+        <em-library-songs [artist]="artist" [album]="album"></em-library-songs>
+    </div>
+</em-loading-overlay>

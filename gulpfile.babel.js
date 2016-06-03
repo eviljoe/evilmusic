@@ -74,7 +74,7 @@ const THIRD_PARTY_JS_FILES = [
 ];
 
 const FIRST_PARTY_CSS_FILES = [
-    `${WEB_SRC_DIR}/assets/css/**/*.css`
+    `${WEB_SRC_DIR}/**/*.css`
 ];
 
 const THIRD_PARTY_CSS_FILES = [
