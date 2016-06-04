@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import _ from 'lodash';
 
 import {Alerts} from './alerts';
@@ -28,6 +28,8 @@ export class Equalizers {
         this.equalizerCalls = equalizerCalls;
         this.webAudioNodes = {};
         this.eq = null;
+        
+        this.loadingChanges = new EventEmitter();
         
         this.init();
     }
@@ -54,10 +56,17 @@ export class Equalizers {
     load(loadNew) {
         let id = loadNew ? 'default' : this.eq.id;
         
+        this.loading = true;
+        
         this.equalizerCalls.get(id).subscribe(
-            (eq) => this.eq = eq,
+            (eq) => this._loaded(eq),
             (err) => this.alerts.error('Could not get equalizer.', err)
         );
+    }
+    
+    _loaded(eq) {
+        this.eq = eq;
+        this.loading = false;
     }
     
     /**
@@ -134,18 +143,39 @@ export class Equalizers {
     save() {
         let ob = this.equalizerCalls.save(this.eq.id, this.eq);
         
+        this.loading = true;
+        
         ob.subscribe(
-            (eq) => this.eq = eq,
+            (eq) => this._saved(eq),
             (err) => this.alerts.error('An error occurred, and the equalizer could not be saved.', err)
         );
         
         return ob;
     }
     
+    _saved(eq) {
+        this.eq = eq;
+        this.loading = false;
+    }
+    
     reset() {
         _.forEach(this.eq.nodes, (node) => {
             _.set(node, 'gain', 0);
             this.updateNodeGain(node);
+        });
+    }
+    
+    get loading() {
+        return this._loading;
+    }
+    
+    set loading(loading) {
+        let oldLoading = this._loading;
+        
+        this._loading = loading;
+        this.loadingChanges.emit({
+            old: oldLoading,
+            new: this._loading
         });
     }
 }

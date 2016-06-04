@@ -23,7 +23,7 @@ export class LoadingOverlayComponent {
         return [new Component({
             selector: 'em-loading-overlay',
             templateUrl: 'components/loading-overlay/loading-overlay.html',
-            inputs: ['overlayVisible']
+            inputs: ['fullScreen', 'overlayVisible']
         })];
     }
     

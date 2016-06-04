@@ -73,8 +73,14 @@ describe(QueueComponent.name, () => {
             _queues.playIndexChanges = Observable.create((observer) => playIndexObserver = observer);
         });
         
-        it('reacts to queue loding changes', () => {
+        it('updates based on the current to queue loading status', () => {
             comp.init();
+            expect(comp._queueLoadingChanged).toHaveBeenCalled();
+        });
+        
+        it('reacts to queue loading changes', () => {
+            comp.init();
+            comp._queueLoadingChanged.calls.reset();
             
             loadingObserver.next();
             loadingObserver.complete();

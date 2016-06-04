@@ -20,19 +20,22 @@ import {Component, ViewChild} from '@angular/core';
 import {MODAL_DIRECTVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {EQComponent} from 'components/eq/eq.component';
+import {LoadingOverlayComponent} from 'components/loading-overlay/loading-overlay.component';
 
 import {Equalizers} from 'services/equalizers';
 
 export class EQButtonComponent {
     constructor(equalizers) {
         this.equalizers = equalizers;
+        
+        this.init();
     }
     
     static get annotations() {
         return [new Component({
             selector: 'em-eq-button',
             templateUrl: 'components/eq/eq-button/eq-button.html',
-            directives: [MODAL_DIRECTVES, EQComponent],
+            directives: [MODAL_DIRECTVES, EQComponent, LoadingOverlayComponent],
             queries: {
                 eqDialog: new ViewChild('eqDialog')
             }
@@ -41,6 +44,15 @@ export class EQButtonComponent {
     
     static get parameters() {
         return [[Equalizers]];
+    }
+    
+    init() {
+        this._equalizerLoadingChanged();
+        this.equalizers.loadingChanges.subscribe(() => this._equalizerLoadingChanged());
+    }
+    
+    _equalizerLoadingChanged() {
+        this.loading = this.equalizers.loading;
     }
     
     open() {

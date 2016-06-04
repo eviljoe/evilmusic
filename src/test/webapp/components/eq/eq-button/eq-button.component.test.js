@@ -17,6 +17,7 @@
  */
 
 import {Observable} from 'rxjs';
+
 import {EQButtonComponent} from 'components/eq/eq-button/eq-button.component';
 
 describe(EQButtonComponent.name, () => {
@@ -25,6 +26,8 @@ describe(EQButtonComponent.name, () => {
     
     beforeEach(() => {
         _equalizers = {
+            loadingChanges: Observable.create(() => {}),
+            
             reset() {},
 
             save() {}
@@ -42,6 +45,39 @@ describe(EQButtonComponent.name, () => {
     describe('parameters', () => {
         it('returns an array', () => {
             expect(EQButtonComponent.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+    
+    describe('init', () => {
+        let loadingObserver;
+        
+        beforeEach(() => {
+            spyOn(comp, '_equalizerLoadingChanged').and.stub();
+            _equalizers.loadingChanges = Observable.create((observer) => loadingObserver = observer);
+        });
+        
+        it('updates based on the current to EQ loading status', () => {
+            comp.init();
+            expect(comp._equalizerLoadingChanged).toHaveBeenCalled();
+        });
+        
+        it('reacts to EQ loading changes', () => {
+            comp.init();
+            comp._equalizerLoadingChanged.calls.reset();
+            
+            loadingObserver.next();
+            loadingObserver.complete();
+            
+            expect(comp._equalizerLoadingChanged).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_equalizerLoadingChanged', () => {
+        it("sets the loading to the value of the equalizers' loading status", () => {
+            _equalizers.loading = 'foo';
+            comp.loading = null;
+            comp._equalizerLoadingChanged();
+            expect(comp.loading).toEqual(_equalizers.loading);
         });
     });
     

@@ -77,6 +77,7 @@ describe(LibraryComponent.name, () => {
         
         it('calls a function when the library loading changes', () => {
             comp.init();
+            comp._libraryLoadingChanged.calls.reset();
             
             loadingObserver.next();
             loadingObserver.complete();

@@ -75,8 +75,15 @@ describe(Equalizers.name, () => {
         let getObserver;
         
         beforeEach(() => {
+            spyOn(equalizers, '_loaded').and.stub();
             spyOn(_equalizerCalls, 'get').and.returnValue(Observable.create((observer) => getObserver = observer));
             spyOn(_alerts, 'error').and.stub();
+        });
+        
+        it('sets the loading flag to true', () => {
+            equalizers.loading = null;
+            equalizers.load();
+            expect(equalizers.loading).toEqual(true);
         });
         
         it('loads the default equalizer when given true', () => {
@@ -96,14 +103,13 @@ describe(Equalizers.name, () => {
             expect(_equalizerCalls.get).toHaveBeenCalledWith(13);
         });
         
-        it('sets the equalizer if it loads successfully', () => {
-            equalizers.eq = null;
+        it('reacts if it loads successfully', () => {
             equalizers.load(true);
             
             getObserver.next({a: 'A'});
             getObserver.complete();
             
-            expect(equalizers.eq).toEqual({a: 'A'});
+            expect(equalizers._loaded).toHaveBeenCalledWith({a: 'A'});
         });
         
         it('displays an error message if the equalizer fails to loads', () => {
@@ -112,6 +118,19 @@ describe(Equalizers.name, () => {
             getObserver.error();
             
             expect(_alerts.error).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_loaded', () => {
+        it('sets the equalizer', () => {
+            equalizers._loaded({foo: 'bar'});
+            expect(equalizers.eq).toEqual({foo: 'bar'});
+        });
+        
+        it('sets the loading flag to false', () => {
+            equalizers.loading = null;
+            equalizers._loaded();
+            expect(equalizers.loading).toEqual(false);
         });
     });
     
@@ -238,8 +257,15 @@ describe(Equalizers.name, () => {
         let saveObserver;
         
         beforeEach(() => {
+            spyOn(equalizers, '_saved').and.stub();
             spyOn(_equalizerCalls, 'save').and.returnValue(Observable.create((observer) => saveObserver = observer));
             spyOn(_alerts, 'error').and.stub();
+        });
+        
+        it('sets the loading flag to true', () => {
+            equalizers.loading = null;
+            equalizers.save();
+            expect(equalizers.loading).toEqual(true);
         });
         
         it('saves the equalizer', () => {
@@ -248,19 +274,32 @@ describe(Equalizers.name, () => {
             expect(_equalizerCalls.save).toHaveBeenCalledWith(17, equalizers.eq);
         });
         
-        it('sets the equalizer to the one returned by the server if successful', () => {
+        it('reacts if the EQ is loaded successful', () => {
             equalizers.save();
             
             saveObserver.next({foo: 'bar'});
             saveObserver.complete();
             
-            expect(equalizers.eq).toEqual({foo: 'bar'});
+            expect(equalizers._saved).toHaveBeenCalledWith({foo: 'bar'});
         });
         
         it('displays an error message if not successful', () => {
             equalizers.save();
             saveObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_saved', () => {
+        it('sets the equalizer', () => {
+            equalizers._saved({foo: 'bar'});
+            expect(equalizers.eq).toEqual({foo: 'bar'});
+        });
+        
+        it('sets the loading flag to false', () => {
+            equalizers.loading = null;
+            equalizers._saved();
+            expect(equalizers.loading).toEqual(false);
         });
     });
     
@@ -284,6 +323,30 @@ describe(Equalizers.name, () => {
             equalizers.eq.nodes.forEach((node) => {
                 expect(equalizers.updateNodeGain).toHaveBeenCalledWith(node);
             });
+        });
+    });
+    
+    describe('get loading', () => {
+        it('returns the loading flag', () => {
+            equalizers._loading = 'foo';
+            expect(equalizers.loading).toEqual('foo');
+        });
+    });
+    
+    describe('set loading', () => {
+        beforeEach(() => {
+            equalizers.loadingChanges = jasmine.createSpyObj('loadingChanges', ['emit']);
+        });
+        
+        it('sets the loading flag', () => {
+            equalizers._loading = null;
+            equalizers.loading = true;
+            expect(equalizers._loading).toEqual(true);
+        });
+        
+        it('emits a loading change', () => {
+            equalizers.loading = true;
+            expect(equalizers.loadingChanges.emit).toHaveBeenCalled();
         });
     });
 });

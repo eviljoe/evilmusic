@@ -45,6 +45,7 @@ export class QueueComponent {
     }
     
     init() {
+        this._queueLoadingChanged();
         this.queues.loadingChanges.subscribe(() => this._queueLoadingChanged());
         this.queues.playIndexChanges.subscribe(() => this.changeDetector.detectChanges());
     }
