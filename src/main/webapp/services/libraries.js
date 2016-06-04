@@ -33,6 +33,7 @@ export class Libraries {
         this.queues = queues;
         
         this.libraryChanges = new EventEmitter();
+        this.loadingChanges = new EventEmitter();
         
         this.cache = {
             artists: new Set(),
@@ -57,6 +58,8 @@ export class Libraries {
     
     /** Loads the contents of the library using a REST call. */
     load() {
+        this.loading = true;
+        
         this.libraryCalls.get().subscribe(
             (library) => this._loaded(library),
             (err) => this.alerts.error('Could not get library.', err)
@@ -66,6 +69,7 @@ export class Libraries {
     _loaded(library) {
         this.library = library;
         this.rebuildCache(library);
+        this.loading = false;
         this.libraryChanges.emit();
     }
     
@@ -151,6 +155,8 @@ export class Libraries {
     * be reloaded.
     */
     clear() {
+        this.loading = true;
+        
         this.libraryCalls.clear().subscribe(
             (library) => this._cleared(library),
             (err) => this.alerts.error('Clear library failed.', err)
@@ -161,6 +167,7 @@ export class Libraries {
         this.library = library;
         this.queues.load(true);
         this.rebuildCache(this.library);
+        this.loading = false;
         this.libraryChanges.emit();
     }
     
@@ -170,6 +177,8 @@ export class Libraries {
     * rebuild, the it and the queue will be reloaded.
     */
     rebuild() {
+        this.loading = true;
+        
         this.libraryCalls.rebuild().subscribe(
             (library) => this._rebuilt(library),
             (err) => this.alerts.error('Library rebuilding failed.', err)
@@ -180,7 +189,22 @@ export class Libraries {
         this.library = library;
         this.queues.load(true);
         this.rebuildCache(this.library);
+        this.loading = false;
         this.libraryChanges.emit();
+    }
+    
+    get loading() {
+        return this._loading;
+    }
+    
+    set loading(loading) {
+        let oldLoading = this._loading;
+        
+        this._loading = loading;
+        this.loadingChanges.emit({
+            old: oldLoading,
+            new: this._loading
+        });
     }
 }
 

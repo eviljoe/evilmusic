@@ -19,14 +19,15 @@
 import {Component} from '@angular/core';
 
 export class LoadingOverlayComponent {
-    static get annotations() { // JOE ju
+    static get annotations() {
         return [new Component({
             selector: 'em-loading-overlay',
-            templateUrl: 'components/loading-overlay/loading-overlay.html'
+            templateUrl: 'components/loading-overlay/loading-overlay.html',
+            inputs: ['overlayVisible']
         })];
     }
     
-    static get parameters() { // JOE ju
+    static get parameters() {
         return [];
     }
 }

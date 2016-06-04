@@ -54,7 +54,9 @@ export class LibraryComponent {
     }
     
     init() {
+        this._libraryLoadingChanged();
         this.libraries.libraryChanges.subscribe(() => this._libraryChanged());
+        this.libraries.loadingChanges.subscribe(() => this._libraryLoadingChanged());
     }
     
     _libraryChanged() {
@@ -65,6 +67,10 @@ export class LibraryComponent {
         } else {
             this.backToArtists();
         }
+    }
+    
+    _libraryLoadingChanged() {
+        this.loading = this.libraries.loading;
     }
     
     isArtistInLibrary() {

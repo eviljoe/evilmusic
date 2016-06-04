@@ -82,6 +82,12 @@ describe(Libraries.name, () => {
             spyOn(_alerts, 'error').and.stub();
         });
         
+        it('sets the loading flag to true', () => {
+            libraries.loading = null;
+            libraries.load();
+            expect(libraries.loading).toEqual(true);
+        });
+        
         it('loads the library', () => {
             libraries.load();
             expect(_libraryCalls.get).toHaveBeenCalled();
@@ -121,6 +127,12 @@ describe(Libraries.name, () => {
             expect(libraries.rebuildCache).toHaveBeenCalledWith({foo: 'bar'});
         });
         
+        it('sets the loading flag to false', () => {
+            libraries.loading = null;
+            libraries._loaded();
+            expect(libraries.loading).toEqual(false);
+        });
+        
         it('emits a library change event', () => {
             libraries._loaded({foo: 'bar'});
             expect(libraries.libraryChanges.emit).toHaveBeenCalled();
@@ -134,6 +146,12 @@ describe(Libraries.name, () => {
             spyOn(_alerts, 'error').and.stub();
             spyOn(_libraryCalls, 'clear').and.returnValue(Observable.create((observer) => clearObserver = observer));
             spyOn(libraries, '_cleared').and.stub();
+        });
+        
+        it('sets the loading flag to true', () => {
+            libraries.loading = null;
+            libraries.clear();
+            expect(libraries.loading).toEqual(true);
         });
         
         it('clears the library', () => {
@@ -180,6 +198,12 @@ describe(Libraries.name, () => {
             expect(libraries.rebuildCache).toHaveBeenCalled();
         });
         
+        it('sets the loading flag to false', () => {
+            libraries.loading = null;
+            libraries._cleared();
+            expect(libraries.loading).toEqual(false);
+        });
+        
         it('emits a library change event', () => {
             libraries._cleared({foo: 'bar'});
             expect(libraries.libraryChanges.emit).toHaveBeenCalled();
@@ -195,6 +219,12 @@ describe(Libraries.name, () => {
                 rebuildObserver = observer;
             }));
             spyOn(libraries, '_rebuilt').and.stub();
+        });
+        
+        it('sets the loading flag to true', () => {
+            libraries.loading = null;
+            libraries.rebuild();
+            expect(libraries.loading).toEqual(true);
         });
         
         it('rebuilds the library', () => {
@@ -239,6 +269,12 @@ describe(Libraries.name, () => {
         it('rebuilds the library cache', () => {
             libraries._rebuilt({foo: 'bar'});
             expect(libraries.rebuildCache).toHaveBeenCalled();
+        });
+        
+        it('sets the loading flag to false', () => {
+            libraries.loading = null;
+            libraries._rebuilt();
+            expect(libraries.loading).toEqual(false);
         });
         
         it('emits a library change event', () => {
@@ -416,6 +452,30 @@ describe(Libraries.name, () => {
             let album = 'album_1';
             
             expect(libraries.getSongKey(artist, album)).toEqual(libraries.getSongKey(artist, album));
+        });
+    });
+    
+    describe('get loading', () => {
+        it('returns the loading flag', () => {
+            libraries._loading = 'foo';
+            expect(libraries.loading).toEqual('foo');
+        });
+    });
+    
+    describe('set loading', () => {
+        beforeEach(() => {
+            libraries.loadingChanges = jasmine.createSpyObj('loadingChanges', ['emit']);
+        });
+        
+        it('sets the loading flag', () => {
+            libraries._loading = null;
+            libraries.loading = true;
+            expect(libraries._loading).toEqual(true);
+        });
+        
+        it('emits a loading change', () => {
+            libraries.loading = true;
+            expect(libraries.loadingChanges.emit).toHaveBeenCalled();
         });
     });
 });

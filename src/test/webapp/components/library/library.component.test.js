@@ -28,6 +28,8 @@ describe(LibraryComponent.name, () => {
         _libraries = {
             libraryChanges: Observable.create(() => {}),
             
+            loadingChanges: Observable.create(() => {}),
+            
             getArtists() {},
             
             getAlbumsForArtist() {}
@@ -50,10 +52,13 @@ describe(LibraryComponent.name, () => {
     
     describe('init', () => {
         let libraryObserver;
+        let loadingObserver;
         
         beforeEach(() => {
             spyOn(comp, '_libraryChanged').and.stub();
+            spyOn(comp, '_libraryLoadingChanged').and.stub();
             _libraries.libraryChanges = Observable.create((observer) => libraryObserver = observer);
+            _libraries.loadingChanges = Observable.create((observer) => loadingObserver = observer);
         });
         
         it('calls a function when the library changes', () => {
@@ -63,6 +68,20 @@ describe(LibraryComponent.name, () => {
             libraryObserver.complete();
             
             expect(comp._libraryChanged).toHaveBeenCalled();
+        });
+        
+        it('updates based on the library loading status', () => {
+            comp.init();
+            expect(comp._libraryLoadingChanged).toHaveBeenCalled();
+        });
+        
+        it('calls a function when the library loading changes', () => {
+            comp.init();
+            
+            loadingObserver.next();
+            loadingObserver.complete();
+            
+            expect(comp._libraryLoadingChanged).toHaveBeenCalled();
         });
     });
     
@@ -90,6 +109,15 @@ describe(LibraryComponent.name, () => {
             comp.isArtistInLibrary.and.returnValue(false);
             comp._libraryChanged();
             expect(comp.backToArtists).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_libraryLoadingChanged', () => {
+        it("sets the loading to the value of the libraries' loading status", () => {
+            _libraries.loading = 'foo';
+            comp.loading = null;
+            comp._libraryLoadingChanged();
+            expect(comp.loading).toEqual(_libraries.loading);
         });
     });
     

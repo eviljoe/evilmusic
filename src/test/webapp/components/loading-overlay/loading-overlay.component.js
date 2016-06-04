@@ -16,30 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.em-loading-overlay-pos-relative {
-    position:relative;
-}
+import {LoadingOverlayComponent} from 'components/loading-overlay/loading-overlay.component';
 
-/*
-* These styles are to make the element expand to the size of its first "position: relative" parent.  If there is no
-* "position: relative" parent, this will make the element expand to the size of the window.
-*/
-.em-loading-animation-container {
-    position: absolute;
-    background-color: lightgray;
-    opacity: 0.6;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 99999;
-}
-
-/* These styles are to make the element's content centered within the element. */
-.em-loading-center-child {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-}
+describe(LoadingOverlayComponent.name, () => {
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(LoadingOverlayComponent.annotations).toEqual(jasmine.any(Array));
+        });
+    });
+    
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(LoadingOverlayComponent.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+});

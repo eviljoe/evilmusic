@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <div class="em-loading-overlay-pos-relative">
-    <div class="em-loading-animation-container">
+    <div *ngIf="overlayVisible" class="em-loading-animation-container em-loading-center-child">
         <div class="em-loading-overlay-spinner">
             <div class="em-loading-overlay-rect-1"></div>
             <div class="em-loading-overlay-rect-2"></div>
