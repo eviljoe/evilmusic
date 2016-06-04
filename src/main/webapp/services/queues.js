@@ -31,6 +31,7 @@ export class Queues {
         this.q = null;
         
         this.playIndexChanges = new EventEmitter();
+        this.loadingChanges = new EventEmitter();
         
         this.init();
     }
@@ -56,10 +57,16 @@ export class Queues {
     load(loadNew) {
         let id = loadNew ? 'default' : this.q.id;
         
+        this.loading = true;
         this.queueCalls.get(id).subscribe(
-            (queue) => this.q = queue,
+            (queue) => this._loaded(queue),
             (err) => this.alerts.error('Could not get queue.', err)
         );
+    }
+    
+    _loaded(queue) {
+        this.q = queue;
+        this.loading = false;
     }
 
     /**
@@ -70,10 +77,17 @@ export class Queues {
      * @param {number} songID The ID of the song to be enqueued.
      */
     addLast(songID) {
+        this.loading = true;
+        
         this.queueCalls.addLast(this.q.id, songID).subscribe(
-            (queue) => this.q = queue,
+            (queue) => this._addedLast(queue),
             (err) => this.alerts.error('Failed to enqueue last.', err)
         );
+    }
+    
+    _addedLast(queue) {
+        this.q = queue;
+        this.loading = false;
     }
     
     /**
@@ -84,10 +98,17 @@ export class Queues {
      * @param {number} queueIndex The index within the queue that should be removed.
      */
     remove(queueIndex) {
+        this.loading = true;
+        
         this.queueCalls.remove(this.q.id, queueIndex).subscribe(
-            (queue) => this.q = queue,
+            (queue) => this._removed(queue),
             (err) => this.alerts.error(`Failed to remove from queue (${queueIndex})`, err)
         );
+    }
+    
+    _removed(queue) {
+        this.q = queue;
+        this.loading = false;
     }
 
     /**
@@ -95,10 +116,17 @@ export class Queues {
      * reloaded.
      */
     clear() {
+        this.loading = true;
+        
         this.queueCalls.clear(this.q.id).subscribe(
-            (queue) => this.q = queue,
+            (queue) => this._cleared(queue),
             (err) => this.alerts.error('Clear queue failed.', err)
         );
+    }
+    
+    _cleared(queue) {
+        this.q = queue;
+        this.loading = false;
     }
     
     /**
@@ -152,6 +180,20 @@ export class Queues {
     _playIndexChanged(playIndex, queue) {
         this.q = queue;
         this.playIndexChanges.emit(playIndex);
+    }
+    
+    get loading() {
+        return this._loading;
+    }
+    
+    set loading(loading) {
+        let oldLoading = this._loading;
+        
+        this._loading = loading;
+        this.loadingChanges.emit({
+            old: oldLoading,
+            new: this._loading
+        });
     }
 }
 

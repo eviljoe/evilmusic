@@ -32,6 +32,8 @@ describe(QueueComponent.name, () => {
         };
         
         _queues = {
+            loadingChanges: Observable.create(() => {}),
+            
             playIndexChanges: Observable.create(() => {}),
             
             q: {},
@@ -61,11 +63,23 @@ describe(QueueComponent.name, () => {
     });
     
     describe('init', () => {
+        let loadingObserver;
         let playIndexObserver;
         
         beforeEach(() => {
+            spyOn(comp, '_queueLoadingChanged').and.stub();
             spyOn(_changeDetector, 'detectChanges').and.stub();
+            _queues.loadingChanges = Observable.create((observer) => loadingObserver = observer);
             _queues.playIndexChanges = Observable.create((observer) => playIndexObserver = observer);
+        });
+        
+        it('reacts to queue loding changes', () => {
+            comp.init();
+            
+            loadingObserver.next();
+            loadingObserver.complete();
+            
+            expect(comp._queueLoadingChanged).toHaveBeenCalled();
         });
         
         it('runs the change detection on play index changes', () => {
@@ -75,6 +89,15 @@ describe(QueueComponent.name, () => {
             playIndexObserver.complete();
             
             expect(_changeDetector.detectChanges).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_queueLoadingChanged', () => {
+        it("sets the loading to the value of the queues' loading status", () => {
+            _queues.loading = 'foo';
+            comp.loading = null;
+            comp._queueLoadingChanged();
+            expect(comp.loading).toEqual(_queues.loading);
         });
     });
     

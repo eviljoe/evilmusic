@@ -18,6 +18,8 @@
 
 import {ChangeDetectorRef, Component} from '@angular/core';
 
+import {LoadingOverlayComponent} from 'components/loading-overlay/loading-overlay.component';
+
 import {Players} from 'services/players';
 import {Queues} from 'services/queues';
 
@@ -26,14 +28,15 @@ export class QueueComponent {
         this.changeDetector = changeDetector;
         this.players = players;
         this.queues = queues;
-        
+    
         this.init();
     }
     
     static get annotations() {
         return [new Component({
             selector: 'em-queue',
-            templateUrl: 'components/queue/queue.html'
+            templateUrl: 'components/queue/queue.html',
+            directives: [LoadingOverlayComponent]
         })];
     }
     
@@ -42,9 +45,12 @@ export class QueueComponent {
     }
     
     init() {
-        this.queues.playIndexChanges.subscribe(() => {
-            this.changeDetector.detectChanges();
-        });
+        this.queues.loadingChanges.subscribe(() => this._queueLoadingChanged());
+        this.queues.playIndexChanges.subscribe(() => this.changeDetector.detectChanges());
+    }
+    
+    _queueLoadingChanged() {
+        this.loading = this.queues.loading;
     }
     
     clear() {

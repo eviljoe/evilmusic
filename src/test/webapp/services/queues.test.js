@@ -84,8 +84,15 @@ describe(Queues.name, () => {
         
         beforeEach(() => {
             queues.q = {};
+            spyOn(queues, '_loaded');
             spyOn(_queueCalls, 'get').and.returnValue(Observable.create((observer) => getObserver = observer));
             spyOn(_alerts, 'error').and.stub();
+        });
+        
+        it('sets the loading flag to true', () => {
+            queues.loading = null;
+            queues.load(false);
+            expect(queues.loading).toEqual(true);
         });
         
         it('loads a new queue when given true', () => {
@@ -105,13 +112,13 @@ describe(Queues.name, () => {
             expect(_queueCalls.get).toHaveBeenCalledWith(7);
         });
         
-        it('sets the queue when it loads successfully', () => {
+        it('reacts when the queue is loaded', () => {
             queues.load(true);
             
             getObserver.next({foo: 'bar'});
             getObserver.complete();
             
-            expect(queues.q).toEqual({foo: 'bar'});
+            expect(queues._loaded).toHaveBeenCalledWith({foo: 'bar'});
         });
         
         it('displays an error message if the queue failed to load', () => {
@@ -121,13 +128,33 @@ describe(Queues.name, () => {
         });
     });
     
+    describe('_loaded', () => {
+        it('sets the queue', () => {
+            queues._loaded({foo: 'bar'});
+            expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('sets the loading flag to false', () => {
+            queues.loading = null;
+            queues._loaded();
+            expect(queues.loading).toEqual(false);
+        });
+    });
+    
     describe('addLast', () => {
         let addLastObserver;
         
         beforeEach(() => {
             queues.q = {id: 7};
+            spyOn(queues, '_addedLast').and.stub();
             spyOn(_queueCalls, 'addLast').and.returnValue(Observable.create((observer) => addLastObserver = observer));
             spyOn(_alerts, 'error').and.stub();
+        });
+        
+        it('sets the loading flag to true', () => {
+            queues.loading = null;
+            queues.addLast(123);
+            expect(queues.loading).toEqual(true);
         });
         
         it('adds the song with the given ID to the queue', () => {
@@ -135,13 +162,13 @@ describe(Queues.name, () => {
             expect(_queueCalls.addLast).toHaveBeenCalledWith(7, 123);
         });
         
-        it('sets the queue when the song is added successfully', () => {
+        it('reacts when the song is added successfully', () => {
             queues.addLast(123);
             
             addLastObserver.next({foo: 'bar'});
             addLastObserver.complete();
             
-            expect(queues.q).toEqual({foo: 'bar'});
+            expect(queues._addedLast).toHaveBeenCalledWith({foo: 'bar'});
         });
         
         it('displays an error message if the add failed', () => {
@@ -151,13 +178,33 @@ describe(Queues.name, () => {
         });
     });
     
+    describe('_addedLast', () => {
+        it('sets the queue', () => {
+            queues._addedLast({foo: 'bar'});
+            expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('sets the loading flag to false', () => {
+            queues.loading = null;
+            queues._addedLast();
+            expect(queues.loading).toEqual(false);
+        });
+    });
+    
     describe('remove', () => {
         let removeObserver;
         
         beforeEach(() => {
             queues.q = {id: 7};
+            spyOn(queues, '_removed').and.stub();
             spyOn(_queueCalls, 'remove').and.returnValue(Observable.create((observer) => removeObserver = observer));
             spyOn(_alerts, 'error').and.stub();
+        });
+        
+        it('sets the loading flag to true', () => {
+            queues.loading = null;
+            queues.remove(123);
+            expect(queues.loading).toEqual(true);
         });
         
         it('removes the song with the given ID from the queue', () => {
@@ -165,13 +212,13 @@ describe(Queues.name, () => {
             expect(_queueCalls.remove).toHaveBeenCalledWith(7, 123);
         });
         
-        it('sets the queue when the song is removed successfully', () => {
+        it('reacts when the song is removed successfully', () => {
             queues.remove(123);
             
             removeObserver.next({foo: 'bar'});
             removeObserver.complete();
             
-            expect(queues.q).toEqual({foo: 'bar'});
+            expect(queues._removed).toHaveBeenCalledWith({foo: 'bar'});
         });
         
         it('displays an error message if the remove failed', () => {
@@ -181,13 +228,33 @@ describe(Queues.name, () => {
         });
     });
     
+    describe('_removed', () => {
+        it('sets the queue', () => {
+            queues._removed({foo: 'bar'});
+            expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('sets the loading flag to false', () => {
+            queues.loading = null;
+            queues._removed();
+            expect(queues.loading).toEqual(false);
+        });
+    });
+    
     describe('clear', () => {
         let clearObserver;
         
         beforeEach(() => {
             queues.q = {id: 7};
+            spyOn(queues, '_cleared').and.stub();
             spyOn(_queueCalls, 'clear').and.returnValue(Observable.create((observer) => clearObserver = observer));
             spyOn(_alerts, 'error').and.stub();
+        });
+        
+        it('sets the loading flag to true', () => {
+            queues.loading = null;
+            queues.clear();
+            expect(queues.loading).toEqual(true);
         });
         
         it('clears the queue', () => {
@@ -195,19 +262,32 @@ describe(Queues.name, () => {
             expect(_queueCalls.clear).toHaveBeenCalledWith(7);
         });
         
-        it('sets the queue when the it is cleared successfully', () => {
+        it('reacts when the it is cleared successfully', () => {
             queues.clear();
             
             clearObserver.next({foo: 'bar'});
             clearObserver.complete();
             
-            expect(queues.q).toEqual({foo: 'bar'});
+            expect(queues._cleared).toHaveBeenCalledWith({foo: 'bar'});
         });
         
         it('displays an error message if the clear failed', () => {
             queues.clear();
             clearObserver.error();
             expect(_alerts.error).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_cleared', () => {
+        it('sets the queue', () => {
+            queues._cleared({foo: 'bar'});
+            expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('sets the loading flag to false', () => {
+            queues.loading = null;
+            queues._cleared();
+            expect(queues.loading).toEqual(false);
         });
     });
     
@@ -344,6 +424,30 @@ describe(Queues.name, () => {
         it('emits a play index change event', () => {
             queues._playIndexChanged(123, {foo: 'bar'});
             expect(queues.playIndexChanges.emit).toHaveBeenCalled();
+        });
+    });
+    
+    describe('get loading', () => {
+        it('returns the loading flag', () => {
+            queues._loading = 'foo';
+            expect(queues.loading).toEqual('foo');
+        });
+    });
+    
+    describe('set loading', () => {
+        beforeEach(() => {
+            queues.loadingChanges = jasmine.createSpyObj('loadingChanges', ['emit']);
+        });
+        
+        it('sets the loading flag', () => {
+            queues._loading = null;
+            queues.loading = true;
+            expect(queues._loading).toEqual(true);
+        });
+        
+        it('emits a loading change', () => {
+            queues.loading = true;
+            expect(queues.loadingChanges.emit).toHaveBeenCalled();
         });
     });
 });

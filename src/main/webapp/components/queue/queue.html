@@ -16,35 +16,37 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div>
-    <h2>Queue</h2>
-</div>
-<div class="em-top-table-controls-container">
-    <button type="button" class="btn btn-xs btn-default" (click)="clear()" title="clear queue">
-        <i class="fa fa-ban"></i> clear
-    </button>
-</div>
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>pI</th>
-        <th>qI</th>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Controls</th>
-    </tr>
-    <tr *ngFor="let elem of getQueueElements()" [ngClass]="{info: isElementPlaying(elem)}">
-        <td>{{elem.playIndex}}</td>
-        <td>{{elem.queueIndex}}</td>
-        <td>{{elem.song.id}}</td>
-        <td>{{elem.song.title}}</td>
-        <td>
-            <button type="button" class="btn btn-xs btn-default" (click)="play(elem.queueIndex)" title="play">
-                <i class="fa fa-play"></i>
-            </button>
-            <button type="button" class="btn btn-xs btn-default" (click)="remove(elem.queueIndex)"
-                    title="remove from queue">
-                <i class="fa fa-times"></i>
-            </button>
-        </td>
-    </tr>
-</table>
+<em-loading-overlay [overlayVisible]="loading">
+    <div>
+        <h2>Queue</h2>
+    </div>
+    <div class="em-top-table-controls-container">
+        <button type="button" class="btn btn-xs btn-default" (click)="clear()" title="clear queue">
+            <i class="fa fa-ban"></i> clear
+        </button>
+    </div>
+    <table class="table table-striped table-condensed">
+        <tr>
+            <th>pI</th>
+            <th>qI</th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Controls</th>
+        </tr>
+        <tr *ngFor="let elem of getQueueElements()" [ngClass]="{info: isElementPlaying(elem)}">
+            <td>{{elem.playIndex}}</td>
+            <td>{{elem.queueIndex}}</td>
+            <td>{{elem.song.id}}</td>
+            <td>{{elem.song.title}}</td>
+            <td>
+                <button type="button" class="btn btn-xs btn-default" (click)="play(elem.queueIndex)" title="play">
+                    <i class="fa fa-play"></i>
+                </button>
+                <button type="button" class="btn btn-xs btn-default" (click)="remove(elem.queueIndex)"
+                        title="remove from queue">
+                    <i class="fa fa-times"></i>
+                </button>
+            </td>
+        </tr>
+    </table>
+</em-loading-overlay>
