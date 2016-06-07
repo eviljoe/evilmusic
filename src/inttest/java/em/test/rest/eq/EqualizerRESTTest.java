@@ -40,7 +40,7 @@ import em.test.rest.calls.EqualizerRESTCalls;
  * @since v0.1
  * @author eviljoe
  */
-public class EqualizerTest {
+public class EqualizerRESTTest {
     
     /* **************************** */
     /* Set Up / Tear Down Functions */

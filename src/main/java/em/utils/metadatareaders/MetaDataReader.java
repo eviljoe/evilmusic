@@ -84,6 +84,10 @@ public abstract class MetaDataReader {
         
         if(reader != null) {
             info = reader.readMetaData(f);
+            
+            if(info != null) {
+                info.setID(f.hashCode());
+            }
         }
         
         return info;

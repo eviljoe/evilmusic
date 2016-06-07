@@ -43,7 +43,7 @@ import em.test.rest.calls.QueueRESTCalls;
  * @since v0.1
  * @author eviljoe
  */
-public class QueueTest {
+public class QueueRESTTest {
     
     private List<Queue> queuesToCleanup;
     

@@ -18,7 +18,6 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
@@ -31,6 +30,7 @@ import em.controllers.LibraryController;
 import em.model.Library;
 import em.model.SongInfo;
 import em.test.rest.calls.LibraryRESTCalls;
+import em.utils.IDSet;
 
 /**
  * A class containing REST tests for {@link LibraryController}.
@@ -40,7 +40,7 @@ import em.test.rest.calls.LibraryRESTCalls;
  * @since v0.1
  * @author eviljoe
  */
-public class LibraryTest {
+public class LibraryRESTTest {
     
     /* ************** */
     /* Before / After */
@@ -88,7 +88,7 @@ public class LibraryTest {
         LibraryRESTCalls.rebuildLibrary();
         lib = LibraryRESTCalls.getLibrary();
         
-        assertNotNull(lib);
+        assertThat(lib, is(not(nullValue())));
         
         songs = lib.getSongs();
         assertThat(songs, is(not(nullValue())));
@@ -99,6 +99,22 @@ public class LibraryTest {
     @Test
     public void testRebuildLibrary_ReturnsLibrary() throws IOException {
         assertThat(LibraryRESTCalls.rebuildLibrary(), is(not(nullValue())));
+    }
+    
+    /**
+     * Tests to ensure that songs in the rebuilt library will have the same IDs as they did before the library was
+     * rebuilt.
+     */
+    @Test
+    public void testRebuildLibrary_HasSameSongIDs() throws IOException {
+        final IDSet<SongInfo> songsBefore = new IDSet<>(LibraryRESTCalls.getLibrary().getSongs());
+        final Collection<SongInfo> songsAfter = LibraryRESTCalls.rebuildLibrary().getSongs();
+        
+        // Make sure that all of the songs after the rebuild can be matched up to one before the rebuild
+        for(SongInfo song : songsAfter) {
+            assertThat(songsBefore.remove(song), is(not(nullValue())));
+        }
+        assertThat(songsBefore, is(empty()));
     }
     
     /* ************* */
