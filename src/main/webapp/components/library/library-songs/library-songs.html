@@ -26,7 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <th align="right">Length</th>
         <th align="right">Sample Rate</th>
         <th align="right">Sample Count</th>
-        <th align="left">Controls</th>
+        <th align="left">
+            <button type="button" class="btn btn-xs btn-default" (click)="addAllLast()" title="add all last">
+                <i class="fa fa-plus"></i>
+            </button>
+        </th>
     </tr>
     <tr *ngFor="let s of getSongs() | sort : 'trackNumber'">
         <td align="right">{{s.id}}</td>

@@ -179,17 +179,33 @@ public class Queue implements Identifiable, Cloneable {
     
     @Transient
     private void updateIndices() {
-        if(EMUtils.hasValues(elements)) {
+        int size = size();
+        
+        if(size > 0) {
             int qI = 0;
-            int pI = Math.max(0, getPlayIndex());
-            
-            pI = -Math.min(pI, size() - 1);
+            int pI = -getNormalizedPlayIndex();
             
             for(QueueElement element : elements) {
                 element.setQueueIndex(qI++);
                 element.setPlayIndex(pI++);
             }
         }
+    }
+    
+    @Transient
+    private int getNormalizedPlayIndex() {
+        int pI = playIndex;
+        
+        pI = Math.max(0, pI);
+        pI = Math.min(pI, size() - 1);
+        
+        return pI;
+    }
+    
+    @Transient
+    public void normalizePlayIndex() {
+        this.playIndex = getNormalizedPlayIndex();
+        updateIndices();
     }
     
     @Override

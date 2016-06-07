@@ -15,8 +15,10 @@
 package em.utils;
 
 import java.util.AbstractSet;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import em.model.Identifiable;
 
@@ -40,13 +42,26 @@ public class IDSet<I extends Identifiable> extends AbstractSet<I> {
     
     /** Creates an empty {@link IDSet}. */
     public IDSet() {
-        this(null);
+        this((Iterator<I>)null);
+    }
+    
+    /**
+     * Creates an {@link IDSet} that will initially contain the values from the given {@link Iterable}.
+     * 
+     * @param it The <code>Iterable</code> that contains the values that will be added to the set. If <code>null</code>,
+     *        the set will be empty.
+     * 
+     * @see #addAll(Iterator)
+     */
+    public IDSet(Iterable<I> it) {
+        this(it == null ? null : it.iterator());
     }
     
     /**
      * Creates an {@link IDSet} that will initially contain the values from the given {@link Iterator}.
      * 
-     * @param it The <code>Iterator</code> that contains the values that will be added to the set.
+     * @param it The <code>Iterator</code> that contains the values that will be added to the set. If <code>null</code>,
+     *        the set will be empty.
      * 
      * @see #addAll(Iterator)
      */
@@ -96,6 +111,8 @@ public class IDSet<I extends Identifiable> extends AbstractSet<I> {
      * @return Returns <code>true</code> if the set changed as a result of this call. Returns <code>false</code>
      *         otherwise.
      * 
+     * @see #addAll(Collection)
+     * @see #addAll(Iterable)
      * @see #add(Identifiable)
      */
     public boolean addAll(Iterator<I> it) {
@@ -111,12 +128,45 @@ public class IDSet<I extends Identifiable> extends AbstractSet<I> {
     }
     
     /**
+     * Returns the {@link Identifiable} contained within the set whose ID is equal to the given
+     * <code>Identifiable</code>'s ID.
+     * 
+     * @param i The <code>Identifiable</code> whose ID will be used to find a set element. If <code>null</code>,
+     *        <code>null</code> will always be returned.
+     * 
+     * @return Returns the element in the set that matches the given <code>Identifiable</code>'s ID. If no element can
+     *         be found, <code>null</code> is returned.
+     * 
+     * @see #get(Integer)
+     * @see Identifiable#getID()
+     */
+    public I get(I i) {
+        return i == null ? null : get(i.getID());
+    }
+    
+    /**
+     * Returns the {@link Identifiable} contained within the set whose ID is equal to the given {@link Integer}.
+     * 
+     * @param id The ID of the <code>Identifiable</code> to be retrieved. If <code>null</code>, <code>null</code> will
+     *        always be returned.
+     * 
+     * @return Returns the element in the set that whose ID is equal to the given <code>Integer</code>. If no element
+     *         can be found, <code>null</code> is returned.
+     * 
+     * @see #get(Identifiable)
+     * @see Identifiable#getID()
+     */
+    public I get(Integer id) {
+        return id == null ? null : map.get(id);
+    }
+    
+    /**
      * Removes the given object from the set. An object will only be removed from the set if it is one of the following
      * types:
      * <ul>
      * <li>{@link Number} - The {@link Identifiable} within the set whose ID equals {@link Number#intValue()} will be
      * removed.</li>
-     * <li>{@link Identifiable} - The <code>Identifiable</code> within the set whose ID will equals this
+     * <li>{@link Identifiable} - The <code>Identifiable</code> within the set whose ID equals this
      * <code>Identifiable</code>'s ID will be removed.</li>
      * </ul>
      * 
@@ -198,7 +248,7 @@ public class IDSet<I extends Identifiable> extends AbstractSet<I> {
      * <ul>
      * <li>{@link Number} - The {@link Identifiable} within the set whose ID equals {@link Number#intValue()} will be
      * checked for.</li>
-     * <li>{@link Identifiable} - The <code>Identifiable</code> within the set whose ID will equals this
+     * <li>{@link Identifiable} - The <code>Identifiable</code> within the set whose ID equals this
      * <code>Identifiable</code>'s ID will be checked for.</li>
      * </ul>
      * 

@@ -1,13 +1,13 @@
 /*
  * EvilMusic - Web-Based Music Player Copyright (C) 2016 Joe Falascino
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.junit.Test;
@@ -31,9 +32,9 @@ import em.model.Identifiable;
 
 /**
  * A class containing unit tests for {@link IDSet}.
- * 
+ *
  * @see IDSet
- * 
+ *
  * @since v0.1
  * @author eviljoe
  */
@@ -106,6 +107,66 @@ public class IDSetTest {
         assertFalse(set.contains(b));
     }
     
+    /** Tests to ensure that the {@link IDSet#addAll(Iterable)} function will correctly add values to the set. */
+    @Test
+    public void testAddAll_Iterable_Values() {
+        final TestIdentifiable a = new TestIdentifiable(3);
+        final TestIdentifiable b = new TestIdentifiable(7);
+        final TestIdentifiable c = new TestIdentifiable(11);
+        final TestIdentifiable d = new TestIdentifiable(13);
+        final TestIdentifiable e = new TestIdentifiable(17);
+        final IDSet<TestIdentifiable> set = new IDSet<>();
+        final ArrayList<TestIdentifiable> list = new ArrayList<>();
+        
+        list.add(a);
+        list.add(b);
+        list.add(c);
+        
+        set.add(d);
+        set.addAll(list.iterator());
+        
+        assertTrue(set.contains(a));
+        assertTrue(set.contains(b));
+        assertTrue(set.contains(c));
+        assertTrue(set.contains(d));
+        assertFalse(set.contains(e));
+    }
+    
+    /**
+     * Tests to ensure that the {@link IDSet#addAll(Iterable)} function will not add any values to the set when given an
+     * empty iterator.
+     */
+    @Test
+    public void testAddAll_Iterable_Empty() {
+        final TestIdentifiable a = new TestIdentifiable(3);
+        final TestIdentifiable b = new TestIdentifiable(7);
+        final IDSet<TestIdentifiable> set = new IDSet<>();
+        final ArrayList<TestIdentifiable> list = new ArrayList<>();
+        
+        set.add(a);
+        set.addAll(list.iterator());
+        
+        assertTrue(set.contains(a));
+        assertFalse(set.contains(b));
+    }
+    
+    /**
+     * Tests to ensure that the {@link IDSet#addAll(Iterable)} function will not add any values to the set when given a
+     * <code>null</code> iterator.
+     */
+    @Test
+    public void testAddAll_Iterable_Null() {
+        final TestIdentifiable a = new TestIdentifiable(3);
+        final TestIdentifiable b = new TestIdentifiable(7);
+        final IDSet<TestIdentifiable> set = new IDSet<>();
+        
+        set.add(a);
+        set.addAll((Iterator<TestIdentifiable>)null);
+        
+        assertTrue(set.contains(a));
+        assertFalse(set.contains(b));
+    }
+    
     /** Tests to ensure that the {@link IDSet#add(Identifiable)} function will add a value to the set. */
     @Test
     public void testAdd_Identifiable_NotNull() {
@@ -150,6 +211,33 @@ public class IDSetTest {
         
         assertFalse(s.add(a));
         assertEquals(0, s.size());
+    }
+    
+    /** Tests to ensure that the {@link IDSet#get(Identifiable)} function will return the element from the set. */
+    @Test
+    public void testGet_Identifiable() {
+        final TestIdentifiable a = new TestIdentifiable(1);
+        final TestIdentifiable b = new TestIdentifiable(2);
+        final TestIdentifiable c = new TestIdentifiable(3);
+        final IDSet<TestIdentifiable> s = new IDSet<>(Arrays.asList(a, b, c));
+        
+        assertNull(s.get((TestIdentifiable)null));
+        assertNull(s.get(new TestIdentifiable(null)));
+        assertNull(s.get(new TestIdentifiable(4)));
+        assertEquals(b, s.get(new TestIdentifiable(2)));
+    }
+    
+    /** Tests to ensure that the {@link IDSet#get(Integer)} function will return the element from the set. */
+    @Test
+    public void testGet_Integer() {
+        final TestIdentifiable a = new TestIdentifiable(1);
+        final TestIdentifiable b = new TestIdentifiable(2);
+        final TestIdentifiable c = new TestIdentifiable(3);
+        final IDSet<TestIdentifiable> s = new IDSet<>(Arrays.asList(a, b, c));
+        
+        assertNull(s.get((Integer)null));
+        assertNull(s.get(Integer.valueOf(4)));
+        assertEquals(b, s.get(2));
     }
     
     /** Tests to ensure that the {@link IDSet#remove(Object)} function will remove the same objects that are added. */

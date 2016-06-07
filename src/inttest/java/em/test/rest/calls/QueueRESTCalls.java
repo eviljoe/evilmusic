@@ -17,6 +17,8 @@ package em.test.rest.calls;
 import static com.jayway.restassured.RestAssured.given;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +29,6 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 import em.model.Queue;
 import em.test.rest.config.RESTTestConfig;
-import em.utils.EMUtils;
 
 /**
  * @since v0.1
@@ -90,9 +91,10 @@ public class QueueRESTCalls {
         res.expect().statusCode(expectStatusCode);
         res.expect().contentType(ContentType.JSON);
         
-        r =
-                res.put(RESTTestConfig.getInstance().getFullURL("/queue/{qID}/last?songIDs={songIDs}"), qID,
-                        EMUtils.toCSV(songIDs, ","));
+        r = res.put( //
+                RESTTestConfig.getInstance().getFullURL("/queue/{qID}/last?{songIDs}"), //
+                qID, //
+                Arrays.stream(songIDs).mapToObj(id -> "songID=" + id).collect(Collectors.joining("&")));
         
         return expectStatusCode == 200 ? toQueue(r.getBody().asString()) : null;
     }

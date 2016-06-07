@@ -74,12 +74,12 @@ export class Queues {
      * the queue will be reloaded.  If a queue has not already been loaded, the song will not be enqueued because there
      * is no way to know which queue should be altered.
      *
-     * @param {number} songID The ID of the song to be enqueued.
+     * @param {...number} One or more IDs of the song(s) to be enqueued.
      */
-    addLast(songID) {
+    addLast(...songIDs) {
         this.loading = true;
         
-        this.queueCalls.addLast(this.q.id, songID).subscribe(
+        this.queueCalls.addLast(this.q.id, songIDs).subscribe(
             (queue) => this._addedLast(queue),
             (err) => this.alerts.error('Failed to enqueue last.', err)
         );

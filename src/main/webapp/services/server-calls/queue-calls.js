@@ -45,7 +45,7 @@ export class QueueCalls {
         
         if(songIDs) {
             for(let songID of songIDs) {
-                queryParams.push(`songIDs=${songID}`);
+                queryParams.push(`songID=${songID}`);
             }
             
             queryParamsStr = queryParams.join('&');

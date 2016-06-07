@@ -64,4 +64,10 @@ export class LibrarySongsComponent {
     addLast(songID) {
         this.queues.addLast(songID);
     }
+    
+    addAllLast() {
+        this.queues.addLast(Array.from(this.getSongs())
+            .sort((songA, songB) => songA.trackNumber - songB.trackNumber)
+            .map((song) => song.id));
+    }
 }

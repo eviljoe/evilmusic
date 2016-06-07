@@ -15,6 +15,8 @@
 package em.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -46,6 +48,7 @@ import em.model.Queue;
 import em.model.QueueElement;
 import em.model.SongInfo;
 import em.utils.EMUtils;
+import em.utils.IDSet;
 import em.utils.LibraryUtils;
 import em.utils.LogUtils;
 
@@ -117,7 +120,10 @@ public class QueueController {
     @Produces(MediaType.APPLICATION_JSON)
     public Queue clearQueue(@PathVariable("id") int id) {
         final Queue q = qDAO.get(id);
+        
         q.clearElements();
+        q.normalizePlayIndex();
+        
         return qDAO.save(q);
     }
     
@@ -134,32 +140,45 @@ public class QueueController {
         }
         
         q.removeElement(qIndex);
+        q.normalizePlayIndex();
         
         return qDAO.save(q);
     }
     
-    // TODO The name of the "songIDs" parameter should be renamed to "songID." This is because the URL will look like
-    // this:
-    // .../last?songID=123&songID=456&songID=789
-    // It does not look like this:
-    // .../last?songIDs=123,456,789
     @Transactional
     @RequestMapping(value = "/rest/queue/{queueID}/last", method = RequestMethod.PUT)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Queue addLast(@PathVariable("queueID") int queueID,
-            @RequestParam(value = "songIDs", required = true) List<Integer> songIDs) throws SongNotFoundException,
+            @RequestParam(value = "songID", required = true) List<Integer> songIDs) throws SongNotFoundException,
             QueueNotFoundException {
         
         final Queue q = qDAO.get(queueID);
-        final List<SongInfo> songs = songDAO.get(songIDs);
         
-        if(EMUtils.hasValues(songs)) {
-            q.addSongsLast(songs);
-            qDAO.save(q);
+        if(EMUtils.hasValues(songIDs)) {
+            // Sort the songs to in the order that they were specified in the REST call.
+            if(q.addSongsLast(sortSongs(songIDs, songDAO.get(songIDs)))) {
+                q.normalizePlayIndex();
+                qDAO.save(q);
+            }
         }
         
         return q;
+    }
+    
+    List<SongInfo> sortSongs(Collection<Integer> orderedSongIDs, Collection<SongInfo> songs) {
+        final IDSet<SongInfo> unsortedSongs = new IDSet<>(songs);
+        final List<SongInfo> sortedSongs = new ArrayList<>(unsortedSongs.size());
+        
+        for(Integer songID : orderedSongIDs) {
+            SongInfo song = unsortedSongs.get(songID);
+            
+            if(song != null) {
+                sortedSongs.add(song);
+            }
+        }
+        
+        return sortedSongs;
     }
     
     @Transactional
@@ -172,6 +191,7 @@ public class QueueController {
         }
         
         q.setPlayIndex(playIndex);
+        q.normalizePlayIndex();
         qDAO.save(q);
         
         return q;

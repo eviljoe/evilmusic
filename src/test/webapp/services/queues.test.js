@@ -157,9 +157,14 @@ describe(Queues.name, () => {
             expect(queues.loading).toEqual(true);
         });
         
-        it('adds the song with the given ID to the queue', () => {
+        it('adds a single song with the given ID to the queue', () => {
             queues.addLast(123);
-            expect(_queueCalls.addLast).toHaveBeenCalledWith(7, 123);
+            expect(_queueCalls.addLast).toHaveBeenCalledWith(7, [123]);
+        });
+        
+        it('adds multiple songs with the given ID to the queue', () => {
+            queues.addLast(1, 2, 3);
+            expect(_queueCalls.addLast).toHaveBeenCalledWith(7, [1, 2, 3]);
         });
         
         it('reacts when the song is added successfully', () => {
