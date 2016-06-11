@@ -45,7 +45,11 @@ describe(LibrarySongsComponent.name, () => {
             currentSongChanges: Observable.create(() => {})
         };
         
-        _queues = {addLast: () => {}};
+        _queues = {
+            queueChanges: Observable.create(() => {}),
+            
+            addLast: () => {}
+        };
         
         comp = new LibrarySongsComponent(_changeDetector, _emUtils, _libraries, _players, _queues);
     });
@@ -65,12 +69,15 @@ describe(LibrarySongsComponent.name, () => {
     describe('init', () => {
         let libraryObserver;
         let currentSongObserver;
+        let queueObserver;
         
         beforeEach(() => {
             _libraries.libraryChanges = Observable.create((observer) => libraryObserver = observer);
             _players.currentSongChanges = Observable.create((observer) => currentSongObserver = observer);
+            _queues.queueChanges = Observable.create((observer) => queueObserver = observer);
             spyOn(comp, '_libraryChanged').and.stub();
             spyOn(comp, '_currentSongChanged').and.stub();
+            spyOn(comp, '_queueChanged').and.stub();
         });
         
         it('updates after the library changes', () => {
@@ -89,6 +96,15 @@ describe(LibrarySongsComponent.name, () => {
             currentSongObserver.complete();
             
             expect(comp._currentSongChanged).toHaveBeenCalled();
+        });
+        
+        it('updates after the queue changes', () => {
+            comp.init();
+            
+            queueObserver.next();
+            queueObserver.complete();
+            
+            expect(comp._queueChanged).toHaveBeenCalled();
         });
     });
     
@@ -111,6 +127,31 @@ describe(LibrarySongsComponent.name, () => {
         it('runs the change detection', () => {
             comp._currentSongChanged();
             expect(_changeDetector.detectChanges).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_queueChanged', () => {
+        beforeEach(() => {
+            comp.enqueuedSongIDs = jasmine.createSpyObj('enqueuedSongIDs', ['clear', 'add']);
+            _queues.q = {
+                elements: [
+                    {song: {id: 1}},
+                    {song: {id: 2}},
+                    {song: {id: 3}}
+                ]
+            };
+        });
+        
+        it('cleares the enqueued song IDs set', () => {
+            comp._queueChanged();
+            expect(comp.enqueuedSongIDs.clear).toHaveBeenCalled();
+        });
+        
+        it('adds the ID of every song in the queue to the enqueued song IDs set', () => {
+            comp._queueChanged();
+            expect(comp.enqueuedSongIDs.add).toHaveBeenCalledWith(1);
+            expect(comp.enqueuedSongIDs.add).toHaveBeenCalledWith(2);
+            expect(comp.enqueuedSongIDs.add).toHaveBeenCalledWith(3);
         });
     });
     
@@ -169,6 +210,20 @@ describe(LibrarySongsComponent.name, () => {
         it('returns true when the playing song has the same ID as the given song', () => {
             _players.currentSong = {id: 1};
             expect(comp.isPlaying({id: 1})).toEqual(true);
+        });
+    });
+    
+    describe('isInQueue', () => {
+        beforeEach(() => {
+            comp.enqueuedSongIDs = new Set([1, 2, 3]);
+        });
+        
+        it("returns true if the given song's ID is in the set", () => {
+            expect(comp.isInQueue({id: 2}));
+        });
+        
+        it("returns false if the given song's ID is not in the set", () => {
+            expect(comp.isInQueue({id: -1}));
         });
     });
 });

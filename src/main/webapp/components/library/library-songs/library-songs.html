@@ -32,11 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </button>
         </th>
     </tr>
-    <tr *ngFor="let s of getSongs() | sort : 'trackNumber'" [ngClass]="{info: isPlaying(s)}">
+    <tr *ngFor="let s of getSongs() | sort : 'trackNumber'" [ngClass]="{info: isPlaying(s), 'library-songs-enqueued': isInQueue(s)}">
         <td align="right">{{s.id}}</td>
         <td align="left">{{s.artist}}</td>
         <td align="left">{{s.album}}</td>
         <td align="right">{{s.trackNumber}}</td>
+        <!-- [ngClass]="{'library-songs-enqueued': isInQueue(s)}" -->
         <td align="left">{{s.title}}</td>
         <td align="right">{{s.millis | minutes}}</td>
         <td align="right">{{s.sampleRate | hertz}}</td>

@@ -32,6 +32,7 @@ export class Queues {
         
         this.playIndexChanges = new EventEmitter();
         this.loadingChanges = new EventEmitter();
+        this.queueChanges = new EventEmitter();
         
         this.init();
     }
@@ -66,6 +67,7 @@ export class Queues {
     
     _loaded(queue) {
         this.q = queue;
+        this.queueChanges.emit(this.q);
         this.loading = false;
     }
 
@@ -87,6 +89,7 @@ export class Queues {
     
     _addedLast(queue) {
         this.q = queue;
+        this.queueChanges.emit(this.q);
         this.loading = false;
     }
     
@@ -108,6 +111,7 @@ export class Queues {
     
     _removed(queue) {
         this.q = queue;
+        this.queueChanges.emit(this.q);
         this.loading = false;
     }
 
@@ -126,6 +130,7 @@ export class Queues {
     
     _cleared(queue) {
         this.q = queue;
+        this.queueChanges.emit(this.q);
         this.loading = false;
     }
     
@@ -179,6 +184,7 @@ export class Queues {
     
     _playIndexChanged(playIndex, queue) {
         this.q = queue;
+        this.queueChanges.emit(this.q);
         this.playIndexChanges.emit(playIndex);
     }
     

@@ -17,6 +17,7 @@
  */
 
 import {ChangeDetectorRef, Component} from '@angular/core';
+import _ from 'lodash';
 
 import {EMUtils} from 'services/emutils';
 import {Libraries} from 'services/libraries';
@@ -34,6 +35,8 @@ export class LibrarySongsComponent {
         this.libraries = libraries;
         this.players = players;
         this.queues = queues;
+        
+        this.enqueuedSongIDs = new Set();
         
         this.init();
     }
@@ -54,6 +57,7 @@ export class LibrarySongsComponent {
     init() {
         this.libraries.libraryChanges.subscribe(() => this._libraryChanged());
         this.players.currentSongChanges.subscribe(() => this._currentSongChanged());
+        this.queues.queueChanges.subscribe(() => this._queueChanged());
     }
     
     _libraryChanged() {
@@ -62,6 +66,11 @@ export class LibrarySongsComponent {
     
     _currentSongChanged() {
         this.changeDetector.detectChanges();
+    }
+    
+    _queueChanged() {
+        this.enqueuedSongIDs.clear();
+        _.forEach(this.queues.q.elements, (elem) => this.enqueuedSongIDs.add(elem.song.id));
     }
     
     getSongs() {
@@ -82,5 +91,9 @@ export class LibrarySongsComponent {
         let playingSong = this.players.currentSong;
 
         return !!playingSong && playingSong.id === song.id;
+    }
+    
+    isInQueue(song) {
+        return this.enqueuedSongIDs.has(song.id);
     }
 }

@@ -129,9 +129,18 @@ describe(Queues.name, () => {
     });
     
     describe('_loaded', () => {
+        beforeEach(() => {
+            queues.queueChanges = jasmine.createSpyObj('queueChanges', ['emit']);
+        });
+        
         it('sets the queue', () => {
             queues._loaded({foo: 'bar'});
             expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('fires a queue change event', () => {
+            queues._loaded();
+            expect(queues.queueChanges.emit).toHaveBeenCalled();
         });
         
         it('sets the loading flag to false', () => {
@@ -184,9 +193,18 @@ describe(Queues.name, () => {
     });
     
     describe('_addedLast', () => {
+        beforeEach(() => {
+            queues.queueChanges = jasmine.createSpyObj('queueChanges', ['emit']);
+        });
+        
         it('sets the queue', () => {
             queues._addedLast({foo: 'bar'});
             expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('fires a queue change event', () => {
+            queues._addedLast();
+            expect(queues.queueChanges.emit).toHaveBeenCalled();
         });
         
         it('sets the loading flag to false', () => {
@@ -234,9 +252,18 @@ describe(Queues.name, () => {
     });
     
     describe('_removed', () => {
+        beforeEach(() => {
+            queues.queueChanges = jasmine.createSpyObj('queueChanges', ['emit']);
+        });
+        
         it('sets the queue', () => {
             queues._removed({foo: 'bar'});
             expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('fires a queue change event', () => {
+            queues._removed();
+            expect(queues.queueChanges.emit).toHaveBeenCalled();
         });
         
         it('sets the loading flag to false', () => {
@@ -284,9 +311,18 @@ describe(Queues.name, () => {
     });
     
     describe('_cleared', () => {
+        beforeEach(() => {
+            queues.queueChanges = jasmine.createSpyObj('queueChanges', ['emit']);
+        });
+        
         it('sets the queue', () => {
             queues._cleared({foo: 'bar'});
             expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('fires a queue change event', () => {
+            queues._cleared();
+            expect(queues.queueChanges.emit).toHaveBeenCalled();
         });
         
         it('sets the loading flag to false', () => {
@@ -419,11 +455,17 @@ describe(Queues.name, () => {
     describe('_playIndexChanged', () => {
         beforeEach(() => {
             queues.playIndexChanges = jasmine.createSpyObj('playIndexChanges', ['emit']);
+            queues.queueChanges = jasmine.createSpyObj('queueChanges', ['emit']);
         });
         
         it('sets the queue', () => {
             queues._playIndexChanged(123, {foo: 'bar'});
             expect(queues.q).toEqual({foo: 'bar'});
+        });
+        
+        it('fires a queue change event', () => {
+            queues._playIndexChanged();
+            expect(queues.queueChanges.emit).toHaveBeenCalled();
         });
         
         it('emits a play index change event', () => {
