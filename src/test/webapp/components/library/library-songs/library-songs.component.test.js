@@ -25,6 +25,7 @@ describe(LibrarySongsComponent.name, () => {
     let _changeDetector;
     let _emUtils;
     let _libraries;
+    let _players;
     let _queues;
     
     beforeEach(() => {
@@ -32,17 +33,21 @@ describe(LibrarySongsComponent.name, () => {
             detectChanges() {}
         };
         
+        _emUtils = {};
+        
         _libraries = {
             libraryChanges: Observable.create(() => {}),
             
             getSongsForAlbum() {}
         };
         
+        _players = {
+            currentSongChanges: Observable.create(() => {})
+        };
+        
         _queues = {addLast: () => {}};
         
-        _emUtils = {};
-        
-        comp = new LibrarySongsComponent(_changeDetector, _emUtils, _libraries, _queues);
+        comp = new LibrarySongsComponent(_changeDetector, _emUtils, _libraries, _players, _queues);
     });
     
     describe('annotations', () => {
@@ -59,10 +64,13 @@ describe(LibrarySongsComponent.name, () => {
     
     describe('init', () => {
         let libraryObserver;
+        let currentSongObserver;
         
         beforeEach(() => {
             _libraries.libraryChanges = Observable.create((observer) => libraryObserver = observer);
+            _players.currentSongChanges = Observable.create((observer) => currentSongObserver = observer);
             spyOn(comp, '_libraryChanged').and.stub();
+            spyOn(comp, '_currentSongChanged').and.stub();
         });
         
         it('updates after the library changes', () => {
@@ -73,6 +81,15 @@ describe(LibrarySongsComponent.name, () => {
             
             expect(comp._libraryChanged).toHaveBeenCalled();
         });
+        
+        it('updates after the current song changes', () => {
+            comp.init();
+            
+            currentSongObserver.next();
+            currentSongObserver.complete();
+            
+            expect(comp._currentSongChanged).toHaveBeenCalled();
+        });
     });
     
     describe('_libraryChanged', () => {
@@ -82,6 +99,17 @@ describe(LibrarySongsComponent.name, () => {
         
         it('runs the change detection', () => {
             comp._libraryChanged();
+            expect(_changeDetector.detectChanges).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_currentSongChanged', () => {
+        beforeEach(() => {
+            spyOn(_changeDetector, 'detectChanges').and.stub();
+        });
+        
+        it('runs the change detection', () => {
+            comp._currentSongChanged();
             expect(_changeDetector.detectChanges).toHaveBeenCalled();
         });
     });
@@ -124,6 +152,23 @@ describe(LibrarySongsComponent.name, () => {
         it('adds the ID for each song sorted by track number', () => {
             comp.addAllLast();
             expect(_queues.addLast).toHaveBeenCalledWith([11, 12, 13]);
+        });
+    });
+    
+    describe('isPlaying', () => {
+        it('returns false when there is no playing song', () => {
+            _players.currentSong = null;
+            expect(comp.isPlaying({id: 1})).toEqual(false);
+        });
+        
+        it('returns false when the playing song has a different ID from the given song', () => {
+            _players.currentSong = {id: 2};
+            expect(comp.isPlaying({id: 1})).toEqual(false);
+        });
+        
+        it('returns true when the playing song has the same ID as the given song', () => {
+            _players.currentSong = {id: 1};
+            expect(comp.isPlaying({id: 1})).toEqual(true);
         });
     });
 });

@@ -17,7 +17,7 @@
  */
 
 import AV from 'av';
-import {Injectable, EventEmitter} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 
 import {Alerts} from './alerts';
 import {EMUtils} from './emutils';
@@ -35,12 +35,14 @@ export class Players {
         this.equalizers = equalizers;
         this.queues = queues;
         this.volumeCalls = volumeCalls;
-        this.AV = AV;
         
+        this.playerProgressChanges = new EventEmitter();
+        this.currentSongChanges = new EventEmitter();
+        
+        this.AV = AV;
         this.avPlayer = null;
         this.currentSong = null;
         this.playerProgress = null;
-        this.playerProgressChanges = new EventEmitter();
         this.volume = MAX_VOLUME;
         
         this.loadVolume();
@@ -119,7 +121,7 @@ export class Players {
         this.currentSong = null;
         this.playNext();
     }
-
+    
     togglePlayback() {
         let toggled = false;
 
@@ -180,6 +182,20 @@ export class Players {
             (volume) => this.volume = volume,
             (err) => this.alerts.error('Could not load volume.', err)
         );
+    }
+    
+    get currentSong() {
+        return this._currentSong;
+    }
+    
+    set currentSong(song) {
+        let old = this._currentSong;
+
+        this._currentSong = song;
+        this.currentSongChanges.emit({
+            old,
+            new: song
+        });
     }
 }
 

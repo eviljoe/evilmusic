@@ -516,4 +516,27 @@ describe(Players.name, () => {
             expect(players.play).not.toHaveBeenCalled();
         });
     });
+    
+    describe('get currentSong', () => {
+        it('returns the current song', () => {
+            players._currentSong = 'foo';
+            expect(players.currentSong).toEqual('foo');
+        });
+    });
+    
+    describe('set currentSong', () => {
+        beforeEach(() => {
+            players.currentSongChanges = jasmine.createSpyObj('currentSongChanges', ['emit']);
+        });
+        
+        it('sets the current song', () => {
+            players.currentSong = 'foo';
+            expect(players._currentSong).toEqual('foo');
+        });
+        
+        it('fires an event', () => {
+            players.currentSong = 'foo';
+            expect(players.currentSongChanges.emit).toHaveBeenCalled();
+        });
+    });
 });

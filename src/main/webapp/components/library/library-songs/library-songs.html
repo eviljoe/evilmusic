@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </button>
         </th>
     </tr>
-    <tr *ngFor="let s of getSongs() | sort : 'trackNumber'">
+    <tr *ngFor="let s of getSongs() | sort : 'trackNumber'" [ngClass]="{info: isPlaying(s)}">
         <td align="right">{{s.id}}</td>
         <td align="left">{{s.artist}}</td>
         <td align="left">{{s.album}}</td>

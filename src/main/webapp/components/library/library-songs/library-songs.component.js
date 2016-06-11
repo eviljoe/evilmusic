@@ -20,6 +20,7 @@ import {ChangeDetectorRef, Component} from '@angular/core';
 
 import {EMUtils} from 'services/emutils';
 import {Libraries} from 'services/libraries';
+import {Players} from 'services/players';
 import {Queues} from 'services/queues';
 
 import {HertzPipe} from 'pipes/hertz.pipe';
@@ -27,10 +28,11 @@ import {MinutesPipe} from 'pipes/minutes.pipe';
 import {SortPipe} from 'pipes/sort.pipe';
 
 export class LibrarySongsComponent {
-    constructor(changeDetector, emUtils, libraries, queues) {
+    constructor(changeDetector, emUtils, libraries, players, queues) {
         this.changeDetector = changeDetector;
         this.emUtils = emUtils;
         this.libraries = libraries;
+        this.players = players;
         this.queues = queues;
         
         this.init();
@@ -46,14 +48,19 @@ export class LibrarySongsComponent {
     }
     
     static get parameters() {
-        return [[ChangeDetectorRef], [EMUtils], [Libraries], [Queues]];
+        return [[ChangeDetectorRef], [EMUtils], [Libraries], [Players], [Queues]];
     }
     
     init() {
         this.libraries.libraryChanges.subscribe(() => this._libraryChanged());
+        this.players.currentSongChanges.subscribe(() => this._currentSongChanged());
     }
     
     _libraryChanged() {
+        this.changeDetector.detectChanges();
+    }
+    
+    _currentSongChanged() {
         this.changeDetector.detectChanges();
     }
     
@@ -69,5 +76,11 @@ export class LibrarySongsComponent {
         this.queues.addLast(Array.from(this.getSongs())
             .sort((songA, songB) => songA.trackNumber - songB.trackNumber)
             .map((song) => song.id));
+    }
+    
+    isPlaying(song) {
+        let playingSong = this.players.currentSong;
+
+        return !!playingSong && playingSong.id === song.id;
     }
 }
