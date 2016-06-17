@@ -14,11 +14,11 @@
 
 package em.utils.metadatareaders;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.gen5.api.Assertions.assertEquals;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 /**
  * @since v0.1

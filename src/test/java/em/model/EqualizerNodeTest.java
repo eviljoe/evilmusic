@@ -14,11 +14,11 @@
 
 package em.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 /**
  * A class containing unit tests for {@link EqualizerNode}.
@@ -46,7 +46,7 @@ public class EqualizerNodeTest {
         assertTrue(node != clone);
         assertEquals(node.getID(), clone.getID());
         assertEquals(node.getFrequency(), clone.getFrequency());
-        assertEquals(node.getQ(), clone.getQ(), 0.0);
-        assertEquals(node.getGain(), clone.getGain(), 0.0);
+        assertEquals(node.getQ(), clone.getQ());
+        assertEquals(node.getGain(), clone.getGain());
     }
 }

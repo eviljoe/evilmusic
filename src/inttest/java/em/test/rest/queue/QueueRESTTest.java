@@ -14,20 +14,20 @@
 
 package em.test.rest.queue;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.gen5.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 
 import em.controllers.QueueController;
 import em.model.Library;
@@ -51,13 +51,13 @@ public class QueueRESTTest {
     /* Before / After */
     /* ************** */
     
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         queuesToCleanup = new ArrayList<Queue>();
         LibraryRESTCalls.rebuildLibrary();
     }
     
-    @After
+    @AfterEach
     public void tearDown() {
         for(Queue q : queuesToCleanup) {
             if(q != null) {

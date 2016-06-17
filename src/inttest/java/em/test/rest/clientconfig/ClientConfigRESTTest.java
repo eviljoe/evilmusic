@@ -14,9 +14,9 @@
 
 package em.test.rest.clientconfig;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.gen5.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 import em.test.rest.calls.ClientConfigRESTCalls;
 
@@ -35,7 +35,7 @@ public class ClientConfigRESTTest {
     public void testPutVolume() {
         double volume = 20.0;
         
-        assertEquals(volume, ClientConfigRESTCalls.putVolume(volume), 0.0);
-        assertEquals(volume, ClientConfigRESTCalls.getVolume(), 0.0);
+        assertEquals(volume, ClientConfigRESTCalls.putVolume(volume));
+        assertEquals(volume, ClientConfigRESTCalls.getVolume());
     }
 }

@@ -14,12 +14,14 @@
 
 package em.model;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.is;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 /**
  * A class containing unit tests for {@link EMPreferences}.
@@ -46,7 +48,7 @@ public class EMPreferencesTest {
         clone = orig.clone();
         assertNotNull(clone);
         assertTrue(orig != clone);
-        assertArrayEquals(orig.getMusicDirectories(), clone.getMusicDirectories());
+        assertThat(clone.getMusicDirectories(), is(arrayContaining(orig.getMusicDirectories())));
         assertEquals(orig.getMetaFLACCommand(), clone.getMetaFLACCommand());
         assertEquals(orig.getDatabaseHome(), clone.getDatabaseHome());
         assertEquals(orig.getDatabaseRollback(), clone.getDatabaseRollback());

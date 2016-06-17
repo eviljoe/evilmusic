@@ -14,17 +14,17 @@
 
 package em.test.rest.library;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.util.Collection;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 
 import em.controllers.LibraryController;
 import em.model.Library;
@@ -46,7 +46,7 @@ public class LibraryRESTTest {
     /* Before / After */
     /* ************** */
     
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         LibraryRESTCalls.rebuildLibrary();
     }

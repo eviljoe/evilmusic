@@ -17,9 +17,9 @@ package em.utils;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNull;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -30,7 +30,7 @@ import java.util.Date;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 /**
  * A class containing JUnit tests for {@link LibraryUtils}.

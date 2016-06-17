@@ -14,14 +14,14 @@
 
 package em.prefs;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertNull;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Properties;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 import em.model.EMPreferences;
 import em.prefs.EMPreferencesManager.EMPreferencesKey;

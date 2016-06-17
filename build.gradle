@@ -24,6 +24,7 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
+apply plugin: 'org.junit.gen5.gradle'
 
 //////////////
 // Settings //
@@ -80,7 +81,9 @@ dependencies {
     compile 'org.hibernate:hibernate-entitymanager:4.3.6.Final'
     compile 'commons-cli:commons-cli:1.2'
 
-    testCompile 'junit:junit:4.11'
+	testCompile 'org.junit:junit5-api:5.0.0-ALPHA'
+	testCompile 'org.junit:junit-console:5.0.0-ALPHA'
+	testRuntime 'org.junit:junit5-engine:5.0.0-ALPHA'
     testCompile 'org.easymock:easymock:3.2'
     testCompile 'com.jayway.restassured:rest-assured:2.4.0'
 
@@ -104,6 +107,9 @@ buildscript {
     dependencies {
         // Necessary For Spring Boot
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.1.8.RELEASE'
+        
+        // Necessary For JUnit5
+        classpath 'org.junit:junit-gradle:5.0.0-ALPHA'
     }
 }
 

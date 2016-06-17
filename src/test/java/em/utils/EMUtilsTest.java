@@ -14,11 +14,12 @@
 
 package em.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertNull;
+import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 import em.model.Identifiable;
 
@@ -291,9 +292,9 @@ public class EMUtilsTest {
      * Tests to ensure that the {@link EMUtils#toSet(Collection, Set)} function will throw a
      * {@link NullPointerException} when given a {@code null} set to add the collection elements to.
      */
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testToSet_NullSet() {
-        EMUtils.toSet(new ArrayList<Integer>(), null);
+        assertThrows(NullPointerException.class, () -> EMUtils.toSet(new ArrayList<Integer>(), null));
     }
     
     /**
@@ -443,19 +444,19 @@ public class EMUtilsTest {
     /** Tests to ensure that the {@code toFloat} functions will correctly convert a float wrapper to a primitive. */
     @Test
     public void testToFloat() {
-        assertEquals(7.0f, EMUtils.toFloat(new Float(7.0f)), 0.0f);
-        assertEquals(0.0f, EMUtils.toFloat(null), 0.0f);
-        assertEquals(11.0f, EMUtils.toFloat(new Float(11.0f), 13.0f), 0.0f);
-        assertEquals(13.0f, EMUtils.toFloat(null, 13.0f), 0.0f);
+        assertEquals(7.0f, EMUtils.toFloat(new Float(7.0f)));
+        assertEquals(0.0f, EMUtils.toFloat(null));
+        assertEquals(11.0f, EMUtils.toFloat(new Float(11.0f), 13.0f));
+        assertEquals(13.0f, EMUtils.toFloat(null, 13.0f));
     }
     
     /** Tests to ensure that the {@code toDouble} functions will correctly convert a double wrapper to a primitive. */
     @Test
     public void testToDouble() {
-        assertEquals(7.0, EMUtils.toDouble(new Double(7.0)), 0.0);
-        assertEquals(0.0, EMUtils.toDouble(null), 0.0);
-        assertEquals(11.0, EMUtils.toDouble(new Double(11.0), 13.0), 0.0);
-        assertEquals(13.0, EMUtils.toDouble(null, 13.0), 0.0);
+        assertEquals(7.0, EMUtils.toDouble(new Double(7.0)));
+        assertEquals(0.0, EMUtils.toDouble(null));
+        assertEquals(11.0, EMUtils.toDouble(new Double(11.0), 13.0));
+        assertEquals(13.0, EMUtils.toDouble(null, 13.0));
     }
     
     /** Tests to ensure that the {@code toChar} functions will correctly convert a character wrapper to a primitive. */
@@ -471,9 +472,9 @@ public class EMUtilsTest {
      * Tests to ensure that the {@link EMUtils#toCSV(Appendable, Iterable, String)} function will throw a
      * {@link NullPointerException} when given a null {@link Appendable}.
      */
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testToCSV_AppendableIterableString_NullAppendable() throws IOException {
-        EMUtils.toCSV(null, Arrays.asList(1, 2, 3), ":");
+        assertThrows(NullPointerException.class, () -> EMUtils.toCSV(null, Arrays.asList(1, 2, 3), ":"));
     }
     
     /**

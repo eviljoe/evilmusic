@@ -14,18 +14,19 @@
 
 package em.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertNotEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 import em.utils.EMUtils;
 
@@ -190,26 +191,28 @@ public class QueueTest {
      * Tests to ensure that {@link Queue#removeElement(int)} will throw an exception when given an index that is too
      * high.
      */
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void testRemoveSong_IndexTooHigh() throws IndexOutOfBoundsException {
         final Queue queue = new Queue();
         final List<SongInfo> songs = Arrays.asList(new SongInfo(5), new SongInfo(7), new SongInfo(11));
         
         queue.addSongsLast(songs);
-        queue.removeElement(-1);
+        
+        assertThrows(IndexOutOfBoundsException.class, () -> queue.removeElement(-1));
     }
     
     /**
      * Tests to ensure that {@link Queue#removeElement(int)} will throw an exception when given an index that is too
      * low.
      */
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void testRemoveSong_IndexTooLow() throws IndexOutOfBoundsException {
         final Queue queue = new Queue();
         final List<SongInfo> songs = Arrays.asList(new SongInfo(5), new SongInfo(7), new SongInfo(11));
         
         queue.addSongsLast(songs);
-        queue.removeElement(3);
+        
+        assertThrows(IndexOutOfBoundsException.class, () -> queue.removeElement(3));
     }
     
     /**

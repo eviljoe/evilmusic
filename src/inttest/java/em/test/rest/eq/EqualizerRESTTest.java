@@ -13,21 +13,21 @@
  */
 package em.test.rest.eq;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.Test;
 
 import em.controllers.EqualizerController;
 import em.model.Equalizer;
@@ -46,7 +46,7 @@ public class EqualizerRESTTest {
     /* Set Up / Tear Down Functions */
     /* **************************** */
     
-    @After
+    @AfterEach
     public void tearDown() {
         EqualizerRESTCalls.deleteAllEQs();
     }

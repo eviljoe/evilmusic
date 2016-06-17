@@ -14,13 +14,14 @@
 
 package em.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Iterator;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 import em.utils.iterators.ArrayIterator;
 
@@ -92,20 +93,20 @@ public class ArrayIteratorTest {
      * Tests to ensure that the {@link ArrayIterator#next()} function will throw a {@code NullPointerException} when
      * iterating over a {@code null} array.
      */
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testNext_NullArray() {
         final ArrayIterator<String> it = new ArrayIterator<String>(null);
-        it.next();
+        assertThrows(NullPointerException.class, () -> it.next());
     }
     
     /**
      * Tests to ensure that the {@link ArrayIterator#next()} function will throw an
      * {@link ArrayIndexOutOfBoundsException} when called on an empty array.
      */
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test
     public void testNext_EmptyArray() {
         final ArrayIterator<String> it = new ArrayIterator<String>(new String[0]);
-        it.next();
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> it.next());
     }
     
     /** Tests to ensure that the {@link ArrayIterator#next()} function will return the next element in the array. */
@@ -204,12 +205,11 @@ public class ArrayIteratorTest {
      * Tests to ensure that the {@link ArrayIterator#remove()} function will throw an
      * {@link UnsupportedOperationException}.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test()
     public void testRemove() {
         final Iterator<String> it = new ArrayIterator<String>(new String[] {"a", "b", "c"}).iterator();
         
-        while(it.hasNext()) {
-            it.remove();
-        }
+        it.next();
+        assertThrows(UnsupportedOperationException.class, () -> it.remove());
     }
 }
