@@ -92,6 +92,20 @@ public class PlaylistController {
     }
     
     @Transactional
+    @RequestMapping(value = "/rest/playlists/{id}/name/{name}", method = RequestMethod.PUT)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Playlist setPlaylistName(@PathVariable("id") int id, @PathVariable("name") String name) {
+        final Playlist p;
+        
+        validatePlaylistName(name);
+        
+        p = playlistDAO.get(id);
+        p.setName(name);
+        
+        return playlistDAO.save(p);
+    }
+    
+    @Transactional
     @RequestMapping(value = "/rest/playlists/{id}/last", method = RequestMethod.PUT)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

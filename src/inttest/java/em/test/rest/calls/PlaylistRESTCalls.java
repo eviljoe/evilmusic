@@ -108,6 +108,24 @@ public class PlaylistRESTCalls {
         return expectStatusCode == 200 ? toPlaylist(r.getBody().asString()) : null;
     }
     
+    public static Playlist setPlaylistName(int pID, String name) throws IOException {
+        return setPlaylistName(200, pID, name);
+    }
+    
+    public static Playlist setPlaylistName(int expectStatusCode, int pID, String name) throws IOException {
+        final RequestSpecification req = given();
+        final ResponseSpecification res;
+        final Response r;
+        
+        res = req.then();
+        res.expect().statusCode(expectStatusCode);
+        res.expect().contentType(ContentType.JSON);
+        
+        r = res.put(RESTTestConfig.getInstance().getFullURL("/playlists/{pID}/name/{name}"), pID, name);
+        
+        return expectStatusCode == 200 ? toPlaylist(r.getBody().asString()) : null;
+    }
+    
     public static Playlist clearPlaylist(int pID) throws IOException {
         return clearPlaylist(200, pID);
     }

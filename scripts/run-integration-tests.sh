@@ -21,6 +21,6 @@
 gradle configIntTest bootRun &
 
 sleep 20
-gradle intTest
+gradle intTest --rerun-tasks
 
 kill -term $!

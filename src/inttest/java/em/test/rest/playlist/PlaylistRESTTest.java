@@ -164,6 +164,61 @@ public class PlaylistRESTTest {
     }
     
     @Nested
+    @DisplayName("setPlaylistName")
+    class SetPlaylistName {
+        
+        private Playlist p;
+        
+        @BeforeEach
+        void beforeEach() throws IOException {
+            p = cleanup(PlaylistRESTCalls.createPlaylist());
+        }
+        
+        @Test
+        @DisplayName("changes a playlist's name")
+        void changesPlaylistName() throws IOException {
+            final String newName = p.getName() + " (modified)";
+            
+            p = PlaylistRESTCalls.setPlaylistName(p.getID(), newName);
+            assertEquals(newName, p.getName());
+        }
+        
+        @Test
+        @DisplayName("returns HTTP 405 when given an empty name")
+        void errorsWhenUsingEmptyName() throws IOException {
+            PlaylistRESTCalls.setPlaylistName(405, p.getID(), "");
+        }
+        
+        @Test
+        @DisplayName("returns HTTP 400 when given a name longer than the max. length")
+        void errorsWhenNameTooLong() throws IOException {
+            final char[] name = new char[Playlist.NAME_MAX_LENGTH + 1];
+            
+            Arrays.fill(name, 'a');
+            PlaylistRESTCalls.setPlaylistName(400, p.getID(), new String(name));
+        }
+        
+        @Test
+        @DisplayName("can change a playlist's name to be the max. length")
+        void doesNotErrorWhenNameIsMaxLength() throws IOException {
+            char[] array = new char[Playlist.NAME_MAX_LENGTH];
+            final String name;
+            
+            Arrays.fill(array, 'a');
+            name = new String(array);
+            
+            p = PlaylistRESTCalls.setPlaylistName(p.getID(), name);
+            assertEquals(name, p.getName());
+        }
+        
+        @Test
+        @DisplayName("returns HTTP 404 when using an invalid playlist ID")
+        void errorsWithInvalidPlaylistID() throws IOException {
+            PlaylistRESTCalls.setPlaylistName(404, -1, p.getName() + " (modified)");
+        }
+    }
+    
+    @Nested
     @DisplayName("addLast")
     class AddLast {
         
@@ -341,6 +396,20 @@ public class PlaylistRESTTest {
             playlists = PlaylistRESTCalls.getPlaylists();
             
             assertEquals(0L, playlists.stream().filter(p -> p.getID() == id).collect(Collectors.counting()));
+        }
+        
+        @Test
+        @DisplayName("can delete a playlist that has songs")
+        void deletesPlaylistWithSongs() throws IOException {
+            final Library lib = LibraryRESTCalls.getLibrary();
+            Playlist p = PlaylistRESTCalls.createPlaylist();
+            
+            p = PlaylistRESTCalls.addLast(200, p.getID(), //
+                    lib.getSongs().get(0).getID(), //
+                    lib.getSongs().get(1).getID(), //
+                    lib.getSongs().get(2).getID());
+            
+            PlaylistRESTCalls.deletePlaylist(204, p.getID());
         }
         
         @Test
