@@ -34,41 +34,39 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author eviljoe
  */
 @Entity
-public class QueueElement implements Identifiable, Cloneable {
+public class PlaylistElement implements Cloneable, Identifiable {
     
-    private static final Logger LOG = Logger.getLogger(QueueElement.class.getName());
+    private static final Logger LOG = Logger.getLogger(PlaylistElement.class.getName());
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private int queueIndex;
-    private int playIndex;
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "FK_QueueElement_to_Queue"))
-    private Queue queue;
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_PlaylistElement_to_Playlist"))
+    private Playlist playlist;
     
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(foreignKey = @ForeignKey(name = "FK_QueueElement_to_SongInfo"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_PlaylistElement_to_SongInfo"))
     private SongInfo song;
     
     /* ************ */
     /* Constructors */
     /* ************ */
     
-    public QueueElement() {
+    public PlaylistElement() {
         this(null, null);
     }
     
-    public QueueElement(Integer id) {
+    public PlaylistElement(Integer id) {
         this(id, null);
     }
     
-    public QueueElement(SongInfo song) {
+    public PlaylistElement(SongInfo song) {
         this(null, song);
     }
     
-    public QueueElement(Integer id, SongInfo song) {
+    public PlaylistElement(Integer id, SongInfo song) {
         super();
         setID(id);
         setSong(song);
@@ -88,22 +86,6 @@ public class QueueElement implements Identifiable, Cloneable {
         this.id = id;
     }
     
-    public int getQueueIndex() {
-        return queueIndex;
-    }
-    
-    public void setQueueIndex(int queueIndex) {
-        this.queueIndex = queueIndex;
-    }
-    
-    public int getPlayIndex() {
-        return playIndex;
-    }
-    
-    public void setPlayIndex(int playIndex) {
-        this.playIndex = playIndex;
-    }
-    
     public SongInfo getSong() {
         return song;
     }
@@ -113,21 +95,21 @@ public class QueueElement implements Identifiable, Cloneable {
     }
     
     @JsonIgnore
-    public Queue getQueue() {
-        return queue;
+    public Playlist getPlaylist() {
+        return playlist;
     }
     
     @JsonIgnore
-    public void setQueue(Queue queue) {
-        this.queue = queue;
+    public void setPlaylist(Playlist playlist) {
+        this.playlist = playlist;
     }
     
     @Override
-    public QueueElement clone() {
-        QueueElement clone;
+    public PlaylistElement clone() {
+        PlaylistElement clone;
         
         try {
-            clone = (QueueElement)super.clone();
+            clone = (PlaylistElement)super.clone();
         } catch(CloneNotSupportedException e) {
             LOG.log(Level.SEVERE, "Could not clone " + this.getClass().getName(), e);
             clone = null;
@@ -135,8 +117,6 @@ public class QueueElement implements Identifiable, Cloneable {
         
         if(clone != null) {
             clone.id = id;
-            clone.queueIndex = queueIndex;
-            clone.playIndex = playIndex;
             clone.song = song == null ? null : song.clone();
         }
         

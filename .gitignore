@@ -5,6 +5,7 @@
 /*derby.log
 /*derbyDB
 /evilmusic.log*
+/evilmusic-int-test.log*
 /.gradle/
 /.metadata
 /node_modules/

@@ -15,8 +15,6 @@
 package em.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -48,7 +46,6 @@ import em.model.Queue;
 import em.model.QueueElement;
 import em.model.SongInfo;
 import em.utils.EMUtils;
-import em.utils.IDSet;
 import em.utils.LibraryUtils;
 import em.utils.LogUtils;
 
@@ -155,30 +152,12 @@ public class QueueController {
         
         final Queue q = qDAO.get(queueID);
         
-        if(EMUtils.hasValues(songIDs)) {
-            // Sort the songs to in the order that they were specified in the REST call.
-            if(q.addSongsLast(sortSongs(songIDs, songDAO.get(songIDs)))) {
-                q.normalizePlayIndex();
-                qDAO.save(q);
-            }
+        if(EMUtils.hasValues(songIDs) && q.addSongsLast(LibraryUtils.sortSongs(songIDs, songDAO.get(songIDs)))) {
+            q.normalizePlayIndex();
+            qDAO.save(q);
         }
         
         return q;
-    }
-    
-    List<SongInfo> sortSongs(Collection<Integer> orderedSongIDs, Collection<SongInfo> songs) {
-        final IDSet<SongInfo> unsortedSongs = new IDSet<>(songs);
-        final List<SongInfo> sortedSongs = new ArrayList<>(unsortedSongs.size());
-        
-        for(Integer songID : orderedSongIDs) {
-            SongInfo song = unsortedSongs.get(songID);
-            
-            if(song != null) {
-                sortedSongs.add(song);
-            }
-        }
-        
-        return sortedSongs;
     }
     
     @Transactional

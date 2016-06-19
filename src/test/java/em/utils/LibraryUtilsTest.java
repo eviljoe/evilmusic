@@ -26,11 +26,20 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.DisplayName;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+
+import em.model.SongInfo;
 
 /**
  * A class containing JUnit tests for {@link LibraryUtils}.
@@ -40,223 +49,261 @@ import org.junit.gen5.api.Test;
  */
 public class LibraryUtilsTest {
     
-    /**
-     * Tests to ensure that {@link LibraryUtils#convertToFile(String)} will correctly convert a music directory string
-     * containing no keywords to a file.
-     */
-    @Test
-    public void testConvertToFile_NoKeywords() throws URISyntaxException {
-        final String sep = File.separator;
-        assertEquals("foo" + sep + "bar", LibraryUtils.convertToFile("foo" + sep + "bar").getPath());
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#convertToFile(String)} will correctly convert a music directory string
-     * containing the {@code $home} keyword to a file.
-     */
-    @Test
-    public void testConvertToFile_HomeKeyword() throws URISyntaxException {
-        final String home = System.getProperty("user.home");
-        final String sep = File.separator;
+    @Nested
+    @DisplayName("convertToFile")
+    class ConvertToFile {
         
-        assertNull(LibraryUtils.convertToFile(""));
-        assertNull(LibraryUtils.convertToFile(null));
-        assertEquals(home + sep + "docs", LibraryUtils.convertToFile("$home" + sep + "docs").getPath());
-        assertEquals("foo" + sep + "bar", LibraryUtils.convertToFile("foo" + sep + "bar").getPath());
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#convertToFile(String)} will correctly convert a music directory string
-     * containing a {@code $timestamp} keyword to a file.
-     */
-    @Test
-    public void testConvertToFile_TimestampKeyword() throws ParseException, URISyntaxException {
-        final String sep = File.separator;
-        final String prefix = sep + "foo" + sep;
-        final String suffix = "bar";
-        final File f = LibraryUtils.convertToFile(prefix + "$timestamp" + suffix);
-        final String path = f.getPath();
+        @Test
+        @DisplayName("will correctly convert a music directory string containing no keywords to a file")
+        void noKeywords() throws URISyntaxException {
+            final String sep = File.separator;
+            assertEquals("foo" + sep + "bar", LibraryUtils.convertToFile("foo" + sep + "bar").getPath());
+        }
         
-        assertThat(path, new ContainsRecentTimestamp(prefix.length(), path.length() - suffix.length()));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#convertToFile(String)} will return {@code null} when given an empty
-     * string.
-     */
-    @Test
-    public void testConvertToFile_Empty() throws URISyntaxException {
-        assertNull(LibraryUtils.convertToFile(""));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#convertToFile(String)} will return {@code null} when given {@code null}.
-     */
-    @Test
-    public void testConvertToFile_Null() throws URISyntaxException {
-        assertNull(LibraryUtils.convertToFile(null));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processHomeKeyword(String) will return {@code null} when given
-     * {@code null}.
-     */
-    @Test
-    public void testProcessHomeKeyword_Null() {
-        assertNull(LibraryUtils.processHomeKeyword(null));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processHomeKeyword(String) will return an empty string when given an
-     * empty string.
-     */
-    @Test
-    public void testProcessHomeKeyword_Empty() {
-        assertEquals("", LibraryUtils.processHomeKeyword(""));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processHomeKeyword(String) will return the given string when given one
-     * without the home keyword.
-     */
-    @Test
-    public void testProcessHomeKeyword_NoKeyword() {
-        assertEquals("/foo/bar", LibraryUtils.processHomeKeyword("/foo/bar"));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processHomeKeyword(String) will return the given string when given one
-     * where the home keyword is not at the beginning of the string.
-     */
-    @Test
-    public void testProcessHomeKeyword_KeywordNotFirst() {
-        assertEquals("/foo/bar/$home", LibraryUtils.processHomeKeyword("/foo/bar/$home"));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processHomeKeyword(String) will return the given string with the home
-     * keyword replaced with the user's home directory.
-     */
-    @Test
-    public void testProcessHomeKeyword_WithKeyword() {
-        final String home = System.getProperty("user.home");
-        assertEquals(home + "/foo/bar", LibraryUtils.processHomeKeyword("$home/foo/bar"));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processTimestampKeyword(String) will return {@code null} when given
-     * {@code null}.
-     */
-    @Test
-    public void testProcessTimestampKeyword_Null() {
-        assertNull(LibraryUtils.processTimestampKeyword(null));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processTimestampKeyword(String) will return an empty string when given
-     * an empty string.
-     */
-    @Test
-    public void testProcessTimestampKeyword_Empty() {
-        assertEquals("", LibraryUtils.processTimestampKeyword(""));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processTimestampKeyword(String) will return the given string when given
-     * one without the time stamp keyword.
-     */
-    @Test
-    public void testProcessTimestampKeyword_NoKeyword() {
-        assertEquals("/foo/bar", LibraryUtils.processTimestampKeyword("/foo/bar"));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processTimestampKeyword(String) will return the given string with the
-     * time stamp keyword replaced with a time stamp.
-     */
-    @Test
-    public void testProcessTimestampKeyword_WithKeyword_First() {
-        final String suffix = "/foo/bar";
-        final String processed = LibraryUtils.processTimestampKeyword("$timestamp" + suffix);
+        @Test
+        @DisplayName("will correctly convert a music directory string containing the $home keyword to a file")
+        void homeKeyword() throws URISyntaxException {
+            final String home = System.getProperty("user.home");
+            final String sep = File.separator;
+            
+            assertNull(LibraryUtils.convertToFile(""));
+            assertNull(LibraryUtils.convertToFile(null));
+            assertEquals(home + sep + "docs", LibraryUtils.convertToFile("$home" + sep + "docs").getPath());
+            assertEquals("foo" + sep + "bar", LibraryUtils.convertToFile("foo" + sep + "bar").getPath());
+        }
         
-        assertThat(processed, new ContainsRecentTimestamp(0, processed.length() - suffix.length()));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processTimestampKeyword(String) will return the given string with the
-     * time stamp keyword replaced with a time stamp.
-     */
-    @Test
-    public void testProcessTimestampKeyword_WithKeyword_Middle() {
-        final String prefix = "/foo/";
-        final String suffix = "/bar";
-        final String processed = LibraryUtils.processTimestampKeyword(prefix + "$timestamp" + suffix);
+        @Test
+        @DisplayName("will correctly convert a music directory string containing a $timestamp keyword to a file")
+        void timestampKeyword() throws ParseException, URISyntaxException {
+            final String sep = File.separator;
+            final String prefix = sep + "foo" + sep;
+            final String suffix = "bar";
+            final File f = LibraryUtils.convertToFile(prefix + "$timestamp" + suffix);
+            final String path = f.getPath();
+            
+            assertThat(path, new ContainsRecentTimestamp(prefix.length(), path.length() - suffix.length()));
+        }
         
-        assertThat(processed, new ContainsRecentTimestamp(prefix.length(), processed.length() - suffix.length()));
-    }
-    
-    /**
-     * Tests to ensure that {@link LibraryUtils#processTimestampKeyword(String) will return the given string with the
-     * time stamp keyword replaced with a time stamp.
-     */
-    @Test
-    public void testProcessTimestampKeyword_WithKeyword_Last() {
-        final String prefix = "/foo/bar";
-        final String processed = LibraryUtils.processTimestampKeyword(prefix + "$timestamp");
+        @Test
+        @DisplayName("will return null when given an empty string")
+        void empty() throws URISyntaxException {
+            assertNull(LibraryUtils.convertToFile(""));
+        }
         
-        assertThat(processed, new ContainsRecentTimestamp(prefix.length(), processed.length()));
+        @Test
+        @DisplayName("will return {@code null} when given null")
+        void convertsNull() throws URISyntaxException {
+            assertNull(LibraryUtils.convertToFile(null));
+        }
     }
     
-    /**
-     * Tests to ensure that the {@link LibraryUtils#processClasspathKeyword(String)} will return {@code null} when given
-     * {@code null}.
-     */
-    @Test
-    public void testConvertToClasspathFile_Null() throws URISyntaxException {
-        assertNull(LibraryUtils.processClasspathKeyword(null, LibraryUtils.class.getClassLoader()));
-    }
-    
-    /**
-     * Tests to ensure that the {@link LibraryUtils#processClasspathKeyword(String)} will return {@code null} when given
-     * an empty string.
-     */
-    @Test
-    public void testConvertToClasspathFile_Empty() throws URISyntaxException {
-        assertNull(LibraryUtils.processClasspathKeyword("", LibraryUtils.class.getClassLoader()));
-    }
-    
-    /**
-     * Tests to ensure that the {@link LibraryUtils#processClasspathKeyword(String)} will return {@code null} when given
-     * a string that does not contain the classpath keyword.
-     */
-    @Test
-    public void testConvertToClasspathFile_NoKeyword() throws URISyntaxException {
-        assertNull(LibraryUtils.processClasspathKeyword("/foo/bar", LibraryUtils.class.getClassLoader()));
-    }
-    
-    /**
-     * Tests to ensure that the {@link LibraryUtils#processClasspathKeyword(String)} will return {@code null} when given
-     * a string that does not start with the classpath keyword.
-     */
-    @Test
-    public void testConvertToClasspathFile_KeywordNotFirst() throws URISyntaxException {
-        assertNull(LibraryUtils.processClasspathKeyword("/foo/$classpath/bar", LibraryUtils.class.getClassLoader()));
-    }
-    
-    /**
-     * Tests to ensure that the {@link LibraryUtils#processClasspathKeyword(String)} will a file whose path is the given
-     * string without the classpath keyword.
-     */
-    @Test
-    public void testConvertToClasspathFile_WithKeyword() throws URISyntaxException, MalformedURLException {
-        final ClassLoader loaderMock = createMock(ClassLoader.class);
-        File f = new File("");
+    @Nested
+    @DisplayName("processHomeKeyword")
+    class ProcessHomeKeyword {
         
-        expect(loaderMock.getResource("/foo/bar")).andReturn(f.toURI().toURL());
-        replay(loaderMock);
+        @Test
+        @DisplayName("will return null when given null")
+        void processNull() {
+            assertNull(LibraryUtils.processHomeKeyword(null));
+        }
         
-        assertEquals(f.getAbsolutePath(), LibraryUtils.processClasspathKeyword("$classpath/foo/bar", loaderMock)
-                .getAbsolutePath());
+        @Test
+        @DisplayName("will return an empty string when given an empty string")
+        void empty() {
+            assertEquals("", LibraryUtils.processHomeKeyword(""));
+        }
+        
+        @Test
+        @DisplayName("will return the given string when given one without the home keyword")
+        void noKeyword() {
+            assertEquals("/foo/bar", LibraryUtils.processHomeKeyword("/foo/bar"));
+        }
+        
+        @Test
+        @DisplayName("will return the given string when given one where the home keyword is not at the beginning of the string")
+        void keywordNotFirst() {
+            assertEquals("/foo/bar/$home", LibraryUtils.processHomeKeyword("/foo/bar/$home"));
+        }
+        
+        @Test
+        @DisplayName("will return the given string with the home keyword replaced with the user's home directory")
+        void withKeyword() {
+            final String home = System.getProperty("user.home");
+            assertEquals(home + "/foo/bar", LibraryUtils.processHomeKeyword("$home/foo/bar"));
+        }
+    }
+    
+    @Nested
+    @DisplayName("processTimestampKeyword")
+    class ProcessTimestampKeyword {
+        
+        @Test
+        @DisplayName("will return null when given null")
+        void processNull() {
+            assertNull(LibraryUtils.processTimestampKeyword(null));
+        }
+        
+        @Test
+        @DisplayName("will return an empty string when given an empty string")
+        void empty() {
+            assertEquals("", LibraryUtils.processTimestampKeyword(""));
+        }
+        
+        @Test
+        @DisplayName("will return the given string when given one without the time stamp keyword")
+        void noKeyword() {
+            assertEquals("/foo/bar", LibraryUtils.processTimestampKeyword("/foo/bar"));
+        }
+        
+        @Test
+        @DisplayName("will return the given string with the time stamp keyword replaced with a time stamp")
+        void withKeywordFirst() {
+            final String suffix = "/foo/bar";
+            final String processed = LibraryUtils.processTimestampKeyword("$timestamp" + suffix);
+            
+            assertThat(processed, new ContainsRecentTimestamp(0, processed.length() - suffix.length()));
+        }
+        
+        @Test
+        @DisplayName("will return the given string with the time stamp keyword replaced with a time stamp")
+        void withKeywordMiddle() {
+            final String prefix = "/foo/";
+            final String suffix = "/bar";
+            final String processed = LibraryUtils.processTimestampKeyword(prefix + "$timestamp" + suffix);
+            
+            assertThat(processed, new ContainsRecentTimestamp(prefix.length(), processed.length() - suffix.length()));
+        }
+        
+        @Test
+        @DisplayName("will return the given string with the time stamp keyword replaced with a time stamp")
+        void withKeywordLast() {
+            final String prefix = "/foo/bar";
+            final String processed = LibraryUtils.processTimestampKeyword(prefix + "$timestamp");
+            
+            assertThat(processed, new ContainsRecentTimestamp(prefix.length(), processed.length()));
+        }
+    }
+    
+    @Nested
+    @DisplayName("convertToClasspathFile")
+    class ConvertToClasspathFile {
+        
+        @Test
+        @DisplayName("will return null when given null")
+        void processNull() throws URISyntaxException {
+            assertNull(LibraryUtils.processClasspathKeyword(null, LibraryUtils.class.getClassLoader()));
+        }
+        
+        @Test
+        @DisplayName("will return null when given an empty string")
+        void empty() throws URISyntaxException {
+            assertNull(LibraryUtils.processClasspathKeyword("", LibraryUtils.class.getClassLoader()));
+        }
+        
+        @Test
+        @DisplayName("will return null when given a string that does not contain the classpath keyword")
+        void noKeyword() throws URISyntaxException {
+            assertNull(LibraryUtils.processClasspathKeyword("/foo/bar", LibraryUtils.class.getClassLoader()));
+        }
+        
+        @Test
+        @DisplayName("will return null when given a string that does not start with the classpath keyword")
+        void keywordNotFirst() throws URISyntaxException {
+            assertNull(LibraryUtils.processClasspathKeyword("/foo/$classpath/bar", LibraryUtils.class.getClassLoader()));
+        }
+        
+        @Test
+        @DisplayName("will return the file's absolute path when given a string starting with the classpath keyword")
+        void withKeyword() throws URISyntaxException, MalformedURLException {
+            final ClassLoader loaderMock = createMock(ClassLoader.class);
+            File f = new File("");
+            
+            expect(loaderMock.getResource("/foo/bar")).andReturn(f.toURI().toURL());
+            replay(loaderMock);
+            
+            assertEquals(f.getAbsolutePath(), LibraryUtils.processClasspathKeyword("$classpath/foo/bar", loaderMock)
+                    .getAbsolutePath());
+        }
+    }
+    
+    @Nested
+    @DisplayName("sortSongs")
+    class SortSongs {
+        
+        private Collection<Integer> ids;
+        private Collection<SongInfo> songs;
+        private SongInfo s0;
+        private SongInfo s1;
+        private SongInfo s2;
+        
+        @BeforeEach
+        void beforeEach() {
+            ids = Arrays.asList(0, 1, 2);
+            
+            s0 = new SongInfo(0);
+            s1 = new SongInfo(1);
+            s2 = new SongInfo(2);
+            songs = Arrays.asList(s2, s1, s0);
+        }
+        
+        @Test
+        @DisplayName("returns an empty list when the ordered song IDs are null/empty")
+        void emptySongIDs() {
+            assertEquals(0, LibraryUtils.sortSongs(null, songs).size());
+            assertEquals(0, LibraryUtils.sortSongs(new ArrayList<>(0), songs).size());
+        }
+        
+        @Test
+        @DisplayName("returns an empty list when the songs null/empty")
+        void emptySongs() {
+            assertEquals(0, LibraryUtils.sortSongs(ids, null).size());
+            assertEquals(0, LibraryUtils.sortSongs(ids, new ArrayList<>(0)).size());
+        }
+        
+        @Test
+        @DisplayName("returns a list of songs ordered according to the given IDs")
+        void ordersSongs() {
+            final List<SongInfo> sorted = LibraryUtils.sortSongs(ids, songs);
+            
+            assertEquals(0, sorted.get(0).getID());
+            assertEquals(1, sorted.get(1).getID());
+            assertEquals(2, sorted.get(2).getID());
+        }
+        
+        @Test
+        @DisplayName("can order when there are more songs than IDs given")
+        void orderWithMoreSongsThanIDs() {
+            final List<SongInfo> sorted;
+            
+            ids = Arrays.asList(0, 1);
+            sorted = LibraryUtils.sortSongs(ids, songs);
+            
+            assertEquals(0, sorted.get(0).getID());
+            assertEquals(1, sorted.get(1).getID());
+        }
+        
+        @DisplayName("can order when there are more IDs than songs given")
+        void orderWithMoreIDsThanSongs() {
+            final List<SongInfo> sorted;
+            
+            songs = Arrays.asList(s0, s1);
+            sorted = LibraryUtils.sortSongs(ids, songs);
+            
+            assertEquals(0, sorted.get(0).getID());
+            assertEquals(1, sorted.get(1).getID());
+        }
+        
+        @DisplayName("can order when the same ID is given more than once")
+        void orderWithSameIDGivenMoreThanOnce() {
+            final List<SongInfo> sorted;
+            
+            ids = Arrays.asList(1, 1, 2);
+            sorted = LibraryUtils.sortSongs(ids, songs);
+            
+            assertEquals(1, sorted.get(0).getID());
+            assertEquals(1, sorted.get(1).getID());
+            assertEquals(2, sorted.get(2).getID());
+        }
     }
     
     /**

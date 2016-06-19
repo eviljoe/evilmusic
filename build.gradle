@@ -88,9 +88,14 @@ dependencies {
     testCompile 'com.jayway.restassured:rest-assured:2.4.0'
 
     intTestCompile sourceSets.main.output
-    intTestCompile configurations.testCompile
     intTestCompile sourceSets.test.output
+    intTestCompile configurations.testCompile
     intTestRuntime configurations.testRuntime
+    intTestCompile 'org.junit:junit5-api:5.0.0-ALPHA'
+	intTestCompile 'org.junit:junit-console:5.0.0-ALPHA'
+	intTestRuntime 'org.junit:junit5-engine:5.0.0-ALPHA'
+    intTestCompile 'org.easymock:easymock:3.2'
+    intTestCompile 'com.jayway.restassured:rest-assured:2.4.0'
 }
 
 //////////////////////
@@ -105,11 +110,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // Necessary For Spring Boot
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.1.8.RELEASE'
-        
-        // Necessary For JUnit5
-        classpath 'org.junit:junit-gradle:5.0.0-ALPHA'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.1.8.RELEASE' // Necessary For Spring Boot
+        classpath 'org.junit:junit-gradle:5.0.0-ALPHA' // Necessary For JUnit5
     }
 }
 
@@ -121,6 +123,19 @@ buildscript {
 task intTest(type: Test) {
     testClassesDir = sourceSets.intTest.output.classesDir
     classpath = sourceSets.intTest.runtimeClasspath
+    
+    gradle.taskGraph.whenReady {
+        if (gradle.taskGraph.hasTask(":intTest")) {
+            sourceSets {
+                test {
+                    java.srcDir file('src/inttest/java')
+                    resources.srcDir file('src/inttest/resources')
+                }
+            }
+        }
+    }
+    
+    dependsOn 'test'
 }
 
 /* Configures the "bootRun" task to start EvilMusic with the development test properties file. */

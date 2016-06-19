@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -147,6 +148,26 @@ public class LibraryUtils {
                 }
             }
         }
+    }
+    
+    public static List<SongInfo> sortSongs(Collection<Integer> orderedSongIDs, Collection<SongInfo> songs) {
+        final ArrayList<SongInfo> sortedSongs = new ArrayList<>(0);
+        
+        if(EMUtils.hasValues(orderedSongIDs) && EMUtils.hasValues(songs)) {
+            final IDSet<SongInfo> unsortedSongs = new IDSet<>(songs);
+            
+            sortedSongs.ensureCapacity(unsortedSongs.size());
+            
+            for(Integer songID : orderedSongIDs) {
+                SongInfo song = unsortedSongs.get(songID);
+                
+                if(song != null) {
+                    sortedSongs.add(song);
+                }
+            }
+        }
+        
+        return sortedSongs;
     }
     
     /* *********************************** */
