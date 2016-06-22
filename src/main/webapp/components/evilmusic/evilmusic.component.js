@@ -21,7 +21,7 @@ import {HTTP_PROVIDERS} from '@angular/http';
 import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {AlertComponent} from 'components/alert/alert.component';
-import {LibraryComponent} from 'components/library/library.component';
+import {MediaComponent} from 'components/media/media.component';
 import {PlayerComponent} from 'components/player/player.component';
 import {ProgressBarComponent} from 'components/progress-bar/progress-bar.component';
 import {QueueComponent} from 'components/queue/queue.component';
@@ -31,10 +31,12 @@ import {EMUtils} from 'services/emutils';
 import {Equalizers} from 'services/equalizers';
 import {Libraries} from 'services/libraries';
 import {Players} from 'services/players';
+import {Playlists} from 'services/playlists';
 import {Queues} from 'services/queues';
 
 import {EqualizerCalls} from 'services/server-calls/equalizer-calls';
 import {LibraryCalls} from 'services/server-calls/library-calls';
+import {PlaylistCalls} from 'services/server-calls/playlist-calls';
 import {QueueCalls} from 'services/server-calls/queue-calls';
 import {VolumeCalls} from 'services/server-calls/volume-calls';
 
@@ -57,6 +59,8 @@ export class EvilMusicComponent {
                 Libraries,
                 LibraryCalls,
                 Players,
+                PlaylistCalls,
+                Playlists,
                 QueueCalls,
                 Queues,
                 VolumeCalls
@@ -64,7 +68,7 @@ export class EvilMusicComponent {
             directives: [
                 MODAL_DIRECTVES,
                 AlertComponent,
-                LibraryComponent,
+                MediaComponent,
                 PlayerComponent,
                 ProgressBarComponent,
                 QueueComponent

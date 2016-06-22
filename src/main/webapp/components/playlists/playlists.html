@@ -16,20 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div class="container-fluid">
-    <div class="row em-top-container">
-        <em-progress-bar></em-progress-bar>
-        <em-player-controls></em-player-controls>
+<em-loading-overlay [overlayVisible]="loading">
+    <div class="em-top-table-controls-container">
+        <button type="button" class="btn btn-xs btn-default" (click)="createPlaylist()" title="create playlist">
+            <i class="fa fa-plus"></i> create
+        </button>
     </div>
     
-    <div class="row">
-        <div class="col-md-8">
-            <em-media></em-media>
-        </div>
-        <div class="col-md-4">
-            <em-queue></em-queue>
-        </div>
+    <div *ngFor="let p of playlists.playlists | sort : 'name'" class="em-playlist-row">
+        <button type="button" class="btn btn-xs btn-default" (click)="deletePlaylist(p)" title="delete playlist">
+            <i class="fa fa-times"></i>
+        </button>
+        <a (click)="playlistClicked(p)" href="javascript:void(0)">{{p.name}}</a>
     </div>
-</div>
-
-<em-alert></em-alert>
+</em-loading-overlay>

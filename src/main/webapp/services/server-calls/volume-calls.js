@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Http} from '@angular/http';
 import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
 
 export class VolumeCalls {
     constructor(http) {
@@ -32,17 +32,13 @@ export class VolumeCalls {
         return [[Http]];
     }
     
-    // TODO ju
     get() {
         return this.http.get('/rest/config/volume')
             .map((res) => res.json());
     }
     
-    // TODO ju
     save(volume) {
         return this.http.put(`/rest/config/volume/${volume}`)
             .map((res) => res.json());
     }
 }
-
-export default VolumeCalls;

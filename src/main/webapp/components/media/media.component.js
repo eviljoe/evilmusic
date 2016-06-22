@@ -16,28 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from 'lodash';
-import {Pipe} from '@angular/core';
+import {Component} from '@angular/core';
+import {TAB_DIRECTIVES} from 'ng2-bootstrap';
 
-export class SortPipe {
-    static get annotations() {
-        return [new Pipe({
-            name: 'sort',
-            pure: false
+import {LibraryComponent} from 'components/library/library.component';
+import {PlaylistsComponent} from 'components/playlists/playlists.component';
+
+export class MediaComponent {
+    static get annotations() { // JOE ju
+        return [new Component({
+            selector: 'em-media',
+            templateUrl: 'components/media/media.html',
+            directives: [TAB_DIRECTIVES, LibraryComponent, PlaylistsComponent]
         })];
     }
- 
-    static get parameters() {
+    
+    static get parameters() { // JOE ju
         return [];
     }
- 
-    transform(collection, key) {
-        if(collection && !Array.isArray(collection)) {
-            collection = Array.from(collection);
-        }
-        
-        return _.sortBy(collection, key);
-    }
 }
-
-export default SortPipe;

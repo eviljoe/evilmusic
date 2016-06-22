@@ -11,4 +11,4 @@ printf "\n<++ GULP TEST ++>\n"
 gulp test
 
 printf "\n<++ GRADLE TEST ++>\n"
-gradle test
+gradle test --rerun-tasks

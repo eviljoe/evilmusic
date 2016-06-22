@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Http} from '@angular/http';
 import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
 
 export class LibraryCalls {
     constructor(http) {
@@ -32,23 +32,18 @@ export class LibraryCalls {
         return [[Http]];
     }
     
-    // TODO ju
     get() {
         return this.http.get('/rest/library')
             .map((res) => res.json());
     }
     
-    // TODO ju
     clear() {
         return this.http.delete('/rest/library')
             .map((res) => res.json());
     }
     
-    // TODO ju
     rebuild() {
         return this.http.post('/rest/library')
             .map((res) => res.json());
     }
 }
-
-export default LibraryCalls;

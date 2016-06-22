@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Http, Headers} from '@angular/http';
 import {Injectable} from '@angular/core';
+import {Headers, Http} from '@angular/http';
 
 export class EqualizerCalls {
     constructor(http) {
@@ -32,13 +32,11 @@ export class EqualizerCalls {
         return [[Http]];
     }
     
-    // TODO ju
     get(id) {
         return this.http.get(`/rest/eq/${id}`)
             .map((res) => res.json());
     }
     
-    // TODO ju
     save(id, eq) {
         let headers = new Headers();
         
@@ -48,5 +46,3 @@ export class EqualizerCalls {
             .map((res) => res.json());
     }
 }
-
-export default EqualizerCalls;

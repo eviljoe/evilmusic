@@ -111,7 +111,7 @@ public class EqualizerController {
         validateEqualizer(eq);
         
         eq.setID(id);
-        eqDAO.get(id); // Make sure the EQ exists
+        eqDAO.exists(id, true); // Make sure the EQ exists
         eqDAO.save(eq);
         
         return eq;

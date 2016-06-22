@@ -19,7 +19,7 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 
-export class QueueCalls {
+export class PlaylistCalls {
     constructor(http) {
         this.http = http;
     }
@@ -32,12 +32,27 @@ export class QueueCalls {
         return [[Http]];
     }
     
-    get(id) {
-        return this.http.get(`/rest/queue/${id}`)
+    create(name) {
+        return this.http.post(`/rest/playlists?name=${name}`)
             .map((res) => res.json());
     }
     
-    addLast(id, ...songIDs) {
+    getAll() {
+        return this.http.get('/rest/playlists')
+            .map((res) => res.json());
+    }
+    
+    get(id) {
+        return this.http.get(`/rest/playlists/${id}`)
+            .map((res) => res.json());
+    }
+    
+    setName(id, name) {
+        return this.http.put(`/rest/playlists/${id}/name/${name}`)
+            .map((res) => res.json());
+    }
+    
+    addLast(id, songIDs) {
         let queryParams = [];
         let queryParamsStr = '';
         
@@ -49,22 +64,21 @@ export class QueueCalls {
             queryParamsStr = queryParams.join('&');
         }
         
-        return this.http.put(`/rest/queue/${id}/last?${queryParamsStr}`)
-            .map((res) => res.json());
-    }
-    
-    remove(id, qIndex) {
-        return this.http.delete(`/rest/queue/${id}/queueindex/${qIndex}`)
+        return this.http.put(`/rest/playlists/{id}/last?${queryParamsStr}`)
             .map((res) => res.json());
     }
     
     clear(id) {
-        return this.http.delete(`/rest/queue/${id}/elements`)
+        return this.http.delete(`/rest/playlists/{id}/elements`)
             .map((res) => res.json());
     }
     
-    setPlayIndex(id, playIndex) {
-        return this.http.put(`/rest/queue/${id}/playindex/${playIndex}`)
+    removeElement(playlistID, playlistElemID) {
+        return this.http.delete(`/rest/playlists/${playlistID}/elements/${playlistElemID}`)
             .map((res) => res.json());
+    }
+    
+    delete(id) {
+        return this.http.delete(`/rest/playlists/${id}`);
     }
 }

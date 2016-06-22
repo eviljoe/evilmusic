@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,6 +66,28 @@ public class EqualizerDAO {
         }
         
         return eq;
+    }
+    
+    public boolean exists(int id, boolean strict) throws EqualizerNotFoundException {
+        final StringBuilder jpql = new StringBuilder();
+        final TypedQuery<Integer> q;
+        final List<Integer> results;
+        final boolean exists;
+        
+        jpql.append("SELECT eq.id ");
+        jpql.append("FROM ").append(Equalizer.class.getName()).append(" eq ");
+        jpql.append("WHERE eq.id = :ID ");
+        
+        q = em.createQuery(jpql.toString(), Integer.class);
+        q.setParameter("ID", id);
+        results = q.getResultList();
+        exists = results != null && results.size() > 0;
+        
+        if(!exists && strict) {
+            throw new EqualizerNotFoundException(id);
+        }
+        
+        return exists;
     }
     
     public Equalizer save(Equalizer eq) {

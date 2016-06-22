@@ -16,28 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from 'lodash';
-import {Pipe} from '@angular/core';
-
-export class SortPipe {
-    static get annotations() {
-        return [new Pipe({
-            name: 'sort',
-            pure: false
-        })];
-    }
- 
-    static get parameters() {
-        return [];
-    }
- 
-    transform(collection, key) {
-        if(collection && !Array.isArray(collection)) {
-            collection = Array.from(collection);
-        }
-        
-        return _.sortBy(collection, key);
-    }
+.em-clickable {
+    cursor: pointer;
 }
 
-export default SortPipe;
+.em-tab-content {
+    margin-top: 10px;
+}
+
+.em-top-table-controls-container {
+    margin-bottom: 5px;
+}
