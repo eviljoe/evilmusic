@@ -31,7 +31,7 @@ export class PlaylistsComponent {
         this.init();
     }
     
-    static get annotations() { // JOE ju
+    static get annotations() {
         return [new Component({
             selector: 'em-playlists',
             templateUrl: 'components/playlists/playlists.html',
@@ -40,32 +40,32 @@ export class PlaylistsComponent {
         })];
     }
     
-    static get parameters() { // JOE ju
+    static get parameters() {
         return [[ChangeDetectorRef], [Playlists]];
     }
     
-    init() { // JOE ju
+    init() {
         this.playlists.playlistsChanges.subscribe(() => this._playlistsChanged());
         this.playlists.loadingChanges.subscribe(() => this._playlistsLoadingChanged());
     }
     
-    _playlistsChanged() { // JOE ju
+    _playlistsChanged() {
         this.changeDetector.markForCheck();
     }
     
-    _playlistsLoadingChanged() { // JOE ju
+    _playlistsLoadingChanged() {
         this.loading = this.playlists.loading;
     }
     
-    playlistClicked(playlist) { // JOE ju
+    playlistClicked(playlist) {
         this.playlist = playlist;
     }
     
-    createPlaylist() { // JOE ju
+    createPlaylist() {
         this.playlists.create(`playlist ${new Date()}`);
     }
     
-    deletePlaylist(playlist) { // JOE ju
+    deletePlaylist(playlist) {
         this.playlists.delete(playlist.id);
     }
 }

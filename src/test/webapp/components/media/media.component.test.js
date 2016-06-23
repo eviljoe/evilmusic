@@ -16,22 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
-import {TAB_DIRECTIVES} from 'ng2-bootstrap';
+import {MediaComponent} from 'components/media/media.component';
 
-import {LibraryComponent} from 'components/library/library.component';
-import {PlaylistsComponent} from 'components/playlists/playlists.component';
-
-export class MediaComponent {
-    static get annotations() {
-        return [new Component({
-            selector: 'em-media',
-            templateUrl: 'components/media/media.html',
-            directives: [TAB_DIRECTIVES, LibraryComponent, PlaylistsComponent]
-        })];
-    }
+describe(MediaComponent.name, () => {
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(MediaComponent.annotations).toEqual(jasmine.any(Array));
+        });
+    });
     
-    static get parameters() {
-        return [];
-    }
-}
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(MediaComponent.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+});

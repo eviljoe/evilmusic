@@ -24,7 +24,7 @@ import {PlaylistCalls} from './server-calls/playlist-calls';
 const PLAYLIST_CHANGE_TYPES = {
     LOAD: 'load',
     ADD: 'add',
-    REMOVE: 'update',
+    REMOVE: 'remove',
     UPDATE: 'update'
 };
 
@@ -39,19 +39,19 @@ export class Playlists {
         this.init();
     }
     
-    static get annotations() { // JOE ju
+    static get annotations() {
         return [new Injectable()];
     }
     
-    static get parameters() { // JOE ju
+    static get parameters() {
         return [[Alerts], [PlaylistCalls]];
     }
     
-    init() { // JOE ju
+    init() {
         this.load();
     }
     
-    load() { // JOE ju
+    load() {
         this.loading = true;
         
         this.playlistCalls.getAll().subscribe(
@@ -66,7 +66,7 @@ export class Playlists {
         this.loading = false;
     }
     
-    create(name) { // JOE ju
+    create(name) {
         this.loading = true;
         
         this.playlistCalls.create(name).subscribe(
@@ -75,21 +75,13 @@ export class Playlists {
         );
     }
     
-    _created(playlist) { // JOE ju
+    _created(playlist) {
         this.playlists.push(playlist);
         this._firePlaylistsChanged(PLAYLIST_CHANGE_TYPES.ADD, playlist);
         this.loading = false;
     }
     
-    _firePlaylistsChanged(type, playlist) { // JOE ju
-        this.playlistsChanges.emit({
-            type,
-            playlist,
-            playlists: this.playlists
-        });
-    }
-    
-    delete(id) { // JOE ju
+    delete(id) {
         this.loading = true;
         
         this.playlistCalls.delete(id).subscribe(
@@ -98,7 +90,7 @@ export class Playlists {
         );
     }
     
-    _deleted(id) { // JOE ju
+    _deleted(id) {
         let plIndex = this.playlists.findIndex((pl) => pl.id === id);
         
         if(plIndex > -1) {
@@ -109,11 +101,19 @@ export class Playlists {
         this.loading = false;
     }
     
-    get loading() { // JOE ju
+    _firePlaylistsChanged(type, playlist) {
+        this.playlistsChanges.emit({
+            type,
+            playlist,
+            playlists: this.playlists
+        });
+    }
+    
+    get loading() {
         return this._loading;
     }
     
-    set loading(loading) { // JOE ju
+    set loading(loading) {
         let oldLoading = this._loading;
         
         this._loading = loading;

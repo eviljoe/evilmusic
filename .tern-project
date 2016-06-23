@@ -4,7 +4,13 @@
         "browser"
     ],
     "loadEagerly": [
-        "src/main/webapp/**/*.js"
+        "src/main/webapp/index.js",
+        "src/main/webapp/assets/**/*.js",
+        "src/main/webapp/components/**/*.js",
+        "src/main/webapp/pipes/**/*.js",
+        "src/main/webapp/services/**/*.js",
+        "src/main/webapp/utils/**/*.js",
+        "src/test/webapp/**/*.js"
     ],
     "plugins": {
         "es_modules": {},
