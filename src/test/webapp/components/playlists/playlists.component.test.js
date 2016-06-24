@@ -114,14 +114,7 @@ describe(PlaylistsComponent.name, () => {
     });
     
     describe('createPlaylist', () => {
-        beforeEach(() => {
-            spyOn(_playlists, 'create').and.stub();
-        });
-        
-        it('creates a new playlist', () => {
-            comp.createPlaylist();
-            expect(_playlists.create).toHaveBeenCalled();
-        });
+        // JOE todo
     });
     
     describe('deletePlaylist', () => {
