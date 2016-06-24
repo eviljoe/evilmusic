@@ -19,6 +19,7 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 
 import {LoadingOverlayComponent} from 'components/loading-overlay/loading-overlay.component';
+import {PlaylistDialogComponent} from 'components/playlists/playlist-dialog/playlist-dialog.component';
 
 import {Playlists} from 'services/playlists';
 import {SortPipe} from 'pipes/sort.pipe';
@@ -28,6 +29,8 @@ export class PlaylistsComponent {
         this.changeDetector = changeDetector;
         this.playlists = playlists;
         
+        this.playlist = null;
+        
         this.init();
     }
     
@@ -35,7 +38,7 @@ export class PlaylistsComponent {
         return [new Component({
             selector: 'em-playlists',
             templateUrl: 'components/playlists/playlists.html',
-            directives: [LoadingOverlayComponent],
+            directives: [LoadingOverlayComponent, PlaylistDialogComponent],
             pipes: [SortPipe]
         })];
     }
@@ -45,6 +48,7 @@ export class PlaylistsComponent {
     }
     
     init() {
+        this.setPlaylistDialogVisible(false); // JOE ju
         this.playlists.playlistsChanges.subscribe(() => this._playlistsChanged());
         this.playlists.loadingChanges.subscribe(() => this._playlistsLoadingChanged());
     }
@@ -61,11 +65,15 @@ export class PlaylistsComponent {
         this.playlist = playlist;
     }
     
-    createPlaylist() {
-        this.playlists.create(`playlist ${new Date()}`);
+    createPlaylist() { // JOE ju
+        this.setPlaylistDialogVisible(true);
     }
     
     deletePlaylist(playlist) {
         this.playlists.delete(playlist.id);
+    }
+    
+    setPlaylistDialogVisible(visible) { // JOE ju
+        this.playlistDialogVisible = visible;
     }
 }

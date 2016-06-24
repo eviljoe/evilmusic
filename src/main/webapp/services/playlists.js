@@ -67,12 +67,17 @@ export class Playlists {
     }
     
     create(name) {
-        this.loading = true;
+        let ob;
         
-        this.playlistCalls.create(name).subscribe(
+        this.loading = true;
+        ob = this.playlistCalls.create(name);
+        
+        ob.subscribe(
             (playlist) => this._created(playlist),
             (err) => this.alerts.error('Could not create playlist', err)
         );
+        
+        return ob; // JOE ju
     }
     
     _created(playlist) {

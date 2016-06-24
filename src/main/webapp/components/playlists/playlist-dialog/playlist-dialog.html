@@ -16,27 +16,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<button class="btn btn-xs btn-default" (click)="open()" title="open equalizer">
-    <i class="fa fa-sliders fa-rotate-90"></i>
-</button>
-
-<div bsModal #playlistDialogTemplate="bs-modal" class="modal fade eq-dialog" tabindex="-1">
-    <div class="modal-dialog">
+<div bsModal #playlistDialog="bs-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <em-loading-overlay [overlayVisible]="loading" [fullScreen]="'true'"></em-loading-overlay>
             
             <div class="modal-header">
-                <h4 class="modal-title">Equalizer</h4>
+                <h4 class="modal-title">Playlist</h4>
             </div>
+            
             <div class="modal-body">
-                <em-eq></em-eq>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" [(ngModel)]="playlistName"/>
+                    </div>
+                </form>
             </div>
+            
             <div class="modal-footer">
-                <button class="btn btn-default" (click)="reset()">
-                    <span class="fa fa-minus"></span> Reset
-                </button>
-                <button class="btn btn-default" (click)="close()">
-                    <span class="fa fa-times"></span> Close
+                <button class="btn btn-default" (click)="cancel()">
+                    <span class="fa fa-times"></span> Cancel
                 </button>
                 <button class="btn btn-primary" (click)="save()">
                     <span class="fa fa-floppy-o"></span> Save
