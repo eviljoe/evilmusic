@@ -123,10 +123,12 @@ describe(Playlists.name, () => {
     
     describe('create', () => {
         let createObserver;
+        let createObservable;
         
         beforeEach(() => {
+            createObservable = Observable.create((observer) => createObserver = observer);
+            spyOn(_playlistCalls, 'create').and.returnValue(createObservable);
             spyOn(playlists, '_created').and.stub();
-            spyOn(_playlistCalls, 'create').and.returnValue(Observable.create((observer) => createObserver = observer));
             spyOn(_alerts, 'error').and.stub();
         });
         
@@ -155,6 +157,10 @@ describe(Playlists.name, () => {
             createObserver.error();
             
             expect(_alerts.error).toHaveBeenCalled();
+        });
+        
+        it('returns the observable', () => {
+            expect(playlists.create('foo')).toBe(createObservable);
         });
     });
     

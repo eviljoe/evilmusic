@@ -34,7 +34,8 @@ export class QueueCalls {
     
     get(id) {
         return this.http.get(`/rest/queue/${id}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     addLast(id, ...songIDs) {
@@ -50,21 +51,25 @@ export class QueueCalls {
         }
         
         return this.http.put(`/rest/queue/${id}/last?${queryParamsStr}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     remove(id, qIndex) {
         return this.http.delete(`/rest/queue/${id}/queueindex/${qIndex}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     clear(id) {
         return this.http.delete(`/rest/queue/${id}/elements`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     setPlayIndex(id, playIndex) {
         return this.http.put(`/rest/queue/${id}/playindex/${playIndex}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
 }

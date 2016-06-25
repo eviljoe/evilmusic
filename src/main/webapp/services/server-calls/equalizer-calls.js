@@ -34,7 +34,8 @@ export class EqualizerCalls {
     
     get(id) {
         return this.http.get(`/rest/eq/${id}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     save(id, eq) {
@@ -43,6 +44,7 @@ export class EqualizerCalls {
         headers.append('Content-Type', 'application/json');
         
         return this.http.put(`/rest/eq/${id}`, JSON.stringify(eq), {headers})
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
 }

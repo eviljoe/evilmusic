@@ -42,58 +42,71 @@ export class PlaylistDialogComponent {
         this.mode = null;
     }
     
-    static get annotations() { // JOE ju
+    static get annotations() {
         return [new Component({
             selector: 'em-playlist-dialog',
             templateUrl: 'components/playlists/playlist-dialog/playlist-dialog.html',
             directives: [MODAL_DIRECTVES],
-            inputs: ['visible', 'mode'],
+            inputs: ['visible', 'mode', 'playlist'],
             outputs: ['onCancel', 'onSave'],
             queries: {
-                playlistDialog: new ViewChild('playlistDialog')
+                playlistDialog: new ViewChild('playlistDialog'),
+                playlistForm: new ViewChild('playlistForm')
             }
         })];
     }
     
-    static get parameters() { // JOE ju
+    static get parameters() {
         return [[Playlists]];
     }
 
-    ngOnChanges(change) { // JOE ju
-        if(change.visible !== undefined) {
+    ngAfterContentInit() {
+        this.playlist = this.playlist || {};
+    }
+
+    ngOnChanges(change) {
+        if(change.visible) {
             this.setDialogVisible(change.visible.currentValue);
         }
     }
     
-    setDialogVisible(visible) { // JOE ju
+    setDialogVisible(visible) {
         if(this.playlistDialog) {
             if(visible) {
-                this.playlistDialog.show();
+                this._showDialog();
             } else {
-                this.playlistDialog.hide();
+                this._hideDialog();
             }
         }
     }
     
-    isValid() {
-        return true; // JOE todo return false if playlist name is empty
+    _showDialog() {
+        if(this.mode === PLAYLIST_DIALOG_MODE.CREATE) {
+            this.playlist = {};
+        }
+
+        this.playlistDialog.show();
     }
     
-    cancel() { // JOE ju
+    _hideDialog() {
+        this.playlistDialog.hide();
+    }
+    
+    cancel() {
         this.onCancel.emit(PLAYLIST_DIALOG_CLOSE_STATUS.CANCELED);
     }
     
-    save() { // JOE ju
-        if(this.isValid()) {
+    save() {
+        if(this.playlistForm.form.valid) {
             this._saveNow();
         }
     }
     
-    _saveNow() { // JOE ju
+    _saveNow() {
         let observable;
         
         if(this.mode === PLAYLIST_DIALOG_MODE.CREATE) {
-            observable = this.playlists.create(this.playlistName);
+            observable = this.playlists.create(this.playlist.name);
         } else if(this.mode === PLAYLIST_DIALOG_MODE.EDIT) {
             observable = null; // JOE todo
         }
@@ -101,7 +114,19 @@ export class PlaylistDialogComponent {
         observable.subscribe(() => this._saved());
     }
     
-    _saved() { // JOE ju
+    _saved() {
         this.onSave.emit(PLAYLIST_DIALOG_CLOSE_STATUS.SAVED);
+    }
+    
+    getTitle() {
+        let title = 'Playlist';
+        
+        if(this.mode === PLAYLIST_DIALOG_MODE.CREATE) {
+            title = 'Create Playlist';
+        } else if(this.mode === PLAYLIST_DIALOG_MODE.EDIT) {
+            title = 'Edit Playlist';
+        }
+        
+        return title;
     }
 }

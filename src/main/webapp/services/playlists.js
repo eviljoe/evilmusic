@@ -77,7 +77,7 @@ export class Playlists {
             (err) => this.alerts.error('Could not create playlist', err)
         );
         
-        return ob; // JOE ju
+        return ob;
     }
     
     _created(playlist) {

@@ -16,32 +16,33 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div bsModal #playlistDialog="bs-modal" class="modal fade" tabindex="-1">
+<div bsModal #playlistDialog="bs-modal" class="modal fade" tabindex="-1" [config]="{backdrop:false, keyboard:false}">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <em-loading-overlay [overlayVisible]="loading" [fullScreen]="'true'"></em-loading-overlay>
             
-            <div class="modal-header">
-                <h4 class="modal-title">Playlist</h4>
-            </div>
-            
-            <div class="modal-body">
-                <form class="form-inline">
+            <form  class="form-inline" #playlistForm="ngForm">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{getTitle()}}</h4>
+                </div>
+                
+                <div class="modal-body">
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" [(ngModel)]="playlistName"/>
+                        <input type="text" class="form-control" [(ngModel)]="playlist.name" name="playlistName"
+                                ngControl="playlistName" required/>
                     </div>
-                </form>
-            </div>
-            
-            <div class="modal-footer">
-                <button class="btn btn-default" (click)="cancel()">
-                    <span class="fa fa-times"></span> Cancel
-                </button>
-                <button class="btn btn-primary" (click)="save()">
-                    <span class="fa fa-floppy-o"></span> Save
-                </button>
-            </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="cancel()">
+                        <span class="fa fa-times"></span> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" (click)="save()" [disabled]="!playlistForm.form.valid">
+                        <span class="fa fa-floppy-o"></span> Save
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -48,7 +48,7 @@ export class PlaylistsComponent {
     }
     
     init() {
-        this.setPlaylistDialogVisible(false); // JOE ju
+        this.setPlaylistDialogVisible(false);
         this.playlists.playlistsChanges.subscribe(() => this._playlistsChanged());
         this.playlists.loadingChanges.subscribe(() => this._playlistsLoadingChanged());
     }
@@ -65,7 +65,7 @@ export class PlaylistsComponent {
         this.playlist = playlist;
     }
     
-    createPlaylist() { // JOE ju
+    createPlaylist() {
         this.setPlaylistDialogVisible(true);
     }
     
@@ -73,7 +73,7 @@ export class PlaylistsComponent {
         this.playlists.delete(playlist.id);
     }
     
-    setPlaylistDialogVisible(visible) { // JOE ju
+    setPlaylistDialogVisible(visible) {
         this.playlistDialogVisible = visible;
     }
 }

@@ -60,10 +60,16 @@ describe(PlaylistsComponent.name, () => {
         let loadingObserver;
         
         beforeEach(() => {
+            spyOn(comp, 'setPlaylistDialogVisible').and.stub();
             spyOn(comp, '_playlistsChanged').and.stub();
             spyOn(comp, '_playlistsLoadingChanged').and.stub();
             _playlists.playlistsChanges = Observable.create((observer) => playlistsObserver = observer);
             _playlists.loadingChanges = Observable.create((observer) => loadingObserver = observer);
+        });
+        
+        it('sets the playlist to not be visible', () => {
+            comp.init();
+            expect(comp.setPlaylistDialogVisible).toHaveBeenCalledWith(false);
         });
         
         it('reacts to playlist changes', () => {
@@ -114,7 +120,14 @@ describe(PlaylistsComponent.name, () => {
     });
     
     describe('createPlaylist', () => {
-        // JOE todo
+        beforeEach(() => {
+            spyOn(comp, 'setPlaylistDialogVisible').and.stub();
+        });
+        
+        it('sets the playlist dialog to be visible', () => {
+            comp.createPlaylist();
+            expect(comp.setPlaylistDialogVisible).toHaveBeenCalledWith(true);
+        });
     });
     
     describe('deletePlaylist', () => {
@@ -125,6 +138,13 @@ describe(PlaylistsComponent.name, () => {
         it('creates a new playlist', () => {
             comp.deletePlaylist({id: 123});
             expect(_playlists.delete).toHaveBeenCalledWith(123);
+        });
+    });
+    
+    describe('setPlaylistDialogVisible', () => {
+        it('sets the flag', () => {
+            comp.setPlaylistDialogVisible(true);
+            expect(comp.playlistDialogVisible).toEqual(true);
         });
     });
 });

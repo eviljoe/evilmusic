@@ -34,16 +34,19 @@ export class LibraryCalls {
     
     get() {
         return this.http.get('/rest/library')
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     clear() {
         return this.http.delete('/rest/library')
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     rebuild() {
         return this.http.post('/rest/library')
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
 }

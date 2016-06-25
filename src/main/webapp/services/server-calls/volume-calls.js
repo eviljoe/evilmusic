@@ -34,11 +34,13 @@ export class VolumeCalls {
     
     get() {
         return this.http.get('/rest/config/volume')
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     save(volume) {
         return this.http.put(`/rest/config/volume/${volume}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
 }

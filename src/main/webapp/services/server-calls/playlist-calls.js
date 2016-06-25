@@ -34,22 +34,26 @@ export class PlaylistCalls {
     
     create(name) {
         return this.http.post(`/rest/playlists?name=${name}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     getAll() {
         return this.http.get('/rest/playlists')
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     get(id) {
         return this.http.get(`/rest/playlists/${id}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     setName(id, name) {
         return this.http.put(`/rest/playlists/${id}/name/${name}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     addLast(id, songIDs) {
@@ -65,20 +69,24 @@ export class PlaylistCalls {
         }
         
         return this.http.put(`/rest/playlists/{id}/last?${queryParamsStr}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     clear(id) {
         return this.http.delete(`/rest/playlists/{id}/elements`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     removeElement(playlistID, playlistElemID) {
         return this.http.delete(`/rest/playlists/${playlistID}/elements/${playlistElemID}`)
-            .map((res) => res.json());
+            .map((res) => res.json())
+            .share();
     }
     
     delete(id) {
-        return this.http.delete(`/rest/playlists/${id}`);
+        return this.http.delete(`/rest/playlists/${id}`)
+            .share();
     }
 }
