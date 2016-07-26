@@ -106,6 +106,31 @@ export class Playlists {
         this.loading = false;
     }
     
+    setPlaylistName(id, name) {
+        let ob;
+        
+        this.loading = true;
+        
+        ob = this.playlistCalls.setName(id, name);
+        ob.subscribe(
+            (playlist) => this._playlistNameSet(playlist),
+            (err) => this.alerts.error('Could not set playlist name', err)
+        );
+        
+        return ob;
+    }
+    
+    _playlistNameSet(playlist) {
+        let plIndex = this.playlists.findIndex((pl) => pl.id === playlist.id);
+        
+        if(plIndex > -1) {
+            this.playlists[plIndex] = playlist;
+        }
+        
+        this._firePlaylistsChanged(PLAYLIST_CHANGE_TYPES.UPDATE, playlist);
+        this.loading = false;
+    }
+    
     _firePlaylistsChanged(type, playlist) {
         this.playlistsChanges.emit({
             type,

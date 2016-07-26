@@ -34,7 +34,9 @@ describe(Playlists.name, () => {
 
             create() {},
 
-            delete() {}
+            delete() {},
+
+            setName() {}
         };
         
         playlists = new Playlists(_alerts, _playlistCalls);
@@ -246,6 +248,76 @@ describe(Playlists.name, () => {
         
         it('sets the loading flag to false', () => {
             playlists._deleted(2);
+            expect(playlists.loading).toEqual(false);
+        });
+    });
+    
+    describe('setPlaylistName', () => {
+        let setObserver;
+        
+        beforeEach(() => {
+            spyOn(_playlistCalls, 'setName').and.returnValue(Observable.create((observer) => setObserver = observer));
+            spyOn(_alerts, 'error').and.stub();
+            spyOn(playlists, '_playlistNameSet').and.stub();
+        });
+        
+        it('sets the loading flag to true', () => {
+            playlists.setPlaylistName(123, 'foo');
+            expect(playlists.loading).toEqual(true);
+        });
+        
+        it('sets the playlist name', () => {
+            playlists.setPlaylistName(123, 'foo');
+            expect(_playlistCalls.setName).toHaveBeenCalled();
+        });
+        
+        it('calls a function after the playlist name has been set', () => {
+            playlists.setPlaylistName(123, 'foo');
+            
+            setObserver.next();
+            setObserver.complete();
+            
+            expect(playlists._playlistNameSet).toHaveBeenCalled();
+        });
+        
+        it('displays an error message if the playlist name set fails', () => {
+            playlists.setPlaylistName(123, 'foo');
+            
+            setObserver.error();
+            
+            expect(_alerts.error).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_playlistNameSet', () => {
+        beforeEach(() => {
+            spyOn(playlists, '_firePlaylistsChanged').and.stub();
+            playlists.playlists = [{id: 1}, {id: 2}, {id: 3}];
+        });
+        
+        it('replaces the playlist with the same ID as the given playlist', () => {
+            let playlist = {id: 1, foo: 'bar'};
+            
+            playlists._playlistNameSet(playlist);
+            expect(playlists.playlists.find((pl) => pl.id === playlist.id)).toBe(playlist);
+        });
+        
+        it('does not replace any playlist if none with the same ID can be found', () => {
+            let playlist = {id: 4, foo: 'bar'};
+            
+            playlists._playlistNameSet(playlist);
+            playlists.playlists.forEach((pl) => {
+                expect(pl.foo).toEqual(undefined);
+            });
+        });
+        
+        it('fires a playlist change event', () => {
+            playlists._playlistNameSet({id: 1});
+            expect(playlists._firePlaylistsChanged).toHaveBeenCalled();
+        });
+        
+        it('sets the loading flag to false', () => {
+            playlists._playlistNameSet({id: 1});
             expect(playlists.loading).toEqual(false);
         });
     });

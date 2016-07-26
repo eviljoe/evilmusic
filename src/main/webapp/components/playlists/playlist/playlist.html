@@ -1,0 +1,50 @@
+<!--
+EvilMusic - Web-Based Music Player
+Copyright (C) 2016 Joe Falascino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<table class="table table-striped table-condensed table-hover">
+    <tr>
+        <th align="right">Playlist<br/>Element ID</th>
+        <th align="right">Song ID</th>
+        <th align="left">Artist</th>
+        <th align="left">Album</th>
+        <th align="right">Track #</th>
+        <th align="left">Title</th>
+        <th align="right">Length</th>
+        <th align="right">Sample Rate</th>
+        <th align="right">Sample Count</th>
+        <th align="left">
+            <!-- JOE todo add to queue -->
+        </th>
+    </tr>
+    <!-- JOE todo: [ngClass]="{info: isPlaying(s), 'library-songs-enqueued': isInQueue(s)}" -->
+    <tr *ngFor="let e of playlist.elements">
+        <td align="right">{{e.id}}</td>
+        <td align="right">{{e.song.id}}</td>
+        <td align="left">{{e.song.artist}}</td>
+        <td align="left">{{e.song.album}}</td>
+        <td align="right">{{e.song.trackNumber}}</td>
+        <td align="left">{{e.song.title}}</td>
+        <td align="right">{{e.song.millis | minutes}}</td>
+        <td align="right">{{e.song.sampleRate | hertz}}</td>
+        <td align="right">{{e.song.sampleCount}}</td>
+        <td align="left">
+            <!-- JOE todo add to queue -->
+            <!-- JOE todo remove from playlist -->
+        </td>
+    </tr>
+</table>

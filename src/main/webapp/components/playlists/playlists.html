@@ -17,17 +17,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <em-loading-overlay [overlayVisible]="loading">
-    <div class="em-top-table-controls-container">
-        <button type="button" class="btn btn-xs btn-default" (click)="createPlaylist()" title="create playlist">
-            <i class="fa fa-plus"></i> create
-        </button>
+    <div [hidden]="playlist">
+        <div class="em-top-table-controls-container">
+            <button type="button" class="btn btn-xs btn-default" (click)="createPlaylist()" title="create playlist">
+                <i class="fa fa-plus"></i> create
+            </button>
+        </div>
+        
+        <div *ngFor="let p of playlists.playlists | sort : 'name'" class="em-playlist-row">
+            <button type="button" class="btn btn-xs btn-default" (click)="deletePlaylist(p)" title="delete playlist">
+                <i class="fa fa-times"></i>
+            </button>
+            <a (click)="playlistClicked(p)" href="javascript:void(0)">{{p.name}}</a>
+        </div>
     </div>
     
-    <div *ngFor="let p of playlists.playlists | sort : 'name'" class="em-playlist-row">
-        <button type="button" class="btn btn-xs btn-default" (click)="deletePlaylist(p)" title="delete playlist">
-            <i class="fa fa-times"></i>
-        </button>
-        <a (click)="playlistClicked(p)" href="javascript:void(0)">{{p.name}}</a>
+    <div [hidden]="!playlist">
+        <em-playlist playlist="playlist"></em-playlist>
     </div>
     
     <em-playlist-dialog [visible]="playlistDialogVisible" [mode]="'create'"

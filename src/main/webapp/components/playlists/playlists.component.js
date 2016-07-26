@@ -20,6 +20,7 @@ import {ChangeDetectorRef, Component} from '@angular/core';
 
 import {LoadingOverlayComponent} from 'components/loading-overlay/loading-overlay.component';
 import {PlaylistDialogComponent} from 'components/playlists/playlist-dialog/playlist-dialog.component';
+import {PlaylistComponent} from 'components/playlists/playlist/playlist.component';
 
 import {Playlists} from 'services/playlists';
 import {SortPipe} from 'pipes/sort.pipe';
@@ -38,7 +39,7 @@ export class PlaylistsComponent {
         return [new Component({
             selector: 'em-playlists',
             templateUrl: 'components/playlists/playlists.html',
-            directives: [LoadingOverlayComponent, PlaylistDialogComponent],
+            directives: [LoadingOverlayComponent, PlaylistDialogComponent, PlaylistComponent],
             pipes: [SortPipe]
         })];
     }
