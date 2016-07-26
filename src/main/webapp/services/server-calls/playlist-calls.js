@@ -89,10 +89,4 @@ export class PlaylistCalls {
         return this.http.delete(`/rest/playlists/${id}`)
             .share();
     }
-    
-    setName(id, name) {
-        return this.http.put(`/rest/playlists/${id}/name/${name}`)
-            .map((res) => res.json())
-            .share();
-    }
 }
