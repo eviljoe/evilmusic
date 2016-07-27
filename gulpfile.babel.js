@@ -24,7 +24,6 @@ import del from 'del';
 import eslint from 'gulp-eslint';
 import fs from 'fs';
 import gulp from 'gulp';
-import jscs from 'gulp-jscs';
 import karma from 'gulp-karma';
 import runSeq from 'run-sequence';
 import source from 'vinyl-source-stream';
@@ -129,12 +128,7 @@ gulp.task('lint-js-eslint', () => {
     .pipe(eslint.results(failOnESLintWarning));
 });
 
-gulp.task('lint-js-jscs', () => {
-    return gulp.src(JS_FILES_TO_LINT)
-    .pipe(jscs());
-});
-
-gulp.task('lint', ['lint-js-eslint', 'lint-js-jscs']);
+gulp.task('lint', ['lint-js-eslint']);
 
 /* ********** */
 /* JavaScript */
@@ -193,16 +187,6 @@ gulp.task('copy-third-party-css-source-maps', () => {
     .pipe(gulp.dest(CSS_DEST_DIR));
 });
 
-/* **** */
-/* HTML */
-/* **** */
-
-gulp.task('create-template-cache', () => {
-    // return gulp.src(FIRST_PARTY_HTML_FILES)
-    //     .pipe(templateCache('evilmusic-templates.js', {module: 'EvilMusicApp'}))
-    //     .pipe(gulp.dest(DEST_DIR));
-});
-
 /* ***** */
 /* Fonts */
 /* ***** */
@@ -218,8 +202,7 @@ gulp.task('copy-fonts', () => {
 
 gulp.task('build-first-party', [
     'build-em-js',
-    'concat-em-css',
-    'create-template-cache'
+    'concat-em-css'
 ]);
 
 gulp.task('build-third-party', [

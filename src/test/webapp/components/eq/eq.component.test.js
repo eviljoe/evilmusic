@@ -77,6 +77,7 @@ describe(EQComponent.name, () => {
         
         it("updates the node's gain", () => {
             let node = {n: 'N'};
+            
             comp.nodeChanged(node);
             expect(_equalizers.updateNodeGain).toHaveBeenCalledWith(node);
         });

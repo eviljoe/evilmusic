@@ -91,6 +91,7 @@ describe(Alerts.name, () => {
     describe('okButton', () => {
         it('creats an alert button that says "OK"', () => {
             let btn = alerts.okButton();
+            
             expect(btn instanceof AlertButton).toEqual(true);
             expect(btn.text).toEqual('OK');
         });

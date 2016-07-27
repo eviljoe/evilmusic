@@ -13,6 +13,7 @@
     },
     
     "rules": {
+        "max-statements": ["off"],
         "no-empty-function": ["off"],
         "no-magic-numbers": ["off"]
     }

@@ -74,7 +74,7 @@ export class PlaylistCalls {
     }
     
     clear(id) {
-        return this.http.delete(`/rest/playlists/{id}/elements`)
+        return this.http.delete('/rest/playlists/{id}/elements')
             .map((res) => res.json())
             .share();
     }

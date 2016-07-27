@@ -19,8 +19,8 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import _ from 'lodash';
 
-import {LibraryCalls} from './server-calls/library-calls';
 import {Alerts} from './alerts';
+import {LibraryCalls} from './server-calls/library-calls';
 import {Queues} from './queues';
 
 const SONG_KEY_HASH_PRIME = 37;

@@ -102,7 +102,7 @@ export class EMUtils {
      *
      * @see isNumber(...)
      */
-    millisecondsToString(millis) {
+    millisecondsToString(millis) {  // eslint-disable-line max-statements
         let str = null;
 
         if(this.isNumber(millis)) {
@@ -120,7 +120,7 @@ export class EMUtils {
             } else {
                 let minutes = Math.floor(millis / this.MILLISECONDS_IN_MINUTE);
                 
-                millis = millis % this.MILLISECONDS_IN_MINUTE;
+                millis %= this.MILLISECONDS_IN_MINUTE;
                 str += minutes;
                 str += millis < this.MILLISECONDS_IN_TEN_SECONDS ? ':0' : ':';
                 str += Math.ceil(millis / this.MILLISECONDS_IN_SECOND);

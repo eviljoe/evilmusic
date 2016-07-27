@@ -29,7 +29,7 @@ const MIN_VOLUME = 0;
 const MAX_VOLUME = 100;
 
 export class Players {
-    constructor(alerts, emUtils, equalizers, queues, volumeCalls) {
+    constructor(alerts, emUtils, equalizers, queues, volumeCalls) { // eslint-disable-line max-statements
         this.alerts = alerts;
         this.emUtils = emUtils;
         this.equalizers = equalizers;

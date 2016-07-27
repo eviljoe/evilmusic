@@ -48,7 +48,7 @@ export class Alerts {
         this._show();
     }
     
-    okButton(primary=true, resolve=true) {
+    okButton(primary = true, resolve = true) {
         return new AlertButton('ok', 'OK', null, primary, resolve);
     }
 }

@@ -33,12 +33,14 @@ describe(AbstractClass.name, () => {
     
         it('checks for each of the given function names when given an array', () => {
             let names = ['a', 'b'];
+            
             abstractClass._initAbstractClass(names);
             expect(abstractClass._checkForAbstractFunctions).toHaveBeenCalledWith(names);
         });
     
         it('checks for each of the given name when given a string', () => {
             let name = 'a';
+            
             abstractClass._initAbstractClass(name);
             expect(abstractClass._checkForAbstractFunction).toHaveBeenCalledWith(name);
         });
