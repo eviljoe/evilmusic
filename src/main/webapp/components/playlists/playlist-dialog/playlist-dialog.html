@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <div class="modal-content">
             <em-loading-overlay [overlayVisible]="loading" [fullScreen]="'true'"></em-loading-overlay>
             
-            <form  class="form-inline" #playlistForm="ngForm">
+            <form class="form-inline" #playlistForm="ngForm">
                 <div class="modal-header">
                     <h4 class="modal-title">{{getTitle()}}</h4>
                 </div>
@@ -29,8 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" [(ngModel)]="playlist.name" name="playlistName"
-                                ngControl="playlistName" required/>
+                        <input type="text" class="form-control" name="name" [(ngModel)]="playlist.name" required/>
                     </div>
                 </div>
                 

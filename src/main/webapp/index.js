@@ -19,7 +19,11 @@
 import 'zone.js';
 import 'reflect-metadata';
 import 'rxjs';
+import {disableDeprecatedForms, provideForms} from '@angular/forms';
 import {bootstrap} from '@angular/platform-browser-dynamic';
 import {EvilMusicComponent} from 'components/evilmusic/evilmusic.component';
 
-bootstrap(EvilMusicComponent);
+bootstrap(EvilMusicComponent, [
+    disableDeprecatedForms(),
+    provideForms()
+]);

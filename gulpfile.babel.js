@@ -53,7 +53,6 @@ const THIRD_PARTY_LIBS = [
     '@angular/http',
     '@angular/platform-browser-dynamic',
     '@angular/platform-browser',
-    '@angular/upgrade',
     'babel-core',
     'babel-polyfill',
     'babel-preset-es2015',
