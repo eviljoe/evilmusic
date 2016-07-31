@@ -16,6 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.em-playlist-row {
-    margin-bottom: 5px;
+.em-playlists-list {
+    max-width: 500px;
 }
