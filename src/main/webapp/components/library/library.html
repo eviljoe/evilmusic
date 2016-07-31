@@ -17,14 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <em-loading-overlay [overlayVisible]="loading">
-    <div class="em-top-table-controls-container">
-        <button type="button" class="btn btn-xs btn-default" (click)="libraries.clear()" title="clear library">
-            <i class="fa fa-ban"></i> clear
-        </button>
-        <button type="button" class="btn btn-xs btn-default" (click)="libraries.rebuild()" title="rebuild library">
-            <i class="fa fa-cubes"></i> rebuild
-        </button>
-    </div>
     <div>
         <em-library-breadcrumb [artist]="artist" [album]="album"
                 (artistCleared)="backToArtists()" (albumCleared)="backToAlbums()"></em-library-breadcrumb>

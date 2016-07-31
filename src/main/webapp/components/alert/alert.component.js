@@ -17,7 +17,7 @@
  */
 
 import {Component, ViewChild} from '@angular/core';
-import {MODAL_DIRECTVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {MODAL_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {Alerts} from 'services/alerts';
 
@@ -30,7 +30,7 @@ export class AlertComponent {
         return [new Component({
             selector: 'em-alert',
             templateUrl: 'components/alert/alert.html',
-            directives: [MODAL_DIRECTVES],
+            directives: [MODAL_DIRECTIVES],
             queries: {
                 alertDialog: new ViewChild('alertDialog')
             }

@@ -17,7 +17,7 @@
  */
 
 import {Component, ViewChild} from '@angular/core';
-import {MODAL_DIRECTVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {MODAL_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {EQComponent} from 'components/eq/eq.component';
 import {LoadingOverlayComponent} from 'components/loading-overlay/loading-overlay.component';
@@ -35,7 +35,7 @@ export class EQButtonComponent {
         return [new Component({
             selector: 'em-eq-button',
             templateUrl: 'components/eq/eq-button/eq-button.html',
-            directives: [MODAL_DIRECTVES, EQComponent, LoadingOverlayComponent],
+            directives: [MODAL_DIRECTIVES, EQComponent, LoadingOverlayComponent],
             queries: {
                 eqDialog: new ViewChild('eqDialog')
             }

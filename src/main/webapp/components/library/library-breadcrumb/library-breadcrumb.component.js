@@ -17,6 +17,7 @@
  */
 
 import {Component, EventEmitter} from '@angular/core';
+import {LibraryMenuButtonComponent} from '../library-menu-button/library-menu-button.component';
 
 export class LibraryBreadcrumbComponent {
     constructor() {
@@ -28,6 +29,9 @@ export class LibraryBreadcrumbComponent {
         return [new Component({
             selector: 'em-library-breadcrumb',
             templateUrl: 'components/library/library-breadcrumb/library-breadcrumb.html',
+            directives: [
+                LibraryMenuButtonComponent
+            ],
             inputs: ['artist', 'album'],
             outputs: ['artistCleared', 'albumCleared']
         })];

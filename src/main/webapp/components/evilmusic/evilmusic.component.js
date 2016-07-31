@@ -17,8 +17,9 @@
  */
 
 import {Component, ViewContainerRef} from '@angular/core';
+import {CORE_DIRECTIVES} from '@angular/common';
 import {HTTP_PROVIDERS} from '@angular/http';
-import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
+import {BS_VIEW_PROVIDERS, MODAL_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {AlertComponent} from 'components/alert/alert.component';
 import {MediaComponent} from 'components/media/media.component';
@@ -52,6 +53,7 @@ export class EvilMusicComponent {
             providers: [HTTP_PROVIDERS],
             viewProviders: [
                 BS_VIEW_PROVIDERS,
+                CORE_DIRECTIVES,
                 Alerts,
                 EMUtils,
                 EqualizerCalls,
@@ -66,7 +68,7 @@ export class EvilMusicComponent {
                 VolumeCalls
             ],
             directives: [
-                MODAL_DIRECTVES,
+                MODAL_DIRECTIVES,
                 AlertComponent,
                 MediaComponent,
                 PlayerComponent,

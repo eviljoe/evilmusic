@@ -17,7 +17,7 @@
  */
 
 import {Component, EventEmitter, ViewChild} from '@angular/core';
-import {MODAL_DIRECTVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {MODAL_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
 import {Playlists} from 'services/playlists';
 
@@ -46,7 +46,7 @@ export class PlaylistDialogComponent {
         return [new Component({
             selector: 'em-playlist-dialog',
             templateUrl: 'components/playlists/playlist-dialog/playlist-dialog.html',
-            directives: [MODAL_DIRECTVES],
+            directives: [MODAL_DIRECTIVES],
             inputs: ['visible', 'mode', 'playlist'],
             outputs: ['onCancel', 'onSave'],
             queries: {

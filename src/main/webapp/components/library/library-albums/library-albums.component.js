@@ -59,6 +59,10 @@ export class LibraryAlbumsComponent {
     albumClicked(album) {
         this.albumChanged.emit(album);
     }
+    
+    getSongCount(album) { // JOE ju
+        return this.libraries.getSongCountForAlbum(this.artist, album);
+    }
 }
 
 export default LibraryAlbumsComponent;

@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div *ngFor="let a of getAlbums() | sort">
-    <a (click)="albumClicked(a)" href="javascript:void(0)">{{a}}</a>
-</div>
+<ul class="list-group em-lib-albums-list">
+    <li class="list-group-item" *ngFor="let a of getAlbums() | sort">
+        <a (click)="albumClicked(a)" href="javascript:void(0)">{{a}}</a>
+        <span class="badge">{{getSongCount(a)}}</span>
+    </li>
+</ul>

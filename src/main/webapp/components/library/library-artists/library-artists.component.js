@@ -55,6 +55,10 @@ export class LibraryArtistsComponent {
     artistClicked(artist) {
         this.artistChanged.emit(artist);
     }
+    
+    getAlbumCount(artist) { // JOE ju
+        return this.libraries.getAlbumCountForArtist(artist);
+    }
 }
 
 export default LibraryArtistsComponent;

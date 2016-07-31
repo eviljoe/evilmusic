@@ -123,6 +123,12 @@ export class Libraries {
         return new Set(this.cache.albumsForArtists.get(artist));
     }
     
+    getAlbumCountForArtist(artist) { // JOE jd ju
+        let albums = this.getAlbumsForArtist(artist);
+        
+        return albums ? albums.size : 0;
+    }
+    
     /**
      * Returns a set containing each song for the given artist & album in the library.
      *
@@ -131,6 +137,12 @@ export class Libraries {
      */
     getSongsForAlbum(artist, album) {
         return new Set(this.cache.songsForAlbum.get(this.getSongKey(artist, album)));
+    }
+    
+    getSongCountForAlbum(artist, album) { // JOE jd ju
+        let songs = this.getSongsForAlbum(artist, album);
+        
+        return songs ? songs.size : 0;
     }
     
     getSongKey(artist, album) {
