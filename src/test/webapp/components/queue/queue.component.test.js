@@ -107,17 +107,6 @@ describe(QueueComponent.name, () => {
         });
     });
     
-    describe('clear', () => {
-        beforeEach(() => {
-            spyOn(_queues, 'clear').and.stub();
-        });
-        
-        it('clears the queue', () => {
-            comp.clear();
-            expect(_queues.clear).toHaveBeenCalled();
-        });
-    });
-    
     describe('play', () => {
         beforeEach(() => {
             spyOn(_players, 'play').and.stub();

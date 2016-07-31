@@ -20,17 +20,17 @@ import {Component} from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
 import {DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
-import {Libraries} from 'services/libraries';
+import {Queues} from 'services/queues';
 
-export class LibraryMenuButtonComponent {
-    constructor(libraries) {
-        this.libraries = libraries;
+export class QueueMenuButtonComponent {
+    constructor(queues) {
+        this.queues = queues;
     }
     
-    static get annotations() {
+    static get annotations() { // JOE ju
         return [new Component({
-            selector: 'em-library-menu-button',
-            templateUrl: 'components/library/library-menu-button/library-menu-button.html',
+            selector: 'em-queue-menu-button',
+            templateUrl: 'components/queue/queue-menu-button/queue-menu-button.html',
             directives: [
                 DROPDOWN_DIRECTIVES,
                 CORE_DIRECTIVES
@@ -38,7 +38,7 @@ export class LibraryMenuButtonComponent {
         })];
     }
     
-    static get parameters() {
-        return [[Libraries]];
+    static get parameters() { // JOE ju
+        return [[Queues]];
     }
 }

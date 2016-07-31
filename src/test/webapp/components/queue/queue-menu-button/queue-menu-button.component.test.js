@@ -16,29 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
-import {CORE_DIRECTIVES} from '@angular/common';
-import {DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {QueueMenuButtonComponent} from 'components/queue/queue-menu-button/queue-menu-button.component';
 
-import {Libraries} from 'services/libraries';
-
-export class LibraryMenuButtonComponent {
-    constructor(libraries) {
-        this.libraries = libraries;
-    }
+describe(QueueMenuButtonComponent.name, () => {
+    describe('annotations', () => {
+        it('returns an array', () => {
+            expect(QueueMenuButtonComponent.annotations).toEqual(jasmine.any(Array));
+        });
+    });
     
-    static get annotations() {
-        return [new Component({
-            selector: 'em-library-menu-button',
-            templateUrl: 'components/library/library-menu-button/library-menu-button.html',
-            directives: [
-                DROPDOWN_DIRECTIVES,
-                CORE_DIRECTIVES
-            ]
-        })];
-    }
-    
-    static get parameters() {
-        return [[Libraries]];
-    }
-}
+    describe('parameters', () => {
+        it('returns an array', () => {
+            expect(QueueMenuButtonComponent.parameters).toEqual(jasmine.any(Array));
+        });
+    });
+});

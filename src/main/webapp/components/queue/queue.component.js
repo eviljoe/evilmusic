@@ -19,6 +19,7 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 
 import {LoadingOverlayComponent} from 'components/loading-overlay/loading-overlay.component';
+import {QueueMenuButtonComponent} from './queue-menu-button/queue-menu-button.component';
 
 import {Players} from 'services/players';
 import {Queues} from 'services/queues';
@@ -36,7 +37,10 @@ export class QueueComponent {
         return [new Component({
             selector: 'em-queue',
             templateUrl: 'components/queue/queue.html',
-            directives: [LoadingOverlayComponent]
+            directives: [
+                LoadingOverlayComponent,
+                QueueMenuButtonComponent
+            ]
         })];
     }
     
@@ -52,10 +56,6 @@ export class QueueComponent {
     
     _queueLoadingChanged() {
         this.loading = this.queues.loading;
-    }
-    
-    clear() {
-        this.queues.clear();
     }
     
     play(index) {
