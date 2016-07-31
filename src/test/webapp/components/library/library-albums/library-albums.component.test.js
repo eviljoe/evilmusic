@@ -32,8 +32,8 @@ describe(LibraryAlbumsComponent.name, () => {
         
         _libraries = {
             libraryChanges: Observable.create(() => {}),
-            
-            getAlbumsForArtist() {}
+            getAlbumsForArtist() {},
+            getSongCountForAlbum() {}
         };
         
         comp = new LibraryAlbumsComponent(_changeDetector, _libraries);
@@ -98,6 +98,16 @@ describe(LibraryAlbumsComponent.name, () => {
         it('emits an album change event', () => {
             comp.albumClicked('foo');
             expect(comp.albumChanged.emit).toHaveBeenCalledWith('foo');
+        });
+    });
+    
+    describe('getSongCount', () => {
+        beforeEach(() => {
+            spyOn(_libraries, 'getSongCountForAlbum').and.returnValue(7);
+        });
+        
+        it('returns the song count', () => {
+            expect(comp.getSongCount('foo')).toEqual(7);
         });
     });
 });

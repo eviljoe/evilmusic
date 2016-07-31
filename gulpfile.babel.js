@@ -121,10 +121,10 @@ gulp.task('clean', (cb) => {
 
 gulp.task('lint-js-eslint', () => {
     return gulp.src(JS_FILES_TO_LINT)
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError())
-    .pipe(eslint.results(failOnESLintWarning));
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError())
+        .pipe(eslint.results(failOnESLintWarning));
 });
 
 gulp.task('lint', ['lint-js-eslint']);
@@ -143,9 +143,9 @@ gulp.task('build-em-js', (cb) => {
     THIRD_PARTY_LIBS.forEach((lib) => b.external(lib));
     
     return b.transform(babelify)
-    .bundle()
-    .pipe(source('evilmusic.js'))
-    .pipe(gulp.dest(DEST_DIR));
+        .bundle()
+        .pipe(source('evilmusic.js'))
+        .pipe(gulp.dest(DEST_DIR));
 });
 
 gulp.task('build-third-party-js', (cb) => {
@@ -157,8 +157,8 @@ gulp.task('build-third-party-js', (cb) => {
     THIRD_PARTY_LIBS.forEach((lib) => b.require(lib));
     
     return b.bundle()
-    .pipe(source('evilmusic-third-party.js'))
-    .pipe(gulp.dest(DEST_DIR));
+        .pipe(source('evilmusic-third-party.js'))
+        .pipe(gulp.dest(DEST_DIR));
 });
 
 /* *** */
@@ -167,23 +167,23 @@ gulp.task('build-third-party-js', (cb) => {
 
 gulp.task('concat-em-css', () => {
     return gulp.src(FIRST_PARTY_CSS_FILES)
-    .pipe(concat('evilmusic.css'))
-    .pipe(gulp.dest(CSS_DEST_DIR));
+        .pipe(concat('evilmusic.css'))
+        .pipe(gulp.dest(CSS_DEST_DIR));
 });
 
 gulp.task('concat-third-party-css', () => {
     verifyFilesExist(THIRD_PARTY_CSS_FILES);
     
     return gulp.src(THIRD_PARTY_CSS_FILES)
-    .pipe(concat('evilmusic-third-party.css'))
-    .pipe(gulp.dest(CSS_DEST_DIR));
+        .pipe(concat('evilmusic-third-party.css'))
+        .pipe(gulp.dest(CSS_DEST_DIR));
 });
 
 gulp.task('copy-third-party-css-source-maps', () => {
     verifyFilesExist(THIRD_PARTY_CSS_MAP_FILES);
     
     return gulp.src(THIRD_PARTY_CSS_MAP_FILES)
-    .pipe(gulp.dest(CSS_DEST_DIR));
+        .pipe(gulp.dest(CSS_DEST_DIR));
 });
 
 /* ***** */
@@ -192,7 +192,7 @@ gulp.task('copy-third-party-css-source-maps', () => {
 
 gulp.task('copy-fonts', () => {
     return gulp.src(THIRD_PARTY_FONT_FILES)
-    .pipe(gulp.dest(FONTS_DEST_DIR));
+        .pipe(gulp.dest(FONTS_DEST_DIR));
 });
 
 /* ****** */
@@ -229,13 +229,13 @@ gulp.task('watch', ['build'], () => {
 
 gulp.task('test', () => {
     return gulp.src([])
-    .pipe(karma({
-        configFile: 'karma.conf.js',
-        action: 'run'
-    }))
-    .on('error', (err) => {
-        throw err;
-    });
+        .pipe(karma({
+            configFile: 'karma.conf.js',
+            action: 'run'
+        }))
+        .on('error', (err) => {
+            throw err;
+        });
 });
 
 /* ******* */

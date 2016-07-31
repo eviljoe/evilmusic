@@ -32,8 +32,8 @@ describe(LibraryArtistsComponent.name, () => {
         
         _libraries = {
             libraryChanges: Observable.create(() => {}),
-            
-            getArtists() {}
+            getArtists() {},
+            getAlbumCountForArtist() {}
         };
         
         comp = new LibraryArtistsComponent(_changeDetector, _libraries);
@@ -88,6 +88,16 @@ describe(LibraryArtistsComponent.name, () => {
         it('emits an artist change event', () => {
             comp.artistClicked('foo');
             expect(comp.artistChanged.emit).toHaveBeenCalledWith('foo');
+        });
+    });
+    
+    describe('getAlbumCount', () => {
+        beforeEach(() => {
+            spyOn(_libraries, 'getAlbumCountForArtist').and.returnValue(7);
+        });
+        
+        it('returns the album count for the artist', () => {
+            expect(comp.getAlbumCount()).toEqual(7);
         });
     });
 });

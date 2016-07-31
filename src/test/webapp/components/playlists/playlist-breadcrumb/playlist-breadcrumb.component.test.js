@@ -103,4 +103,15 @@ describe(PlaylistBreadcrumbComponent.name, () => {
             expect(comp.getPlaylistName()).toEqual('foo');
         });
     });
+    
+    describe('menuOnCreate', () => {
+        beforeEach(() => {
+            spyOn(comp.onCreate, 'emit').and.stub();
+        });
+        
+        it('emits an event', () => {
+            comp.menuOnCreate();
+            expect(comp.onCreate.emit).toHaveBeenCalled();
+        });
+    });
 });

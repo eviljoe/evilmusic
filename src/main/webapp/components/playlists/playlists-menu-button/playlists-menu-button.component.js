@@ -17,21 +17,23 @@
  */
 
 import {Component, EventEmitter} from '@angular/core';
-import {PlaylistsMenuButtonComponent} from '../playlists-menu-button/playlists-menu-button.component';
-
-export class PlaylistBreadcrumbComponent {
+import {CORE_DIRECTIVES} from '@angular/common';
+import {DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+ 
+export class PlaylistsMenuButtonComponent {
     constructor() {
         this.onCreate = new EventEmitter();
-        this.playlistCleared = new EventEmitter();
     }
     
     static get annotations() {
         return [new Component({
-            selector: 'em-playlist-breadcrumb',
-            templateUrl: 'components/playlists/playlist-breadcrumb/playlist-breadcrumb.html',
-            directives: [PlaylistsMenuButtonComponent],
-            inputs: ['playlist'],
-            outputs: ['onCreate', 'playlistCleared']
+            selector: 'em-playlists-menu-button',
+            templateUrl: 'components/playlists/playlists-menu-button/playlists-menu-button.html',
+            directives: [
+                DROPDOWN_DIRECTIVES,
+                CORE_DIRECTIVES
+            ],
+            outputs: ['onCreate']
         })];
     }
     
@@ -39,27 +41,7 @@ export class PlaylistBreadcrumbComponent {
         return [];
     }
     
-    hasPlaylist() {
-        return !!this.playlist;
-    }
-    
-    isSingleActive() {
-        return !!this.hasPlaylist();
-    }
-    
-    isMultiActive() {
-        return !this.hasPlaylist();
-    }
-    
-    multiClicked() {
-        this.playlistCleared.emit();
-    }
-    
-    getPlaylistName() {
-        return this.playlist ? this.playlist.name : null;
-    }
-    
-    menuOnCreate() {
+    createClicked() {
         this.onCreate.emit();
     }
 }

@@ -17,9 +17,10 @@
  */
 
 import {Component} from '@angular/core';
-import {Libraries} from 'services/libraries';
 import {CORE_DIRECTIVES} from '@angular/common';
 import {DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+
+import {Libraries} from 'services/libraries';
 
 export class LibraryMenuButtonComponent {
     constructor(libraries) {

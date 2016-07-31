@@ -17,15 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <em-loading-overlay [overlayVisible]="loading">
-    <em-playlist-breadcrumb [playlist]="playlist" (playlistCleared)="showPlaylists()"></em-playlist-breadcrumb>
+    <em-playlist-breadcrumb [playlist]="playlist" (playlistCleared)="showPlaylists()" (onCreate)="createPlaylist()">
+    </em-playlist-breadcrumb>
     
     <div [hidden]="playlist">
-        <div class="em-top-table-controls-container">
-            <button type="button" class="btn btn-xs btn-default" (click)="createPlaylist()" title="create playlist">
-                <i class="fa fa-plus"></i> create
-            </button>
-        </div>
-        
         <div *ngFor="let p of playlists.playlists | sort : 'name'" class="em-playlist-row">
             <button type="button" class="btn btn-xs btn-default" (click)="deletePlaylist(p)" title="delete playlist">
                 <i class="fa fa-times"></i>

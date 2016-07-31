@@ -123,7 +123,15 @@ export class Libraries {
         return new Set(this.cache.albumsForArtists.get(artist));
     }
     
-    getAlbumCountForArtist(artist) { // JOE jd ju
+    /**
+     * Returns the number of albums that the given artist has.
+     *
+     * @param {string} artist The artist whose album count is to be returned.
+     *
+     * @return {number} The number of albums the artist has.  If the artist does not exist or has no albums, zero is
+     * returned.
+     */
+    getAlbumCountForArtist(artist) {
         let albums = this.getAlbumsForArtist(artist);
         
         return albums ? albums.size : 0;
@@ -139,7 +147,16 @@ export class Libraries {
         return new Set(this.cache.songsForAlbum.get(this.getSongKey(artist, album)));
     }
     
-    getSongCountForAlbum(artist, album) { // JOE jd ju
+    /**
+     * Returns the number of songs in the album.
+     *
+     * @param {string} artist The artist for the album
+     * @param {[type]} album The album whose songs count is to be returned.
+     *
+     * @return {number} The number of songs the album has.  If the album does not exist or has no songs, zero is
+     * returned.
+     */
+    getSongCountForAlbum(artist, album) {
         let songs = this.getSongsForAlbum(artist, album);
         
         return songs ? songs.size : 0;

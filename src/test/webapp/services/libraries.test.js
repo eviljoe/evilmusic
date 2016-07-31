@@ -418,6 +418,18 @@ describe(Libraries.name, () => {
         });
     });
     
+    describe('getAlbumCountForArtist', () => {
+        it('returns zero when there is no artist', () => {
+            spyOn(libraries, 'getAlbumsForArtist').and.returnValue(null);
+            expect(libraries.getAlbumCountForArtist()).toEqual(0);
+        });
+        
+        it('returns the album count when there is an artist', () => {
+            spyOn(libraries, 'getAlbumsForArtist').and.returnValue(new Set([{}, {}, {}]));
+            expect(libraries.getAlbumCountForArtist()).toEqual(3);
+        });
+    });
+    
     describe('getSongsForAlbum', () => {
         let song1 = null;
         let song2 = null;
@@ -443,6 +455,18 @@ describe(Libraries.name, () => {
         
         it('returns a set of albums for the given artist+album', () => {
             expect(libraries.getSongsForAlbum('artist1', 'album1')).toEqual(new Set([song1, song2]));
+        });
+    });
+    
+    describe('getSongCountForAlbum', () => {
+        it('returns zero when there is no album', () => {
+            spyOn(libraries, 'getSongsForAlbum').and.returnValue(null);
+            expect(libraries.getSongCountForAlbum()).toEqual(0);
+        });
+        
+        it('returns the song count when there is an album', () => {
+            spyOn(libraries, 'getSongsForAlbum').and.returnValue(new Set([{}, {}, {}]));
+            expect(libraries.getSongCountForAlbum()).toEqual(3);
         });
     });
     
