@@ -19,6 +19,8 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import _ from 'lodash';
 
+import {LibrarySongMenuButtonComponent} from '../library-song-menu-button/library-song-menu-button.component';
+
 import {EMUtils} from 'services/emutils';
 import {Libraries} from 'services/libraries';
 import {Players} from 'services/players';
@@ -46,6 +48,7 @@ export class LibrarySongsComponent {
             selector: 'em-library-songs',
             templateUrl: 'components/library/library-songs/library-songs.html',
             inputs: ['album', 'artist'],
+            directives: [LibrarySongMenuButtonComponent],
             pipes: [HertzPipe, MinutesPipe, SortPipe]
         })];
     }
@@ -77,14 +80,8 @@ export class LibrarySongsComponent {
         return this.libraries.getSongsForAlbum(this.artist, this.album);
     }
     
-    addLast(songID) {
-        this.queues.addLast(songID);
-    }
-    
-    addAllLast() {
-        this.queues.addLast(Array.from(this.getSongs())
-            .sort((songA, songB) => songA.trackNumber - songB.trackNumber)
-            .map((song) => song.id));
+    createSongSet(song) {
+        return new Set([song]);
     }
     
     isPlaying(song) {

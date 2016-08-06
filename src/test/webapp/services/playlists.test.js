@@ -31,12 +31,10 @@ describe(Playlists.name, () => {
         
         _playlistCalls = {
             getAll: () => Observable.create(() => {}),
-
             create() {},
-
             delete() {},
-
-            setName() {}
+            setName() {},
+            addLast() {}
         };
         
         playlists = new Playlists(_alerts, _playlistCalls);
@@ -291,24 +289,13 @@ describe(Playlists.name, () => {
     
     describe('_playlistNameSet', () => {
         beforeEach(() => {
+            spyOn(playlists, '_replacePlaylist').and.stub();
             spyOn(playlists, '_firePlaylistsChanged').and.stub();
-            playlists.playlists = [{id: 1}, {id: 2}, {id: 3}];
         });
         
-        it('replaces the playlist with the same ID as the given playlist', () => {
-            let playlist = {id: 1, foo: 'bar'};
-            
-            playlists._playlistNameSet(playlist);
-            expect(playlists.playlists.find((pl) => pl.id === playlist.id)).toBe(playlist);
-        });
-        
-        it('does not replace any playlist if none with the same ID can be found', () => {
-            let playlist = {id: 4, foo: 'bar'};
-            
-            playlists._playlistNameSet(playlist);
-            playlists.playlists.forEach((pl) => {
-                expect(pl.foo).toEqual(undefined);
-            });
+        it('replaces the playlist', () => {
+            playlists._playlistNameSet({id: 1});
+            expect(playlists._replacePlaylist).toHaveBeenCalledWith({id: 1});
         });
         
         it('fires a playlist change event', () => {
@@ -330,6 +317,89 @@ describe(Playlists.name, () => {
         it('fires an event', () => {
             playlists._firePlaylistsChanged('foo', {foo: 'bar'});
             expect(playlists.playlistsChanges.emit).toHaveBeenCalled();
+        });
+    });
+    
+    describe('addSongsLast', () => {
+        let addObserver;
+        
+        beforeEach(() => {
+            spyOn(_playlistCalls, 'addLast').and.returnValue(Observable.create((observer) => addObserver = observer));
+            spyOn(_alerts, 'error').and.stub();
+            spyOn(playlists, '_addedSongsLast').and.stub();
+        });
+        
+        it('sets the loading flag to true', () => {
+            playlists.loading = false;
+            playlists.addSongsLast({id: 1}, 10, 11, 12);
+            expect(playlists.loading).toEqual(true);
+        });
+        
+        it('adds the songs to the playlist', () => {
+            playlists.addSongsLast({id: 1}, 10, 11, 12);
+            expect(_playlistCalls.addLast).toHaveBeenCalledWith(1, [10, 11, 12]);
+        });
+        
+        it('reacts when the songs are added successfully', () => {
+            playlists.addSongsLast({id: 1}, 10, 11, 12);
+            
+            addObserver.next();
+            addObserver.complete();
+            
+            expect(playlists._addedSongsLast).toHaveBeenCalled();
+        });
+        
+        it('displays an error message when the songs cannot be added', () => {
+            playlists.addSongsLast({id: 1}, 10, 11, 12);
+            
+            addObserver.error();
+            
+            expect(_alerts.error).toHaveBeenCalled();
+        });
+    });
+    
+    describe('_addedSongsLast', () => {
+        beforeEach(() => {
+            spyOn(playlists, '_replacePlaylist').and.stub();
+            spyOn(playlists, '_firePlaylistsChanged').and.stub();
+        });
+        
+        it('replaces the playlist', () => {
+            playlists._addedSongsLast({foo: 'bar'});
+            expect(playlists._replacePlaylist).toHaveBeenCalledWith({foo: 'bar'});
+        });
+        
+        it('fires a playlist change event', () => {
+            playlists._addedSongsLast({foo: 'bar'});
+            expect(playlists._firePlaylistsChanged).toHaveBeenCalledWith('update', {foo: 'bar'});
+        });
+        
+        it('sets the loading flag to false', () => {
+            playlists.loading = true;
+            playlists._addedSongsLast({});
+            expect(playlists.loading).toEqual(false);
+        });
+    });
+    
+    describe('_replacePlaylist', () => {
+        beforeEach(() => {
+            playlists.playlists = [{id: 1}, {id: 2}, {id: 3}];
+        });
+        
+        it('replaces the playlist with the same ID as the given playlist', () => {
+            let playlist = {id: 1, foo: 'bar'};
+            
+            playlists._replacePlaylist(playlist);
+            expect(playlists.playlists.find((pl) => pl.id === playlist.id)).toBe(playlist);
+        });
+        
+        it('does not replace any playlist if none with the same ID can be found', () => {
+            let playlist = {id: 4, foo: 'bar'};
+            
+            playlists._replacePlaylist(playlist);
+            playlists.playlists.forEach((pl) => {
+                expect(pl.foo).toEqual(undefined);
+            });
         });
     });
     

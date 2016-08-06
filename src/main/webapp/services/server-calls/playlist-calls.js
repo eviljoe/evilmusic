@@ -68,7 +68,7 @@ export class PlaylistCalls {
             queryParamsStr = queryParams.join('&');
         }
         
-        return this.http.put(`/rest/playlists/{id}/last?${queryParamsStr}`)
+        return this.http.put(`/rest/playlists/${id}/last?${queryParamsStr}`)
             .map((res) => res.json())
             .share();
     }

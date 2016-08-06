@@ -121,12 +121,7 @@ export class Playlists {
     }
     
     _playlistNameSet(playlist) {
-        let plIndex = this.playlists.findIndex((pl) => pl.id === playlist.id);
-        
-        if(plIndex > -1) {
-            this.playlists[plIndex] = playlist;
-        }
-        
+        this._replacePlaylist(playlist); // JOE ju
         this._firePlaylistsChanged(PLAYLIST_CHANGE_TYPES.UPDATE, playlist);
         this.loading = false;
     }
@@ -137,6 +132,29 @@ export class Playlists {
             playlist,
             playlists: this.playlists
         });
+    }
+    
+    addSongsLast(playlist, ... songIDs) {
+        this.loading = true;
+        
+        this.playlistCalls.addLast(playlist.id, songIDs).subscribe(
+            (pl) => this._addedSongsLast(pl),
+            (err) => this.alerts.error('Could not add songs to the playlist', err)
+        );
+    }
+    
+    _addedSongsLast(playlist) {
+        this._replacePlaylist(playlist);
+        this._firePlaylistsChanged(PLAYLIST_CHANGE_TYPES.UPDATE, playlist);
+        this.loading = false;
+    }
+    
+    _replacePlaylist(playlist) {
+        let plIndex = this.playlists.findIndex((pl) => pl.id === playlist.id);
+
+        if(plIndex > -1) {
+            this.playlists[plIndex] = playlist;
+        }
     }
     
     get loading() {

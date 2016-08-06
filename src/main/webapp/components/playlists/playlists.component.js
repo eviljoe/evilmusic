@@ -56,6 +56,7 @@ export class PlaylistsComponent {
     
     init() {
         this.setPlaylistDialogVisible(false);
+        this._playlistsLoadingChanged();
         this.playlists.playlistsChanges.subscribe(() => this._playlistsChanged());
         this.playlists.loadingChanges.subscribe(() => this._playlistsLoadingChanged());
     }

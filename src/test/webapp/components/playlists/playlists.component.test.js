@@ -81,9 +81,15 @@ describe(PlaylistsComponent.name, () => {
             expect(comp._playlistsChanged).toHaveBeenCalled();
         });
         
+        it('updates based on the current playlist loading status', () => {
+            comp.init();
+            expect(comp._playlistsLoadingChanged).toHaveBeenCalled();
+        });
+        
         it('reacts to loading changes', () => {
             comp.init();
             
+            comp._playlistsLoadingChanged.calls.reset();
             loadingObserver.next();
             loadingObserver.complete();
             

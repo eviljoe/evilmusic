@@ -172,30 +172,6 @@ describe(LibrarySongsComponent.name, () => {
         });
     });
     
-    describe('addLast', () => {
-        it('adds the song with the given ID to the end of the queue', () => {
-            spyOn(_queues, 'addLast');
-            comp.addLast(17);
-            expect(_queues.addLast).toHaveBeenCalledWith(17);
-        });
-    });
-    
-    describe('addAllLast', () => {
-        beforeEach(() => {
-            spyOn(comp, 'getSongs').and.returnValue(new Set([
-                {id: 13, trackNumber: 3},
-                {id: 12, trackNumber: 2},
-                {id: 11, trackNumber: 1}
-            ]));
-            spyOn(_queues, 'addLast').and.stub();
-        });
-        
-        it('adds the ID for each song sorted by track number', () => {
-            comp.addAllLast();
-            expect(_queues.addLast).toHaveBeenCalledWith([11, 12, 13]);
-        });
-    });
-    
     describe('isPlaying', () => {
         it('returns false when there is no playing song', () => {
             _players.currentSong = null;

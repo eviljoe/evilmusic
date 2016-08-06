@@ -1,0 +1,38 @@
+<!--
+EvilMusic - Web-Based Music Player
+Copyright (C) 2016 Joe Falascino
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="btn-group" dropdown>
+    <button type="button" class="btn btn-xs btn-default" (click)="addToQueueLast()">
+        <span class="fa fa-plus"></span>
+    </button>
+    
+    <button type="button" class="btn btn-xs btn-default em-lib-song-dropdown-btn" dropdownToggle>
+        <span class="caret"></span>
+    </button>
+    
+    <ul class="dropdown-menu" dropdownMenu>
+        <li><a class="dropdown-item" href="javascript:void(0)" (click)="addToQueueLast()">
+            <span class="fa fa-plus"></span> add to queue
+        </a></li>
+        <li class="divider dropdown-divider"></li>
+        <li><a class="dropdown-item" href="javascript:void(0)" *ngFor="let p of getPlaylists()"
+                (click)="addToPlaylistLast(p)">
+            <span class="fa fa-plus"></span> add to {{p.name}}
+        </a></li>
+    </ul>
+</div>

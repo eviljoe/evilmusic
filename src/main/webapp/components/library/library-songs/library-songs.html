@@ -27,9 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <th align="right">Sample Rate</th>
         <th align="right">Sample Count</th>
         <th align="left">
-            <button type="button" class="btn btn-xs btn-default" (click)="addAllLast()" title="add all last">
-                <i class="fa fa-plus"></i>
-            </button>
+            <em-library-song-menu-button [songs]="getSongs()"></em-library-song-menu-button>
         </th>
     </tr>
     <tr *ngFor="let s of getSongs() | sort : 'trackNumber'" [ngClass]="{info: isPlaying(s), 'library-songs-enqueued': isInQueue(s)}">
@@ -42,9 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <td align="right">{{s.sampleRate | hertz}}</td>
         <td align="right">{{s.sampleCount}}</td>
         <td align="left">
-            <button type="button" class="btn btn-xs btn-default" (click)="addLast(s.id)" title="add last">
-                <i class="fa fa-plus"></i>
-            </button>
+            <em-library-song-menu-button [songs]="createSongSet(s)"></em-library-song-menu-button>
         </td>
     </tr>
 </table>
