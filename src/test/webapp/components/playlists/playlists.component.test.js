@@ -136,17 +136,6 @@ describe(PlaylistsComponent.name, () => {
         });
     });
     
-    describe('deletePlaylist', () => {
-        beforeEach(() => {
-            spyOn(_playlists, 'delete').and.stub();
-        });
-        
-        it('creates a new playlist', () => {
-            comp.deletePlaylist({id: 123});
-            expect(_playlists.delete).toHaveBeenCalledWith(123);
-        });
-    });
-    
     describe('setPlaylistDialogVisible', () => {
         it('sets the flag', () => {
             comp.setPlaylistDialogVisible(true);

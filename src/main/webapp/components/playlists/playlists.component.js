@@ -22,6 +22,8 @@ import {LoadingOverlayComponent} from 'components/loading-overlay/loading-overla
 import {PlaylistDialogComponent} from 'components/playlists/playlist-dialog/playlist-dialog.component';
 import {PlaylistBreadcrumbComponent} from 'components/playlists/playlist-breadcrumb/playlist-breadcrumb.component';
 import {PlaylistComponent} from 'components/playlists/playlist/playlist.component';
+import {PlaylistElemMenuButtonComponent} from
+    'components/playlists/playlist-elem-menu-button/playlist-elem-menu-button.component';
 
 import {Playlists} from 'services/playlists';
 import {SortPipe} from 'pipes/sort.pipe';
@@ -44,7 +46,8 @@ export class PlaylistsComponent {
                 LoadingOverlayComponent,
                 PlaylistDialogComponent,
                 PlaylistBreadcrumbComponent,
-                PlaylistComponent
+                PlaylistComponent,
+                PlaylistElemMenuButtonComponent
             ],
             pipes: [SortPipe]
         })];
@@ -79,10 +82,6 @@ export class PlaylistsComponent {
     
     createPlaylist() {
         this.setPlaylistDialogVisible(true);
-    }
-    
-    deletePlaylist(playlist) {
-        this.playlists.delete(playlist.id);
     }
     
     setPlaylistDialogVisible(visible) {

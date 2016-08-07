@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <span class="fa fa-plus"></span>
     </button>
     
-    <button type="button" class="btn btn-xs btn-default em-lib-song-dropdown-btn" dropdownToggle>
+    <button type="button" class="btn btn-xs btn-default em-pl-elem-dropdown-btn" dropdownToggle>
         <span class="caret"></span>
     </button>
     
@@ -32,10 +32,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </a>
         </li>
         <li class="divider dropdown-divider"></li>
+        <li *ngIf="isForFullPlaylist()">
+            <a class="dropdown-item" href="javascript:void(0)" (click)="deletePlaylist()">
+                <span class="fa fa-times"></span> delete playlist
+            </a>
+        </li>
         <li>
-            <a class="dropdown-item" href="javascript:void(0)" *ngFor="let p of getPlaylists()"
-                    (click)="addToPlaylistLast(p)">
-                <span class="fa fa-plus"></span> add to {{p.name}}
+            <a class="dropdown-item" href="javascript:void(0)" (click)="removeFromPlaylist()">
+                <span class="fa fa-times"></span> remove from playlist
             </a>
         </li>
     </ul>

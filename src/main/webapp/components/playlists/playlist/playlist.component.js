@@ -18,6 +18,8 @@
 
 import {Component} from '@angular/core';
 
+import {PlaylistElemMenuButtonComponent} from '../playlist-elem-menu-button/playlist-elem-menu-button.component';
+
 import {Playlists} from 'services/playlists';
 
 import {HertzPipe} from 'pipes/hertz.pipe';
@@ -32,6 +34,7 @@ export class PlaylistComponent {
         return [new Component({
             selector: 'em-playlist',
             templateUrl: 'components/playlists/playlist/playlist.html',
+            directives: [PlaylistElemMenuButtonComponent],
             pipes: [HertzPipe, MinutesPipe],
             inputs: ['playlist']
         })];
@@ -39,5 +42,9 @@ export class PlaylistComponent {
     
     static get parameters() {
         return [[Playlists]];
+    }
+    
+    getElements() {
+        return this.playlist ? this.playlist.elements : null;
     }
 }

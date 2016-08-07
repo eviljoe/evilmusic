@@ -16,8 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-"{{playlist}}"
-
 <table class="table table-striped table-condensed table-hover">
     <tr>
         <th align="right">Playlist<br/>Element ID</th>
@@ -30,12 +28,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <th align="right">Sample Rate</th>
         <th align="right">Sample Count</th>
         <th align="left">
-            <!-- JOE todo add to queue -->
-            <!-- JOE todo delete playlist-->
+            <em-playlist-elem-menu-button [playlist]="playlist"></em-playlist-elem-menu-button>
         </th>
     </tr>
     <!-- JOE todo: [ngClass]="{info: isPlaying(s), 'library-songs-enqueued': isInQueue(s)}" -->
-    <tr *ngFor="let e of playlist.elements">
+    <tr *ngFor="let e of getElements()">
         <td align="right">{{e.id}}</td>
         <td align="right">{{e.song.id}}</td>
         <td align="left">{{e.song.artist}}</td>
@@ -46,8 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <td align="right">{{e.song.sampleRate | hertz}}</td>
         <td align="right">{{e.song.sampleCount}}</td>
         <td align="left">
-            <!-- JOE todo add to queue -->
-            <!-- JOE todo remove from playlist -->
+            <em-playlist-elem-menu-button [playlist]="playlist" [element]="e"></em-playlist-elem-menu-button>
         </td>
     </tr>
 </table>

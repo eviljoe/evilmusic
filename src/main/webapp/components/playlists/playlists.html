@@ -23,16 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <div [hidden]="playlist">
         <ul class="list-group em-playlists-list">
             <li class="list-group-item" *ngFor="let p of playlists.playlists | sort : 'name'">
-                <button type="button" class="btn btn-xs btn-default" (click)="deletePlaylist(p)" title="delete playlist">
-                    <i class="fa fa-times"></i>
-                </button>
                 <a (click)="playlistClicked(p)" href="javascript:void(0)">{{p.name}}</a>
+                <em-playlist-elem-menu-button [playlist]="p"></em-playlist-elem-menu-button>
             </li>
         </ul>
     </div>
     
     <div [hidden]="!playlist">
-        <em-playlist playlist="playlist"></em-playlist>
+        <em-playlist [playlist]="playlist"></em-playlist>
     </div>
     
     <em-playlist-dialog [visible]="playlistDialogVisible" [mode]="'create'"
